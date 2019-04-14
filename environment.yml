@@ -1,0 +1,17 @@
+name: pyforest
+
+channels:
+  - defaults
+
+dependencies:
+  - python=3.7
+
+  # Linting and type checking
+  - pylint
+  - mypy
+
+  # Unit test
+  - pytest
+
+  # Document
+  - sphinx
