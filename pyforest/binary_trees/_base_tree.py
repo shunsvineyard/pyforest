@@ -2,14 +2,13 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
+from typing import Any
+
 import abc
 
-class BaseTree(abc.ABC):
-    """An abstract base class for any types of binary trees. This base class
-    defines the basic properties and methods that all types of binary tress
-    should provide.
-
-    Attributes
+class Node:
+    """
+        Attributes
     ----------
     left: node
         The left child of the node.
@@ -19,6 +18,28 @@ class BaseTree(abc.ABC):
 
     data: Any
         The data that the node contains.
+    """
+
+    def __init__(self, key: Any, data: Any):
+        self._key = key
+        self._data = data
+        self.parent = None
+        self.left = None
+        self.right = None
+
+    @property
+    def key(self):
+        return self._key
+
+    @property
+    def data(self):
+        return self._data
+
+
+class BaseTree(abc.ABC):
+    """An abstract base class for any types of binary trees. This base class
+    defines the basic properties and methods that all types of binary tress
+    should provide.
 
     Methods
     -------
@@ -35,6 +56,10 @@ class BaseTree(abc.ABC):
     is to make sure the type of binary trees is compatable. Therefore, binary
     tree traversal can be performed on any type of binary trees.
     """
+
+    def __init__(self):
+        self.root = None
+
     @abc.abstractmethod
     def search(self, value):
         pass
@@ -47,17 +72,6 @@ class BaseTree(abc.ABC):
     def delete(self, value):
         pass
 
-    @abc.abstractproperty
-    def left(self):
-        pass
-
-    @abc.abstractproperty
-    def right(self):
-        pass
-
-    @abc.abstractproperty
-    def data(self):
-        pass
 
 
 
