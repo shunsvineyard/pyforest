@@ -100,7 +100,8 @@ class BinarySearchTree(_base_tree.BaseTree):
                 node.right.parent = node
 
     def _search(self, key: Any, node: _base_tree.Node) -> _base_tree.Node:
-        
+        """
+        """
         if key == node.key:
             return node
         elif key < node.key:
@@ -115,20 +116,24 @@ class BinarySearchTree(_base_tree.BaseTree):
                 raise KeyError(f"Key {key} not found")
 
     def _get_min(self, node: _base_tree.Node) -> _base_tree.Node:
+        """
+        """
         current_node = node
         while current_node.left:
             current_node = current_node.left
         return current_node
 
     def _height(self, node:_base_tree.Node) -> int:
-
+        """
+        """
         if node is None:
             return 0
         
         return max(self._height(node.left), self._height(node.right)) + 1
 
     def _is_balance(self, node: _base_tree.Node) -> bool:
-
+        """
+        """
         left_hight = self._height(node.left)
         right_height = self._height(node.right)
 
@@ -139,7 +144,8 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def search(self, key: Any) -> Any:
-
+        """
+        """
         if self._size == 0:
             return None
 
@@ -170,6 +176,8 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def delete(self, key: Any) -> NoReturn:
+        """
+        """
         if self._size != 0:
             deleting_node = self._search(key=key, node=self.root)
 
@@ -214,15 +222,20 @@ class BinarySearchTree(_base_tree.BaseTree):
                         deleting_node.parent.right = deleting_node.right
 
             del(deleting_node)
+            self._size -= 1
 
         # If the tree is empty, do nothing
 
     def get_min(self) -> Any:
+        """
+        """
         if self._size == 0:
             return None
         return self._get_min(self.root).data
 
     def get_max(self) -> Any:
+        """
+        """
         if self._size == 0:
             return None
 
@@ -234,13 +247,19 @@ class BinarySearchTree(_base_tree.BaseTree):
         return node.data
 
     def get_height(self) -> int:
+        """
+        """
         return self._height(self.root)
 
     def is_balance(self) -> bool:
+        """
+        """
         if self._size == 0:
             return True
 
         self._is_balance(node=self.root)
 
     def size(self) -> int:
+        """
+        """
         return self._size

@@ -2,10 +2,15 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
+from __future__ import annotations
+
+from dataclasses import dataclass
 from typing import Any
 
 import abc
 
+
+@dataclass
 class Node:
     """
         Attributes
@@ -19,21 +24,12 @@ class Node:
     data: Any
         The data that the node contains.
     """
-
-    def __init__(self, key: Any, data: Any):
-        self._key = key
-        self._data = data
-        self.parent = None
-        self.left = None
-        self.right = None
-
-    @property
-    def key(self):
-        return self._key
-
-    @property
-    def data(self):
-        return self._data
+    __slots__ = ["key", "data", "parent", "left", "right"]
+    key: Any
+    data: Any
+    parent: "Node" = None
+    left: "Node" = None
+    right: "Node" = None
 
 
 class BaseTree(abc.ABC):
