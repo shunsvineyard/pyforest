@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Yellowstone",
+        "location": "Wyoming",
+        "data": "March 1, 1872",
+        "area": 2219790
+    },
+    {
+        "name": "Sequoia",
+        "location": "California",
+        "data": "September 25, 1890",
+        "area": 404062
+    },
+    {
+        "name": "Yosemite",
+        "location": "California",
+        "data": "October 1, 1890",
+        "area": 761747
+    },
+    {
+        "name": "Mount Rainier",
+        "location": "Washington",
+        "data": "March 2, 1899",
+        "area": 236381
+    },
+    {
+        "name": "Crater Lake",
+        "location": "Oregon",
+        "data": "May 22, 1902",
+        "area": 183224
+    },
+    {
+        "name": "Wind Cave",
+        "location": "South Dakota",
+        "data": "January 9, 1903",
+        "area": 33970
+    }
+]
