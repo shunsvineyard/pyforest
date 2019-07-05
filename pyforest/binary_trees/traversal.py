@@ -23,7 +23,7 @@ from typing import NoReturn
 
 from pyforest.binary_trees import _base_tree
 
-def _inorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
+def _inorder_traverse(node: _base_tree.Node, output: list(tuple())) -> NoReturn:
     """Perform In-Order traversal.
 
     Parameters
@@ -32,12 +32,24 @@ def _inorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
         The root of the binary tree.
     """
     if node:
-        _inorder_traverse(node.left)
-        print(node.data, end=" ")
-        output.append(node.data)
-        _inorder_traverse(node.right)
+        _inorder_traverse(node.left, output)
+        output.append((node.key, node.data))
+        _inorder_traverse(node.right, output)
 
-def _preorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
+def _outorder_traverse(node: _base_tree.Node, output: list(tuple())) -> NoReturn:
+    """Perform Output-Order traversal.
+
+    Parameters
+    ----------
+    node : _base_tree.Node
+        The root of the binary tree.
+    """
+    if node:
+        _outorder_traverse(node.right, output)
+        output.append((node.key, node.data))
+        _outorder_traverse(node.left, output)
+
+def _preorder_traverse(node: _base_tree.Node, output: list(tuple())) -> NoReturn:
     """Perform Pre-Order traversal.
 
     Parameters
@@ -46,12 +58,11 @@ def _preorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
         The root of the binary tree.
     """
     if node:
-        print(node.data, end=" ")
-        output.append(node.data)
-        _preorder_traverse(node.left)
-        _preorder_traverse(node.right)
+        output.append((node.key, node.data))
+        _preorder_traverse(node.left, output)
+        _preorder_traverse(node.right, output)
 
-def _postorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
+def _postorder_traverse(node: _base_tree.Node, output: list(tuple())) -> NoReturn:
     """Perform Post-Order traversal.
 
     Parameters
@@ -60,26 +71,39 @@ def _postorder_traverse(node: _base_tree.Node, output: list) -> NoReturn:
         The root of the binary tree.
     """
     if node:
-        _postorder_traverse(node.left)
-        _postorder_traverse(node.right)
-        print(node.data, end=" ")
-        output.append(node.data)
+        _postorder_traverse(node.left, output)
+        _postorder_traverse(node.right, output)
+        output.append((node.key, node.data))
 
-def inorder_traverse(tree: _base_tree.BaseTree) -> list:
+def inorder_traverse(tree: _base_tree.BaseTree) -> list(tuple()):
     """Perform In-Order traversal.
     In-order traversal traverses a tree by the order:
     left subtree, current node, right subtree (LDR)
-    
+
     Parameters
     ----------
     tree : _base_tree.BaseTree
         A type of binary tree.
     """
-    output = list()
+    output = list(tuple())
     _inorder_traverse(node=tree.root, output=output)
     return output
 
-def preorder_traverse(tree: _base_tree.BaseTree) -> list:
+def outorder_traverse(tree: _base_tree.BaseTree) -> list(tuple()):
+    """Perform Out-Order traversal.
+    Out-order traversal traverses a tree by the order:
+    right subtree, current node, left subtree (RNL)
+
+    Parameters
+    ----------
+    tree : _base_tree.BaseTree
+        A type of binary tree.
+    """
+    output = list(tuple())
+    _outorder_traverse(node=tree.root, output=output)
+    return output
+
+def preorder_traverse(tree: _base_tree.BaseTree) -> list(tuple()):
     """Perform Pre-Order traversal.
     Pre-order traversal traverses a tree by the order:
     current node, left subtree, right subtree (DLR)
@@ -89,11 +113,11 @@ def preorder_traverse(tree: _base_tree.BaseTree) -> list:
     tree : _base_tree.BaseTree
         A type of binary tree.
     """
-    output = list()
+    output = list(tuple())
     _preorder_traverse(node=tree.root, output=output)
     return output
 
-def postorder_traverse(tree: _base_tree.BaseTree) -> list:
+def postorder_traverse(tree: _base_tree.BaseTree) -> list(tuple()):
     """Perform Post-Order traversal.
     Post-order traversal traverses a tree by the order:
     left subtree, right subtree, current node (LRD)
@@ -103,11 +127,11 @@ def postorder_traverse(tree: _base_tree.BaseTree) -> list:
     tree : _base_tree.BaseTree
         A type of binary tree.
     """
-    output = list()
+    output = list(tuple())
     _postorder_traverse(node=tree.root, output=output)
     return output
 
-def levelorder_traverse(tree: _base_tree.BaseTree) -> list:
+def levelorder_traverse(tree: _base_tree.BaseTree) -> list(tuple()):
     """Perform Level-Order traversal.
     Level-order traversal traverses a tree:
     level by level, from left to right, starting from the root node.
@@ -118,12 +142,11 @@ def levelorder_traverse(tree: _base_tree.BaseTree) -> list:
         The root of a type of binary tree.
     """
     queue = [tree.root]
-    output = list()
+    output = list(tuple())
 
     while len(queue) > 0:
         temp = queue.pop(0)
-        print(temp.data, end=" ")
-        output.append(temp.data)
+        output.append((temp.key, temp.data))
         if temp.left:
             queue.append(temp.left)
 

@@ -13,23 +13,27 @@ import abc
 @dataclass
 class Node:
     """
-        Attributes
+    Attributes
     ----------
+    key: Any
+        A key can be anything that is comparable.
+    data: Any
+        The data that the node contains.
+
+    parent: Any
+        The parant of the node.
+
     left: node
         The left child of the node.
 
     right: node
         The right child of the node.
-
-    data: Any
-        The data that the node contains.
     """
-    __slots__ = ["key", "data", "parent", "left", "right"]
     key: Any
     data: Any
-    parent: "Node" = None
-    left: "Node" = None
-    right: "Node" = None
+    parent: Any = None
+    left: Any = None
+    right: Any = None
 
 
 class BaseTree(abc.ABC):
