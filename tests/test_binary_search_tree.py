@@ -1,27 +1,17 @@
-import pytest
-
 from pyforest.binary_trees import binary_search_tree
 from pyforest.binary_trees import traversal
 
-def test_simple_case():
+import pytest
+
+def test_simple_case(basic_tree):
 
     tree = binary_search_tree.BinarySearchTree()
     # Test an empty tree
     assert tree.size() == 0
 
-    # Draw a tree
     # 23, 4, 30, 11, 7, 34, 20, 24, 22, 15, 1
-    tree.insert(key=23, data="23")
-    tree.insert(key=4, data="4")
-    tree.insert(key=30, data="30")
-    tree.insert(key=11, data="11")
-    tree.insert(key=7, data="7")
-    tree.insert(key=34, data="34")
-    tree.insert(key=20, data="20")
-    tree.insert(key=24, data="24")
-    tree.insert(key=22, data="22")
-    tree.insert(key=15, data="15")
-    tree.insert(key=1, data="1")
+    for key, data in basic_tree:
+        tree.insert(key=key, data=data)
 
     assert tree.size() == 11
     assert tree.get_min() == 1
@@ -43,21 +33,12 @@ def test_simple_case():
         tree.search(15)
 
 
-def test_deletion():
+def test_deletion(basic_tree):
     tree = binary_search_tree.BinarySearchTree()
 
     # 23, 4, 30, 11, 7, 34, 20, 24, 22, 15, 1
-    tree.insert(key=23, data="23")
-    tree.insert(key=4, data="4")
-    tree.insert(key=30, data="30")
-    tree.insert(key=11, data="11")
-    tree.insert(key=7, data="7")
-    tree.insert(key=34, data="34")
-    tree.insert(key=20, data="20")
-    tree.insert(key=24, data="24")
-    tree.insert(key=22, data="22")
-    tree.insert(key=15, data="15")
-    tree.insert(key=1, data="1")
+    for key, data in basic_tree:
+        tree.insert(key=key, data=data)
 
     # No child
     tree.delete(15)

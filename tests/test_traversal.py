@@ -1,23 +1,11 @@
-
 from pyforest.binary_trees import binary_search_tree
 from pyforest.binary_trees import traversal
 
-def test_binary_search_tree_traversal():
+def test_binary_search_tree_traversal(basic_tree):
     tree = binary_search_tree.BinarySearchTree()
 
-    # 23, 4, 30, 11, 7, 34, 20, 24, 22, 15, 1
-    tree.insert(key=23, data="23")
-    tree.insert(key=4, data="4")
-    tree.insert(key=30, data="30")
-    tree.insert(key=11, data="11")
-    tree.insert(key=7, data="7")
-    tree.insert(key=34, data="34")
-    tree.insert(key=20, data="20")
-    tree.insert(key=24, data="24")
-    tree.insert(key=22, data="22")
-    tree.insert(key=15, data="15")
-    tree.insert(key=1, data="1")
-
+    for key, data in basic_tree:
+        tree.insert(key=key, data=data)
 
     assert traversal.levelorder_traverse(tree) == [
         (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"), (24, "24"),
