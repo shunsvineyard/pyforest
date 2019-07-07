@@ -1,6 +1,3 @@
-pyforest
-========
-
 .. toctree::
    :maxdepth: 4
 

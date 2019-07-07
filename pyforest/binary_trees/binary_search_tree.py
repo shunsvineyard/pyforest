@@ -161,10 +161,12 @@ class BinarySearchTree(_base_tree.BaseTree):
     # Overriding abstract method
     def insert(self, key: Any, data: Any) -> NoReturn:
         """Insert an item into a binary tree.
+
         Parameters
         ----------
         data: int
             The data to be inserted into the tree.
+
         Raises
         ------
         ValueError
@@ -238,6 +240,9 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     def get_min(self) -> Any:
         """
+
+        Returns
+        -------
         """
         if self._size == 0:
             return None

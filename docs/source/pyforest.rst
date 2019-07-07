@@ -1,40 +1,21 @@
-pyforest package
-================
+The Forest Library
+==================
 
-Subpackages
------------
+Binary Trees
+------------
 
 .. toctree::
 
    pyforest.binary_trees
 
-Submodules
-----------
+Generic Trees
+-------------
 
-pyforest.b\_tree module
------------------------
+.. toctree::
 
-.. automodule:: pyforest.b_tree
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyforest.breadth\_first\_search module
---------------------------------------
-
-.. automodule:: pyforest.breadth_first_search
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyforest.depth\_first\_search module
-------------------------------------
-
-.. automodule:: pyforest.depth_first_search
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   pyforest.b_tree
+   pyforest.breadth_first_search
+   pyforest.depth_first_search
 
 Module contents
 ---------------
