@@ -2,13 +2,14 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""A Binary Search Tree (BST) is a binary tree with
-the following properties:
+"""A Binary Search Tree (BST) module.
+
+A BST is a binary tree with the following properties:
 
 - The left subtree of a node contains only nodes whose keys are less
   than or equal to the node’s key
 - The right subtree of a node contains only nodes whose keys are
-  greater than the node’s key 
+  greater than the node’s key
 
 Besides, BST should provide, at least, these Basic Operations:
 - Search: search an element in a tree
@@ -39,29 +40,25 @@ from typing import Any, NoReturn
 
 
 class BinarySearchTree(_base_tree.BaseTree):
-    """A Binary Search Tree (BST)
+    """Binary Search Tree (BST) class.
 
     Attributes
     ----------
-    left: node
-        The left node.
-    right: node
-        The right node.
-    data: Any
-        The value the node holds.
+    root: node
+        The root node of the binary search tree.
 
     Methods
     -------
-    search(value: Any)
-        Look for the value in a tree.
-    insert(value: Any)
-        Insert the value into a tree.
-    delete(value: Any)
-        Delete the value from a tree.
+    search(key: Any)
+        Look for the key in a tree.
+    insert(key: Any, data: Any)
+        Insert a key and data pair into a tree.
+    delete(key: Any)
+        Delete data from a tree based on the key.
 
     Examples
     --------
-    TODO: example use simple examples.
+    TODO: add simple examples.
     """
 
     def __init__(self, key: Any = None, data: Any = None):
@@ -71,13 +68,17 @@ class BinarySearchTree(_base_tree.BaseTree):
         self._size = 1 if key and data else 0
 
     def _insert(self, key: Any, data: Any, node: _base_tree.Node) -> NoReturn:
-        """The real implementation of tree insertion.
+        """Real implementation of tree insertion.
+
         Parameters
         ----------
-        data: int
+        key: Any
+            The key of the data.
+        data: Any
             The data to be inserted into the tree.
-        node: _Node
+        node: Node
             The parent node of the input data.
+
         Raises
         ------
         ValueError
@@ -87,59 +88,51 @@ class BinarySearchTree(_base_tree.BaseTree):
         if key == node.key:
             raise ValueError("Duplicate key")
         elif key < node.key:
-            if node.left != None:
+            if node.left is not None:
                 self._insert(key=key, data=data, node=node.left)
             else:
                 node.left = _base_tree.Node(key=key, data=data)
                 node.left.parent = node
-        elif key > node.key:
-            if node.right != None:
+        else:  # key > node.key
+            if node.right is not None:
                 self._insert(key=key, data=data, node=node.right)
             else:
                 node.right = _base_tree.Node(key=key, data=data)
                 node.right.parent = node
 
     def _search(self, key: Any, node: _base_tree.Node) -> _base_tree.Node:
-        """
-        """
         if key == node.key:
             return node
         elif key < node.key:
-            if node.left != None:
+            if node.left is not None:
                 return self._search(key=key, node=node.left)
             else:
                 raise KeyError(f"Key {key} not found")
-        elif key > node.key:
-            if node.right != None:
+        else:  # key > node.key
+            if node.right is not None:
                 return self._search(key=key, node=node.right)
             else:
                 raise KeyError(f"Key {key} not found")
 
     def _get_min(self, node: _base_tree.Node) -> _base_tree.Node:
-        """
-        """
         current_node = node
         while current_node.left:
             current_node = current_node.left
         return current_node
 
-    def _height(self, node:_base_tree.Node) -> int:
-        """
-        """
+    def _height(self, node: _base_tree.Node) -> int:
         if node is None:
             return 0
-        
+
         return max(self._height(node.left), self._height(node.right)) + 1
 
     def _is_balance(self, node: _base_tree.Node) -> bool:
-        """
-        """
         left_hight = self._height(node.left)
         right_height = self._height(node.right)
 
         if (abs(left_hight - right_height) > 1):
             return False
-        
+
         if node.left:
             if not self._is_balance(node=node.left):
                 return False
@@ -151,7 +144,23 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def search(self, key: Any) -> Any:
-        """
+        """Search data based the given key.
+
+        Parameters
+        ----------
+        key: Any
+            The key associated with the data.
+
+        Returns
+        -------
+        Any
+            The data based on the given key; None if the key not found.
+
+        Raises
+        ------
+        ValueError
+            If the input data has existed in the tree, `ValueError`
+            will be thrown.
         """
         if self._size == 0:
             return None
@@ -160,11 +169,14 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def insert(self, key: Any, data: Any) -> NoReturn:
-        """Insert an item into a binary tree.
+        """Insert data and its key into the binary tree.
 
         Parameters
         ----------
-        data: int
+        key: Any
+            A unique key associated with the data.
+
+        data: Any
             The data to be inserted into the tree.
 
         Raises
@@ -173,7 +185,6 @@ class BinarySearchTree(_base_tree.BaseTree):
             If the input data has existed in the tree, `ValueError`
             will be thrown.
         """
-
         if self._size == 0:
             self.root = _base_tree.Node(key=key, data=data)
         else:
@@ -185,13 +196,18 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def delete(self, key: Any) -> NoReturn:
-        """
+        """Delete the data based on the given key.
+
+        Parameters
+        ----------
+        key: Any
+            The key associated with the data.
         """
         if self._size != 0:
             deleting_node = self._search(key=key, node=self.root)
 
             # No children
-            if deleting_node.left == None and deleting_node.right == None:
+            if deleting_node.left is None and deleting_node.right is None:
                 if deleting_node.parent.left == deleting_node:
                     deleting_node.parent.left = None
                 else:
@@ -216,7 +232,7 @@ class BinarySearchTree(_base_tree.BaseTree):
             # One child
             else:
                 # One child (left)
-                if deleting_node.left and deleting_node.right == None:
+                if deleting_node.left and deleting_node.right is None:
 
                     deleting_node.left.parent = deleting_node.parent
 
@@ -239,18 +255,13 @@ class BinarySearchTree(_base_tree.BaseTree):
         # If the tree is empty, do nothing
 
     def get_min(self) -> Any:
-        """
-
-        Returns
-        -------
-        """
+        """Return the minimum key from the tree."""
         if self._size == 0:
             return None
         return self._get_min(self.root).key
 
     def get_max(self) -> Any:
-        """
-        """
+        """Return the maximum key from the tree."""
         if self._size == 0:
             return None
 
@@ -262,12 +273,16 @@ class BinarySearchTree(_base_tree.BaseTree):
         return node.key
 
     def get_height(self) -> int:
-        """
-        """
+        """Return the height of the tree."""
         return self._height(self.root)
 
     def is_balance(self) -> bool:
-        """
+        """Check if the tree is balance.
+
+        Returns
+        -------
+        bool
+            True is the tree is balance; False otherwise.
         """
         if self._size == 0:
             return True
@@ -275,6 +290,5 @@ class BinarySearchTree(_base_tree.BaseTree):
         return self._is_balance(node=self.root)
 
     def size(self) -> int:
-        """
-        """
+        """Return the total nodes of the tree."""
         return self._size

@@ -2,21 +2,24 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
+"""A base class for binary trees."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, NoReturn
 
 import abc
 
-
 @dataclass
 class Node:
-    """
+    """Basic tree node class.
+
     Attributes
     ----------
     key: Any
         A key can be anything that is comparable.
+
     data: Any
         The data that the node contains.
 
@@ -29,6 +32,7 @@ class Node:
     right: node
         The right child of the node.
     """
+
     key: Any
     data: Any
     parent: Any = None
@@ -37,7 +41,9 @@ class Node:
 
 
 class BaseTree(abc.ABC):
-    """An abstract base class for any types of binary trees. This base class
+    """An abstract base class for any types of binary trees.
+
+    This base class
     defines the basic properties and methods that all types of binary tress
     should provide.
 
@@ -61,18 +67,16 @@ class BaseTree(abc.ABC):
         self.root = None
 
     @abc.abstractmethod
-    def search(self, value):
+    def search(self, key: Any) -> Any:
+        """Search data based the given key."""
         pass
 
     @abc.abstractmethod
-    def insert(self, value):
+    def insert(self, key: Any, data: Any) -> NoReturn:
+        """Insert data and its key into the binary tree."""
         pass
 
     @abc.abstractmethod
-    def delete(self, value):
+    def delete(self, key: Any) -> NoReturn:
+        """Delete the data based on the given key."""
         pass
-
-
-
-
-
