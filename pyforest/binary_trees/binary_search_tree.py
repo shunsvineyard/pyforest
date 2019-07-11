@@ -67,7 +67,7 @@ class BinarySearchTree(_base_tree.BaseTree):
             self.root = _base_tree.Node(key=key, data=data)
         self._size = 1 if key and data else 0
 
-    def _insert(self, key: Any, data: Any, node: _base_tree.Node) -> NoReturn:
+    def _insert(self, key: Any, data: Any, node: _base_tree.Node):
         """Real implementation of tree insertion.
 
         Parameters
@@ -121,7 +121,7 @@ class BinarySearchTree(_base_tree.BaseTree):
         return current_node
 
     def _height(self, node: _base_tree.Node) -> int:
-        if node is None:
+        if node.left is None and node.right is None:
             return 0
 
         return max(self._height(node.left), self._height(node.right)) + 1
@@ -168,7 +168,7 @@ class BinarySearchTree(_base_tree.BaseTree):
         return self._search(key=key, node=self.root).data
 
     # Overriding abstract method
-    def insert(self, key: Any, data: Any) -> NoReturn:
+    def insert(self, key: Any, data: Any):
         """Insert data and its key into the binary tree.
 
         Parameters
@@ -195,7 +195,7 @@ class BinarySearchTree(_base_tree.BaseTree):
         self._size += 1
 
     # Overriding abstract method
-    def delete(self, key: Any) -> NoReturn:
+    def delete(self, key: Any):
         """Delete the data based on the given key.
 
         Parameters

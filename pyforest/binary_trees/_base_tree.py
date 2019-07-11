@@ -11,6 +11,7 @@ from typing import Any, NoReturn
 
 import abc
 
+
 @dataclass
 class Node:
     """Basic tree node class.

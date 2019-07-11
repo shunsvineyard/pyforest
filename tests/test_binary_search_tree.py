@@ -3,6 +3,7 @@ from pyforest.binary_trees import traversal
 
 import pytest
 
+
 def test_simple_case(basic_tree):
 
     tree = binary_search_tree.BinarySearchTree()
@@ -16,8 +17,8 @@ def test_simple_case(basic_tree):
     assert tree.size() == 11
     assert tree.get_min() == 1
     assert tree.get_max() == 34
-    assert tree.get_height() == 5
-    assert tree.is_balance() == False
+    assert tree.get_height() == 4
+    assert tree.is_balance() is False
     assert tree.search(24) == "24"
 
     tree.delete(15)
@@ -26,8 +27,8 @@ def test_simple_case(basic_tree):
     tree.delete(20)
 
     assert tree.size() == 7
-    assert tree.get_height() == 3
-    assert tree.is_balance() == True
+    assert tree.get_height() == 2
+    assert tree.is_balance() is True
 
     with pytest.raises(KeyError):
         tree.search(15)
