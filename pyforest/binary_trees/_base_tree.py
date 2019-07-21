@@ -2,23 +2,51 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
+"""A base class for binary trees."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, NoReturn
+
 import abc
 
-class BaseTree(abc.ABC):
-    """An abstract base class for any types of binary trees. This base class
-    defines the basic properties and methods that all types of binary tress
-    should provide.
+
+@dataclass
+class Node:
+    """Basic tree node class.
 
     Attributes
     ----------
+    key: Any
+        A key can be anything that is comparable.
+
+    data: Any
+        The data that the node contains.
+
+    parent: Any
+        The parant of the node.
+
     left: node
         The left child of the node.
 
     right: node
         The right child of the node.
+    """
 
+    key: Any
     data: Any
-        The data that the node contains.
+    parent: Any = None
+    left: Any = None
+    right: Any = None
+
+
+class BaseTree(abc.ABC):
+    """An abstract base class for any types of binary trees.
+
+    This base class
+    defines the basic properties and methods that all types of binary tress
+    should provide.
 
     Methods
     -------
@@ -35,30 +63,21 @@ class BaseTree(abc.ABC):
     is to make sure the type of binary trees is compatable. Therefore, binary
     tree traversal can be performed on any type of binary trees.
     """
-    @abc.abstractmethod
-    def search(self, value):
-        pass
+
+    def __init__(self):
+        self.root = None
 
     @abc.abstractmethod
-    def insert(self, value):
+    def search(self, key: Any) -> Any:
+        """Search data based the given key."""
         pass
 
     @abc.abstractmethod
-    def delete(self, value):
+    def insert(self, key: Any, data: Any) -> NoReturn:
+        """Insert data and its key into the binary tree."""
         pass
 
-    @abc.abstractproperty
-    def left(self):
+    @abc.abstractmethod
+    def delete(self, key: Any) -> NoReturn:
+        """Delete the data based on the given key."""
         pass
-
-    @abc.abstractproperty
-    def right(self):
-        pass
-
-    @abc.abstractproperty
-    def data(self):
-        pass
-
-
-
-
