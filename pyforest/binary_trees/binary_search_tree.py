@@ -36,6 +36,8 @@ a BST is as the table.
 
 from pyforest.binary_trees import _base_tree
 
+from pyforest.binary_trees import traversal
+
 from typing import Any, NoReturn
 
 
@@ -49,16 +51,51 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     Methods
     -------
-    search(key: Any)
-        Look for the key in a tree.
-    insert(key: Any, data: Any)
-        Insert a key and data pair into a tree.
     delete(key: Any)
         Delete data from a tree based on the key.
+    get_height()
+        Return the height of the tree.
+    get_max()
+        Return the maximum key from the tree.
+    get_min()
+        Return the minimum key from the tree.
+    insert(key: Any, data: Any)
+        Insert a key and data pair into a tree.
+    is_balance()
+        Check if the tree is balance.
+    search(key: Any)
+        Look for the key in a tree.
+    size()
+        Return the total number of nodes of the tree.
 
     Examples
     --------
-    TODO: add simple examples.
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> tree.size()
+    11
+    >>> tree.get_min()
+    1
+    >>> tree.get_max()
+    34
+    >>> tree.get_height()
+    4
+    >>> tree.is_balance()
+    False
+    >>> tree.search(24)
+    24
+    >>> tree.delete(15)
     """
 
     def __init__(self, key: Any = None, data: Any = None):
@@ -101,6 +138,25 @@ class BinarySearchTree(_base_tree.BaseTree):
                 node.right.parent = node
 
     def _search(self, key: Any, node: _base_tree.Node) -> _base_tree.Node:
+        """Real implementation of search.
+
+        Parameters
+        ----------
+        key: Any
+            The key of the data.
+        node: Node
+            The node to check if its key matches the given key.
+
+        Retruns
+        -------
+        Node
+            Return the node if the key matches, or the node for next recursion.
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist, `KeyError` will be thrown.
+        """
         if key == node.key:
             return node
         elif key < node.key:
@@ -115,13 +171,36 @@ class BinarySearchTree(_base_tree.BaseTree):
                 raise KeyError(f"Key {key} not found")
 
     def _get_min(self, node: _base_tree.Node) -> _base_tree.Node:
+        """Real implementation of getting the leftmost node.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the tree.
+
+        Retruns
+        -------
+        Node
+            Return the leftmost node in the tree.
+        """
         current_node = node
         while current_node.left:
             current_node = current_node.left
         return current_node
 
     def _height(self, node: _base_tree.Node) -> int:
+        """Real implementation of getting the height of a given node.
 
+        Parameters
+        ----------
+        node: Node
+            The root of the tree.
+
+        Retruns
+        -------
+        int
+            Return the height of the given node.
+        """
         if node is None:
             return 0
 
@@ -131,6 +210,18 @@ class BinarySearchTree(_base_tree.BaseTree):
         return max(self._height(node.left), self._height(node.right)) + 1
 
     def _is_balance(self, node: _base_tree.Node) -> bool:
+        """Real implementation of checking if a tree is balance.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the tree.
+
+        Retruns
+        -------
+        bool
+            Return True if the tree is balance; False otherwise.
+        """
         left_hight = self._height(node.left)
         right_height = self._height(node.right)
 
@@ -148,7 +239,7 @@ class BinarySearchTree(_base_tree.BaseTree):
 
     # Overriding abstract method
     def search(self, key: Any) -> Any:
-        """Search data based the given key.
+        """Search data based on the given key.
 
         Parameters
         ----------
@@ -162,9 +253,8 @@ class BinarySearchTree(_base_tree.BaseTree):
 
         Raises
         ------
-        ValueError
-            If the input data has existed in the tree, `ValueError`
-            will be thrown.
+        KeyError
+            If the key does not exist, `KeyError` will be thrown.
         """
         if self._size == 0:
             return None
@@ -294,5 +384,44 @@ class BinarySearchTree(_base_tree.BaseTree):
         return self._is_balance(node=self.root)
 
     def size(self) -> int:
-        """Return the total nodes of the tree."""
+        """Return the total number of nodes of the tree."""
         return self._size
+
+
+def is_valid_binary_search_tree(tree: _base_tree.BaseTree):
+    """Check if a binary tree is a valid BST.
+
+    Parameters
+    ----------
+    tree : _base_tree.BaseTree
+        A type of binary tree.
+
+    Returns
+    -------
+    bool
+        True is the tree is a BST; False otherwise.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> binary_search_tree.is_valid_binary_search_tree(tree)
+    True
+    """
+    in_order_result = traversal.inorder_traverse(tree=tree)
+
+    for index in range(len(in_order_result) - 1):
+        if in_order_result[index] > in_order_result[index + 1]:
+            return False
+    return True

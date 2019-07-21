@@ -32,7 +32,7 @@ def _inorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
     node : _base_tree.Node
         The root of the binary tree.
 
-    output : list(tuple())
+    output : List(Tuple())
         The result of the traversal. This is an output parameter.
     """
     if node:
@@ -43,7 +43,18 @@ def _inorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 def _inorder_traverse_non_recursive(
         root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+    """Perform In-Order traversal without recursive.
 
+    Parameters
+    ----------
+    root : _base_tree.Node
+        The root of the binary tree.
+
+    Returns
+    -------
+    List(Tuple())
+        The result of the traversal.
+    """
     output: List[Tuple[Any, Any]] = []
 
     if root is None:
@@ -101,7 +112,7 @@ def _outorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
     node : _base_tree.Node
         The root of the binary tree.
 
-    output : list(tuple())
+    output : List(Tuple())
         The result of the traversal. This is an output parameter.
     """
     if node:
@@ -112,7 +123,18 @@ def _outorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 def _outorder_traverse_non_recursive(
         root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+    """Perform Out-Order traversal without recursive.
 
+    Parameters
+    ----------
+    root : _base_tree.Node
+        The root of the binary tree.
+
+    Returns
+    -------
+    List(Tuple())
+        The result of the traversal.
+    """
     output: List[Tuple[Any, Any]] = []
 
     if root is None:
@@ -170,7 +192,7 @@ def _preorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
     node : _base_tree.Node
         The root of the binary tree.
 
-    output : list(tuple())
+    output : List(Tuple())
         The result of the traversal. This is an output parameter.
     """
     if node:
@@ -181,7 +203,18 @@ def _preorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 def _preorder_traverse_non_recursive(
         root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+    """Perform Pre-Order traversal without recursive.
 
+    Parameters
+    ----------
+    root : _base_tree.Node
+        The root of the binary tree.
+
+    Returns
+    -------
+    List(Tuple())
+        The result of the traversal.
+    """
     output = []
     if root is None:
         return []
@@ -210,7 +243,7 @@ def _postorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
     node : _base_tree.Node
         The root of the binary tree.
 
-    output : list(tuple())
+    output : List(Tuple())
         The result of the traversal. This is an output parameter.
     """
     if node:
@@ -221,7 +254,18 @@ def _postorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 def _postorder_traverse_non_recursive(
         root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+    """Perform Post-Order traversal without recursive.
 
+    Parameters
+    ----------
+    root : _base_tree.Node
+        The root of the binary tree.
+
+    Returns
+    -------
+    List(Tuple())
+        The result of the traversal.
+    """
     output: List[Tuple[Any, Any]] = []
 
     if root is None:
@@ -281,6 +325,29 @@ def inorder_traverse(tree: _base_tree.BaseTree,
     ----------
     tree : _base_tree.BaseTree
         A type of binary tree.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> from pyforest.binary_trees import traversal
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> traversal.inorder_traverse(tree)
+    [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
+     (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
+    >>> traversal.inorder_traverse(tree, recursive=False)
+    [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
+     (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
     """
     if recursive:
         output: List[Tuple[Any, Any]] = []
@@ -301,6 +368,29 @@ def outorder_traverse(tree: _base_tree.BaseTree,
     ----------
     tree : _base_tree.BaseTree
         A type of binary tree.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> from pyforest.binary_trees import traversal
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> traversal.outorder_traverse(tree)
+    [(34, '34'), (30, '30'), (24, '24'), (23, '23'), (22, '22'), (20, '20'),
+     (15, '15'), (11, '11'), (7, '7'), (4, '4'), (1, '1')]
+    >>> traversal.outorder_traverse(tree, recursive=False)
+    [(34, '34'), (30, '30'), (24, '24'), (23, '23'), (22, '22'), (20, '20'),
+     (15, '15'), (11, '11'), (7, '7'), (4, '4'), (1, '1')]
     """
     if recursive:
         output: List[Tuple[Any, Any]] = []
@@ -321,6 +411,29 @@ def preorder_traverse(tree: _base_tree.BaseTree,
     ----------
     tree : _base_tree.BaseTree
         A type of binary tree.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> from pyforest.binary_trees import traversal
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> traversal.preorder_traverse(tree)
+    [(23, '23'), (4, '4'), (1, '1'), (11, '11'), (7, '7'), (20, '20'),
+     (15, '15'), (22, '22'), (30, '30'), (24, '24'), (34, '34')]
+    >>> traversal.preorder_traverse(tree, recursive=False)
+    [(23, '23'), (4, '4'), (1, '1'), (11, '11'), (7, '7'), (20, '20'),
+     (15, '15'), (22, '22'), (30, '30'), (24, '24'), (34, '34')]
     """
     if recursive:
         output: List[Tuple[Any, Any]] = []
@@ -341,6 +454,29 @@ def postorder_traverse(tree: _base_tree.BaseTree,
     ----------
     tree : _base_tree.BaseTree
         A type of binary tree.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> from pyforest.binary_trees import traversal
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> traversal.postorder_traverse(tree)
+    [(1, '1'), (7, '7'), (15, '15'), (22, '22'), (20, '20'), (11, '11'),
+     (4, '4'), (24, '24'), (34, '34'), (30, '30'), (23, '23')]
+    >>> traversal.postorder_traverse(tree, recursive=False)
+    [(1, '1'), (7, '7'), (15, '15'), (22, '22'), (20, '20'), (11, '11'),
+     (4, '4'), (24, '24'), (34, '34'), (30, '30'), (23, '23')]
     """
     if recursive:
         output: List[Tuple[Any, Any]] = []
@@ -358,8 +494,28 @@ def levelorder_traverse(tree: _base_tree.BaseTree) -> List[Tuple[Any, Any]]:
 
     Parameters
     ----------
-    root : _base_tree.BaseTree
-        The root of a type of binary tree.
+    tree : _base_tree.BaseTree
+        A type of binary tree.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import binary_search_tree
+    >>> from pyforest.binary_trees import traversal
+    >>> tree = binary_search_tree.BinarySearchTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> traversal.levelorder_traverse(tree)
+    [(23, '23'), (4, '4'), (30, '30'), (1, '1'), (11, '11'), (24, '24'),
+     (34, '34'), (7, '7'), (20, '20'), (15, '15'), (22, '22')]
     """
     queue = [tree.root]
     output = []
