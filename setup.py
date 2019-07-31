@@ -12,7 +12,7 @@ README = (HERE / "README.rst").read_text()
 # This call to setup() does all the work
 setuptools.setup(
     name="python-forest",
-    version="0.1.0",
+    version="0.1.1",
     description="The Forest in Python",
     long_description=README,
     long_description_content_type="text/x-rst",
