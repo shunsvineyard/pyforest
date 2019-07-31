@@ -11,7 +11,7 @@ def demo():
 
     # Insert the national park data from a JSON file.
     print("1. Insert national park data from national_parks.json")
-    with open("examples/national_parks.json") as np_data:
+    with open("national_parks.json") as np_data:
         parks = json.load(np_data)
         for park in parks:
             park_data = np_library.NPData(name=park["name"],

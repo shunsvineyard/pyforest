@@ -2,11 +2,19 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
+"""Threaded Binary Tree module.
+
+Threaded binary tree is a binary search tree variant that optimize traversal
+in a particular order by making all right child of leaf nodes pointer to
+their in-order successor of the node (if it exists). There are two types
+of threaded binary tree:
+- Single Threaded
+- Double Threaded
+"""
 from pyforest.binary_trees import _base_tree
 
 class ThreadedBinaryTree(_base_tree.BaseTree):
-    """Threaded Binary Tree
-    """
+    """Threaded Binary Tree."""
 
     def __init__(self):
         self._left = None
