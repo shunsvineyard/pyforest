@@ -10,7 +10,7 @@ install:
 
 script:
   - pytest
-  - pytest --cov=./
+  - pytest --cov=./pyforest/
 
 after_success:
   # Upload coverage data to codecov
