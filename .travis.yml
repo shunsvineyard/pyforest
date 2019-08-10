@@ -9,7 +9,6 @@ install:
   - pip install codecov
 
 script:
-  - pytest
   - pytest --cov=./pyforest/
 
 after_success:
