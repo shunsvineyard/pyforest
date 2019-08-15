@@ -6,39 +6,27 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, NoReturn
+from typing import Any, NoReturn, TypeVar
 
 import abc
+import functools
 
 
-@dataclass
-class Node:
-    """Basic tree node class.
+@functools.total_ordering
+class _Comparable(abc.ABC):
+    @abc.abstractmethod
+    def __eq__(self, other: Any) -> bool:
+        pass
 
-    Attributes
-    ----------
-    key: Any
-        A key can be anything that is comparable.
+    @abc.abstractmethod
+    def __lt__(self, other: Any) -> bool:
+        pass
 
-    data: Any
-        The data that the node contains.
+# User-defined type for a tree node key. The key must be comparable.
+KeyType = TypeVar("KeyType", bound=_Comparable)
 
-    parent: Any
-        The parant of the node.
-
-    left: node
-        The left child of the node.
-
-    right: node
-        The right child of the node.
-    """
-
-    key: Any
-    data: Any
-    parent: Any = None
-    left: Any = None
-    right: Any = None
+# User-defined type for a tree node.
+NodeType = TypeVar("NodeType")
 
 
 class BaseTree(abc.ABC):
@@ -65,7 +53,7 @@ class BaseTree(abc.ABC):
     """
 
     def __init__(self):
-        self.root = None
+        self.root: NodeType = None
 
     @abc.abstractmethod
     def search(self, key: Any) -> Any:
@@ -81,3 +69,7 @@ class BaseTree(abc.ABC):
     def delete(self, key: Any) -> NoReturn:
         """Delete the data based on the given key."""
         pass
+
+
+# User-defined type for a binary tree.
+TreeType = TypeVar("TreeType", bound=BaseTree)
