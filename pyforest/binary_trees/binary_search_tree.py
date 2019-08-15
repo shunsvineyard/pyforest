@@ -38,7 +38,38 @@ from pyforest.binary_trees import base_tree
 
 from pyforest.binary_trees import traversal
 
-from typing import Any, NoReturn
+from typing import Any, Generic, NoReturn, Optional
+
+import dataclasses
+
+
+@dataclasses.dataclass
+class Node(Generic[base_tree.KeyType]):
+    """Basic tree node class.
+
+    Attributes
+    ----------
+    key: KeyType
+        A key can be anything that is comparable.
+
+    data: Any
+        The data that the node contains.
+
+    parent: Any
+        The parant of the node.
+
+    left: node
+        The left child of the node.
+
+    right: node
+        The right child of the node.
+    """
+
+    key: base_tree.KeyType
+    data: Any
+    parent: Optional["Node"]
+    left: Optional["Node"] = None
+    right: Optional["Node"] = None
 
 
 class BinarySearchTree(base_tree.BaseTree):
@@ -51,7 +82,7 @@ class BinarySearchTree(base_tree.BaseTree):
 
     Methods
     -------
-    delete(key: Any)
+    delete(key: KeyType)
         Delete data from a tree based on the key.
     get_height()
         Return the height of the tree.
@@ -59,11 +90,11 @@ class BinarySearchTree(base_tree.BaseTree):
         Return the maximum key from the tree.
     get_min()
         Return the minimum key from the tree.
-    insert(key: Any, data: Any)
+    insert(key: KeyType, data: Any)
         Insert a key and data pair into a tree.
     is_balance()
         Check if the tree is balance.
-    search(key: Any)
+    search(key: KeyType)
         Look for the key in a tree.
     size()
         Return the total number of nodes of the tree.
@@ -98,18 +129,18 @@ class BinarySearchTree(base_tree.BaseTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: Any = None, data: Any = None):
-        base_tree.BaseTree.__init__(self)
+    def __init__(self, key: base_tree.KeyType = None, data: Any = None):
+        base_tree.TreeType.__init__(self)
         if key and data:
-            self.root = base_tree.Node(key=key, data=data)
+            self.root = Node(key=key, data=data, parent=None)
         self._size = 1 if key and data else 0
 
-    def _insert(self, key: Any, data: Any, node: base_tree.Node):
+    def _insert(self, key: base_tree.KeyType, data: Any, node: Node):
         """Real implementation of tree insertion.
 
         Parameters
         ----------
-        key: Any
+        key: KeyType
             The key of the data.
         data: Any
             The data to be inserted into the tree.
@@ -128,21 +159,19 @@ class BinarySearchTree(base_tree.BaseTree):
             if node.left is not None:
                 self._insert(key=key, data=data, node=node.left)
             else:
-                node.left = base_tree.Node(key=key, data=data)
-                node.left.parent = node
+                node.left = Node(key=key, data=data, parent=node)
         else:  # key > node.key
             if node.right is not None:
                 self._insert(key=key, data=data, node=node.right)
             else:
-                node.right = base_tree.Node(key=key, data=data)
-                node.right.parent = node
+                node.right = Node(key=key, data=data, parent=node)
 
-    def _search(self, key: Any, node: base_tree.Node) -> base_tree.Node:
+    def _search(self, key: base_tree.KeyType, node: Node) -> Node:
         """Real implementation of search.
 
         Parameters
         ----------
-        key: Any
+        key: KeyType
             The key of the data.
         node: Node
             The node to check if its key matches the given key.
@@ -170,7 +199,7 @@ class BinarySearchTree(base_tree.BaseTree):
             else:
                 raise KeyError(f"Key {key} not found")
 
-    def _get_min(self, node: base_tree.Node) -> base_tree.Node:
+    def _get_min(self, node: Node) -> Node:
         """Real implementation of getting the leftmost node.
 
         Parameters
@@ -188,7 +217,7 @@ class BinarySearchTree(base_tree.BaseTree):
             current_node = current_node.left
         return current_node
 
-    def _height(self, node: base_tree.Node) -> int:
+    def _height(self, node: Optional[Node]) -> int:
         """Real implementation of getting the height of a given node.
 
         Parameters
@@ -209,7 +238,7 @@ class BinarySearchTree(base_tree.BaseTree):
 
         return max(self._height(node.left), self._height(node.right)) + 1
 
-    def _is_balance(self, node: base_tree.Node) -> bool:
+    def _is_balance(self, node: Node) -> bool:
         """Real implementation of checking if a tree is balance.
 
         Parameters
@@ -238,12 +267,12 @@ class BinarySearchTree(base_tree.BaseTree):
         return True
 
     # Overriding abstract method
-    def search(self, key: Any) -> Any:
+    def search(self, key: base_tree.KeyType) -> Any:
         """Search data based on the given key.
 
         Parameters
         ----------
-        key: Any
+        key: KeyType
             The key associated with the data.
 
         Returns
@@ -262,12 +291,12 @@ class BinarySearchTree(base_tree.BaseTree):
         return self._search(key=key, node=self.root).data
 
     # Overriding abstract method
-    def insert(self, key: Any, data: Any):
+    def insert(self, key: base_tree.KeyType, data: Any):
         """Insert data and its key into the binary tree.
 
         Parameters
         ----------
-        key: Any
+        key: KeyType
             A unique key associated with the data.
 
         data: Any
@@ -280,25 +309,26 @@ class BinarySearchTree(base_tree.BaseTree):
             will be thrown.
         """
         if self._size == 0:
-            self.root = base_tree.Node(key=key, data=data)
+            self.root = Node(key=key, data=data, parent=None)
         else:
-            try:
-                self._insert(key=key, data=data, node=self.root)
-            except:
-                raise
+            self._insert(key=key, data=data, node=self.root)
+
         self._size += 1
 
     # Overriding abstract method
-    def delete(self, key: Any):
+    def delete(self, key: base_tree.KeyType):
         """Delete the data based on the given key.
 
         Parameters
         ----------
-        key: Any
+        key: KeyType
             The key associated with the data.
         """
         if self._size != 0:
-            deleting_node = self._search(key=key, node=self.root)
+            deleting_node: Node = self._search(key=key, node=self.root)
+
+            if deleting_node.parent is None:
+                raise ValueError("Node's parent cannot be None")
 
             # No children
             if deleting_node.left is None and deleting_node.right is None:
@@ -312,6 +342,10 @@ class BinarySearchTree(base_tree.BaseTree):
             elif deleting_node.left and deleting_node.right:
                 # Find the min node on the right sub-tree
                 candidate = self._get_min(node=deleting_node.right)
+
+                if candidate.parent is None:
+                    raise ValueError("Node's parent cannot be None")
+
                 # Copy the candidate to the deleting node
                 deleting_node.key = candidate.key
                 deleting_node.data = candidate.data
@@ -325,6 +359,10 @@ class BinarySearchTree(base_tree.BaseTree):
 
             # One child
             else:
+
+                if deleting_node.parent is None:
+                    raise ValueError("Node's parent cannot be None")
+
                 # One child (left)
                 if deleting_node.left and deleting_node.right is None:
 
@@ -335,13 +373,16 @@ class BinarySearchTree(base_tree.BaseTree):
                     else:
                         deleting_node.parent.right = deleting_node.left
                 # One child (right)
-                else:
+                elif deleting_node.right and deleting_node.left is None:
                     deleting_node.right.parent = deleting_node.parent
 
                     if deleting_node.parent.left == deleting_node:
                         deleting_node.parent.left = deleting_node.right
                     else:
                         deleting_node.parent.right = deleting_node.right
+                # Should never happen
+                else:
+                    raise RuntimeError("Fatal error")
 
                 del(deleting_node)
             self._size -= 1
@@ -388,12 +429,12 @@ class BinarySearchTree(base_tree.BaseTree):
         return self._size
 
 
-def is_valid_binary_search_tree(tree: base_tree.BaseTree):
+def is_valid_binary_search_tree(tree: base_tree.TreeType):
     """Check if a binary tree is a valid BST.
 
     Parameters
     ----------
-    tree : base_tree.BaseTree
+    tree : base_tree.TreeType
         A type of binary tree.
 
     Returns
