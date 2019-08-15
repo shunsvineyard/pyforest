@@ -22,9 +22,10 @@ class _Comparable(abc.ABC):
     def __lt__(self, other: Any) -> bool:
         pass
 
-
+# User-defined type for a tree node key. The key must be comparable.
 KeyType = TypeVar("KeyType", bound=_Comparable)
 
+# User-defined type for a tree node.
 NodeType = TypeVar("NodeType")
 
 
@@ -52,7 +53,7 @@ class BaseTree(abc.ABC):
     """
 
     def __init__(self):
-        self.root = None
+        self.root: NodeType = None
 
     @abc.abstractmethod
     def search(self, key: Any) -> Any:

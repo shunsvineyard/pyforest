@@ -130,7 +130,7 @@ class BinarySearchTree(base_tree.BaseTree):
     """
 
     def __init__(self, key: base_tree.KeyType = None, data: Any = None):
-        base_tree.TreeType.__init__(self)
+        base_tree.BaseTree.__init__(self)
         if key and data:
             self.root = Node(key=key, data=data, parent=None)
         self._size = 1 if key and data else 0
@@ -400,7 +400,7 @@ class BinarySearchTree(base_tree.BaseTree):
         if self._size == 0:
             return None
 
-        node = self.root
+        node: Node = self.root
 
         while node.right is not None:
             node = node.right
