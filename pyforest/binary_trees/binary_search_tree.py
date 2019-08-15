@@ -34,14 +34,14 @@ a BST is as the table.
 +------------+------------+-----------+
 """
 
-from pyforest.binary_trees import _base_tree
+from pyforest.binary_trees import base_tree
 
 from pyforest.binary_trees import traversal
 
 from typing import Any, NoReturn
 
 
-class BinarySearchTree(_base_tree.BaseTree):
+class BinarySearchTree(base_tree.BaseTree):
     """Binary Search Tree (BST) class.
 
     Attributes
@@ -99,12 +99,12 @@ class BinarySearchTree(_base_tree.BaseTree):
     """
 
     def __init__(self, key: Any = None, data: Any = None):
-        _base_tree.BaseTree.__init__(self)
+        base_tree.BaseTree.__init__(self)
         if key and data:
-            self.root = _base_tree.Node(key=key, data=data)
+            self.root = base_tree.Node(key=key, data=data)
         self._size = 1 if key and data else 0
 
-    def _insert(self, key: Any, data: Any, node: _base_tree.Node):
+    def _insert(self, key: Any, data: Any, node: base_tree.Node):
         """Real implementation of tree insertion.
 
         Parameters
@@ -128,16 +128,16 @@ class BinarySearchTree(_base_tree.BaseTree):
             if node.left is not None:
                 self._insert(key=key, data=data, node=node.left)
             else:
-                node.left = _base_tree.Node(key=key, data=data)
+                node.left = base_tree.Node(key=key, data=data)
                 node.left.parent = node
         else:  # key > node.key
             if node.right is not None:
                 self._insert(key=key, data=data, node=node.right)
             else:
-                node.right = _base_tree.Node(key=key, data=data)
+                node.right = base_tree.Node(key=key, data=data)
                 node.right.parent = node
 
-    def _search(self, key: Any, node: _base_tree.Node) -> _base_tree.Node:
+    def _search(self, key: Any, node: base_tree.Node) -> base_tree.Node:
         """Real implementation of search.
 
         Parameters
@@ -170,7 +170,7 @@ class BinarySearchTree(_base_tree.BaseTree):
             else:
                 raise KeyError(f"Key {key} not found")
 
-    def _get_min(self, node: _base_tree.Node) -> _base_tree.Node:
+    def _get_min(self, node: base_tree.Node) -> base_tree.Node:
         """Real implementation of getting the leftmost node.
 
         Parameters
@@ -188,7 +188,7 @@ class BinarySearchTree(_base_tree.BaseTree):
             current_node = current_node.left
         return current_node
 
-    def _height(self, node: _base_tree.Node) -> int:
+    def _height(self, node: base_tree.Node) -> int:
         """Real implementation of getting the height of a given node.
 
         Parameters
@@ -209,7 +209,7 @@ class BinarySearchTree(_base_tree.BaseTree):
 
         return max(self._height(node.left), self._height(node.right)) + 1
 
-    def _is_balance(self, node: _base_tree.Node) -> bool:
+    def _is_balance(self, node: base_tree.Node) -> bool:
         """Real implementation of checking if a tree is balance.
 
         Parameters
@@ -280,7 +280,7 @@ class BinarySearchTree(_base_tree.BaseTree):
             will be thrown.
         """
         if self._size == 0:
-            self.root = _base_tree.Node(key=key, data=data)
+            self.root = base_tree.Node(key=key, data=data)
         else:
             try:
                 self._insert(key=key, data=data, node=self.root)
@@ -388,12 +388,12 @@ class BinarySearchTree(_base_tree.BaseTree):
         return self._size
 
 
-def is_valid_binary_search_tree(tree: _base_tree.BaseTree):
+def is_valid_binary_search_tree(tree: base_tree.BaseTree):
     """Check if a binary tree is a valid BST.
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Returns

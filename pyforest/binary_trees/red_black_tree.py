@@ -2,9 +2,9 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-from pyforest.binary_trees import _base_tree
+from pyforest.binary_trees import base_tree
 
-class RBTree(_base_tree.BaseTree):
+class RBTree(base_tree.BaseTree):
     """Red-Black Tree
     """
 

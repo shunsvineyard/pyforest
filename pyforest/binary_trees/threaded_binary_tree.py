@@ -11,9 +11,9 @@ of threaded binary tree:
 - Single Threaded
 - Double Threaded
 """
-from pyforest.binary_trees import _base_tree
+from pyforest.binary_trees import base_tree
 
-class ThreadedBinaryTree(_base_tree.BaseTree):
+class ThreadedBinaryTree(base_tree.BaseTree):
     """Threaded Binary Tree."""
 
     def __init__(self):

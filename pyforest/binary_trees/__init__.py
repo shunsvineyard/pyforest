@@ -6,9 +6,8 @@
 
 Modules
 -------
-_base_tree
-    A private module provides common interfaces that any binary tree
-    needs to provide.
+base_tree
+    A module provides common interfaces that any binary tree needs to provide.
 
 avl_tree
     AVL Tree is a self-balancing binary search tree.

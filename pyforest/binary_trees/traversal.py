@@ -6,30 +6,30 @@
 
 Routines
 --------
-inorder_traverse(tree: _base_tree.BaseTree) -> NoReturn
+inorder_traverse(tree: base_tree.BaseTree) -> NoReturn
     Perform in-order traversal.
 
-preorder_traverse(tree: _base_tree.BaseTree) -> NoReturn
+preorder_traverse(tree: base_tree.BaseTree) -> NoReturn
     Perform pre-order traversal.
 
-postorder_traverse(tree: _base_tree.BaseTree) -> NoReturn
+postorder_traverse(tree: base_tree.BaseTree) -> NoReturn
     Perform post-order traversal.
 
-levelorder_traverse(tree: _base_tree.BaseTree) -> NoReturn
+levelorder_traverse(tree: base_tree.BaseTree) -> NoReturn
     Perform level order traversal.
 """
 
 from typing import Any, List, NoReturn, Tuple
 
-from pyforest.binary_trees import _base_tree
+from pyforest.binary_trees import base_tree
 
 
-def _inorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
+def _inorder_traverse(node: base_tree.Node, output: List[Tuple[Any, Any]]):
     """Perform In-Order traversal.
 
     Parameters
     ----------
-    node : _base_tree.Node
+    node : base_tree.Node
         The root of the binary tree.
 
     output : List(Tuple())
@@ -42,12 +42,12 @@ def _inorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 
 def _inorder_traverse_non_recursive(
-        root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+        root: base_tree.Node) -> List[Tuple[Any, Any]]:
     """Perform In-Order traversal without recursive.
 
     Parameters
     ----------
-    root : _base_tree.Node
+    root : base_tree.Node
         The root of the binary tree.
 
     Returns
@@ -104,12 +104,12 @@ def _inorder_traverse_non_recursive(
     return output
 
 
-def _outorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
+def _outorder_traverse(node: base_tree.Node, output: List[Tuple[Any, Any]]):
     """Perform Output-Order traversal.
 
     Parameters
     ----------
-    node : _base_tree.Node
+    node : base_tree.Node
         The root of the binary tree.
 
     output : List(Tuple())
@@ -122,12 +122,12 @@ def _outorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 
 def _outorder_traverse_non_recursive(
-        root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+        root: base_tree.Node) -> List[Tuple[Any, Any]]:
     """Perform Out-Order traversal without recursive.
 
     Parameters
     ----------
-    root : _base_tree.Node
+    root : base_tree.Node
         The root of the binary tree.
 
     Returns
@@ -184,12 +184,12 @@ def _outorder_traverse_non_recursive(
     return output
 
 
-def _preorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
+def _preorder_traverse(node: base_tree.Node, output: List[Tuple[Any, Any]]):
     """Perform Pre-Order traversal.
 
     Parameters
     ----------
-    node : _base_tree.Node
+    node : base_tree.Node
         The root of the binary tree.
 
     output : List(Tuple())
@@ -202,12 +202,12 @@ def _preorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 
 def _preorder_traverse_non_recursive(
-        root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+        root: base_tree.Node) -> List[Tuple[Any, Any]]:
     """Perform Pre-Order traversal without recursive.
 
     Parameters
     ----------
-    root : _base_tree.Node
+    root : base_tree.Node
         The root of the binary tree.
 
     Returns
@@ -235,12 +235,12 @@ def _preorder_traverse_non_recursive(
     return output
 
 
-def _postorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
+def _postorder_traverse(node: base_tree.Node, output: List[Tuple[Any, Any]]):
     """Perform Post-Order traversal.
 
     Parameters
     ----------
-    node : _base_tree.Node
+    node : base_tree.Node
         The root of the binary tree.
 
     output : List(Tuple())
@@ -253,12 +253,12 @@ def _postorder_traverse(node: _base_tree.Node, output: List[Tuple[Any, Any]]):
 
 
 def _postorder_traverse_non_recursive(
-        root: _base_tree.Node) -> List[Tuple[Any, Any]]:
+        root: base_tree.Node) -> List[Tuple[Any, Any]]:
     """Perform Post-Order traversal without recursive.
 
     Parameters
     ----------
-    root : _base_tree.Node
+    root : base_tree.Node
         The root of the binary tree.
 
     Returns
@@ -314,7 +314,7 @@ def _postorder_traverse_non_recursive(
     return output
 
 
-def inorder_traverse(tree: _base_tree.BaseTree,
+def inorder_traverse(tree: base_tree.BaseTree,
                      recursive: bool = True) -> List[Tuple[Any, Any]]:
     """Perform In-Order traversal.
 
@@ -323,7 +323,7 @@ def inorder_traverse(tree: _base_tree.BaseTree,
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Examples
@@ -357,7 +357,7 @@ def inorder_traverse(tree: _base_tree.BaseTree,
     return _inorder_traverse_non_recursive(root=tree.root)
 
 
-def outorder_traverse(tree: _base_tree.BaseTree,
+def outorder_traverse(tree: base_tree.BaseTree,
                       recursive: bool = True) -> List[Tuple[Any, Any]]:
     """Perform Out-Order traversal.
 
@@ -366,7 +366,7 @@ def outorder_traverse(tree: _base_tree.BaseTree,
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Examples
@@ -400,7 +400,7 @@ def outorder_traverse(tree: _base_tree.BaseTree,
     return _outorder_traverse_non_recursive(root=tree.root)
 
 
-def preorder_traverse(tree: _base_tree.BaseTree,
+def preorder_traverse(tree: base_tree.BaseTree,
                       recursive: bool = True) -> List[Tuple[Any, Any]]:
     """Perform Pre-Order traversal.
 
@@ -409,7 +409,7 @@ def preorder_traverse(tree: _base_tree.BaseTree,
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Examples
@@ -443,7 +443,7 @@ def preorder_traverse(tree: _base_tree.BaseTree,
     return _preorder_traverse_non_recursive(root=tree.root)
 
 
-def postorder_traverse(tree: _base_tree.BaseTree,
+def postorder_traverse(tree: base_tree.BaseTree,
                        recursive: bool = True) -> List[Tuple[Any, Any]]:
     """Perform Post-Order traversal.
 
@@ -452,7 +452,7 @@ def postorder_traverse(tree: _base_tree.BaseTree,
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Examples
@@ -486,7 +486,7 @@ def postorder_traverse(tree: _base_tree.BaseTree,
     return _postorder_traverse_non_recursive(root=tree.root)
 
 
-def levelorder_traverse(tree: _base_tree.BaseTree) -> List[Tuple[Any, Any]]:
+def levelorder_traverse(tree: base_tree.BaseTree) -> List[Tuple[Any, Any]]:
     """Perform Level-Order traversal.
 
     Level-order traversal traverses a tree:
@@ -494,7 +494,7 @@ def levelorder_traverse(tree: _base_tree.BaseTree) -> List[Tuple[Any, Any]]:
 
     Parameters
     ----------
-    tree : _base_tree.BaseTree
+    tree : base_tree.BaseTree
         A type of binary tree.
 
     Examples
