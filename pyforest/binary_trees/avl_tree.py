@@ -2,11 +2,23 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-from pyforest.binary_trees import base_tree
+"""AVL Tree."""
 
-class AVLTree(base_tree.BaseTree):
-    """AVL Tree
-    """
+from dataclasses import dataclass
+from typing import Optional
+
+from pyforest.binary_trees import binary_tree
+
+
+@dataclass
+class AVLNode(binary_tree.Node):
+    left: Optional["AVLNode"] = None
+    right: Optional["AVLNode"] = None
+    height: int = 1
+
+
+class AVLTree(binary_tree.BinaryTree):
+    """AVL Tree."""
 
     def __init__(self):
         self._left = None

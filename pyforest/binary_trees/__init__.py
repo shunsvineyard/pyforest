@@ -6,7 +6,7 @@
 
 Modules
 -------
-base_tree
+binary_tree
     A module provides common interfaces that any binary tree needs to provide.
 
 avl_tree
