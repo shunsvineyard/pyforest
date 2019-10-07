@@ -4,11 +4,11 @@
 
 """A base class for binary trees."""
 
-from dataclasses import dataclass
-from typing import Any, Generic, NoReturn, Optional, TypeVar
-
 import abc
 import functools
+
+from dataclasses import dataclass
+from typing import Any, Generic, NoReturn, Optional, TypeVar
 
 
 @functools.total_ordering
@@ -27,6 +27,8 @@ KeyType = TypeVar("KeyType", bound=_Comparable)
 
 @dataclass
 class Node(Generic[KeyType]):
+    """The `Node` class defines the basic binary tree node."""
+
     key: KeyType
     data: Any
     left: Optional["Node"] = None
@@ -36,9 +38,8 @@ class Node(Generic[KeyType]):
 class BinaryTree(abc.ABC):
     """An abstract base class for any types of binary trees.
 
-    This base class
-    defines the basic properties and methods that all types of binary tress
-    should provide.
+    This base class defines the basic properties and methods that all types of
+    binary tress should provide.
 
     Methods
     -------
@@ -57,7 +58,7 @@ class BinaryTree(abc.ABC):
     """
 
     def __init__(self):
-        self.root: NodeType = None
+        self.root: Optional[Node] = None
 
     @abc.abstractmethod
     def search(self, key: Any) -> Any:
@@ -74,10 +75,6 @@ class BinaryTree(abc.ABC):
         """Delete the data based on the given key."""
         pass
 
-    def height(self) -> int:
-        """Return the height of the tree."""
-        pass
-
 
 # User-defined type for a binary tree.
 TreeType = TypeVar("TreeType", bound=BinaryTree)
@@ -88,6 +85,6 @@ def verify(tree: TreeType) -> bool:
     pass
 
 
-def convert(tree: Any) -> NoReturn:
+def convert(tree: Any) -> TreeType:
     """Convert a general tree to a binary tree."""
     pass

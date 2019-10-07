@@ -34,11 +34,10 @@ a BST is as the table.
 +------------+------------+-----------+
 """
 
-from pyforest.binary_trees import binary_tree
-
-from pyforest.binary_trees import traversal
-
 from typing import Any, Generic, NoReturn, Optional
+
+from pyforest.binary_trees import binary_tree
+from pyforest.binary_trees import traversal
 
 
 class BinarySearchTree(binary_tree.BinaryTree):
@@ -102,7 +101,6 @@ class BinarySearchTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
             self.root = binary_tree.Node(key=key, data=data)
-        self._size = 1 if key and data else 0
 
     def _insert(self,
                 key: binary_tree.KeyType,
@@ -259,7 +257,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
         KeyError
             If the key does not exist, `KeyError` will be thrown.
         """
-        if self._size == 0:
+        if self.root is None:
             return None
 
         return self._search(key=key, node=self.root).data
@@ -282,12 +280,10 @@ class BinarySearchTree(binary_tree.BinaryTree):
             If the input data has existed in the tree, `ValueError`
             will be thrown.
         """
-        if self._size == 0:
+        if self.root is None:
             self.root = binary_tree.Node(key=key, data=data)
         else:
             self._insert(key=key, data=data, node=self.root)
-
-        self._size += 1
 
     def _delete_helper(self, node: binary_tree.Node) -> binary_tree.Node:
         """Find the minimum node, return it, and update its parent's left.
@@ -401,17 +397,15 @@ class BinarySearchTree(binary_tree.BinaryTree):
 
             del(current)
 
-        self._size -= 1
-
     def get_min(self) -> Any:
         """Return the minimum key from the tree."""
-        if self._size == 0:
+        if self.root is None:
             return None
         return self._get_min(self.root).key
 
     def get_max(self) -> Any:
         """Return the maximum key from the tree."""
-        if self._size == 0:
+        if self.root is None:
             return None
 
         node: binary_tree.Node = self.root
@@ -433,14 +427,10 @@ class BinarySearchTree(binary_tree.BinaryTree):
         bool
             True is the tree is balance; False otherwise.
         """
-        if self._size == 0:
+        if self.root is None:
             return True
 
         return self._is_balance(node=self.root)
-
-    def size(self) -> int:
-        """Return the total number of nodes of the tree."""
-        return self._size
 
 
 def is_valid_binary_search_tree(tree: binary_tree.TreeType):

@@ -5,13 +5,13 @@
 """AVL Tree."""
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Generic, Optional
 
 from pyforest.binary_trees import binary_tree
 
 
 @dataclass
-class AVLNode(binary_tree.Node):
+class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
     left: Optional["AVLNode"] = None
     right: Optional["AVLNode"] = None
     height: int = 1
