@@ -56,6 +56,7 @@ Although the purpose of building ``The Forest`` is for fun and for informative, 
 Version
 -------
 The version format of ``The Forest`` is x.y.z with the following convention:
+
 - x: major change. For example, for The Forest 1.0, x is 1. And, x is 2 in The Forest 2.0.
 - y: new trees or new features. When a new tree or a new feature is added into The Forest, bump up this number.
 - z: minor change or bug fix.
