@@ -1,22 +1,19 @@
 """Unit tests for the binary search tree module."""
 
+import pytest
+
 from pyforest.binary_trees import binary_search_tree
 from pyforest.binary_trees import traversal
-
-import pytest
 
 
 def test_simple_case(basic_tree):
     """Test the basic opeartions of a binary search tree."""
     tree = binary_search_tree.BinarySearchTree()
-    # Test an empty tree
-    assert tree.size() == 0
 
     # 23, 4, 30, 11, 7, 34, 20, 24, 22, 15, 1
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert tree.size() == 11
     assert tree.get_min() == 1
     assert tree.get_max() == 34
     assert tree.get_height() == 4
@@ -28,7 +25,6 @@ def test_simple_case(basic_tree):
     tree.delete(7)
     tree.delete(20)
 
-    assert tree.size() == 7
     assert tree.get_height() == 2
     assert tree.is_balance() is True
 

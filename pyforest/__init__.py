@@ -8,15 +8,4 @@ Packages
 --------
 binary_trees
     A package contains many types of binary tree data structure.
-
-Modules
--------
-b_tree
-    A B-Tree data structure.
-
-breadth_first_search
-    Breadth first search for any type of trees.
-
-depth_first_search
-    Depth first search for any type of trees.
 """

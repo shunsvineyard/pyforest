@@ -6,7 +6,7 @@
 
 Modules
 -------
-base_tree
+binary_tree
     A module provides common interfaces that any binary tree needs to provide.
 
 avl_tree
@@ -21,9 +21,6 @@ red_black_tree
 threaded_binary_tree
     Threaded Binary Tree is a binary tree variant that performs
     faster in-order traversal.
-
-binary_tree_converter
-    Convert any generic tree to a binary tree.
 
 traversal
     Traverse any type of binary trees.

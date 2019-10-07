@@ -21,21 +21,21 @@ levelorder_traverse(tree: base_tree.TreeType) -> NoReturn
 
 from typing import Any, List, NoReturn, Optional, Tuple
 
-from pyforest.binary_trees import base_tree
+from pyforest.binary_trees import binary_tree
 
 # User-defined type for traversal output.
-OutputType = List[Tuple[base_tree.KeyType, Any]]
+OutputType = List[Tuple[binary_tree.KeyType, Any]]
 
 # Alias for the base node type.
-BaseNodeType = Optional[base_tree.NodeType]
+NodeType = Optional[binary_tree.Node]
 
 
-def _inorder_traverse(node: BaseNodeType, output: OutputType):
+def _inorder_traverse(node: NodeType, output: OutputType):
     """Perform In-Order traversal.
 
     Parameters
     ----------
-    node : BaseNodeType
+    node : NodeType
         The root of the binary tree.
 
     output : List(Tuple())
@@ -48,12 +48,12 @@ def _inorder_traverse(node: BaseNodeType, output: OutputType):
 
 
 def _inorder_traverse_non_recursive(
-        root: BaseNodeType) -> OutputType:
+        root: NodeType) -> OutputType:
     """Perform In-Order traversal without recursive.
 
     Parameters
     ----------
-    root : BaseNodeType
+    root : NodeType
         The root of the binary tree.
 
     Returns
@@ -110,12 +110,12 @@ def _inorder_traverse_non_recursive(
     return output
 
 
-def _outorder_traverse(node: BaseNodeType, output: OutputType):
+def _outorder_traverse(node: NodeType, output: OutputType):
     """Perform Output-Order traversal.
 
     Parameters
     ----------
-    node : BaseNodeType
+    node : NodeType
         The root of the binary tree.
 
     output : List(Tuple())
@@ -128,12 +128,12 @@ def _outorder_traverse(node: BaseNodeType, output: OutputType):
 
 
 def _outorder_traverse_non_recursive(
-        root: BaseNodeType) -> OutputType:
+        root: NodeType) -> OutputType:
     """Perform Out-Order traversal without recursive.
 
     Parameters
     ----------
-    root : BaseNodeType
+    root : NodeType
         The root of the binary tree.
 
     Returns
@@ -190,12 +190,12 @@ def _outorder_traverse_non_recursive(
     return output
 
 
-def _preorder_traverse(node: BaseNodeType, output: OutputType):
+def _preorder_traverse(node: NodeType, output: OutputType):
     """Perform Pre-Order traversal.
 
     Parameters
     ----------
-    node : BaseNodeType
+    node : NodeType
         The root of the binary tree.
 
     output : List(Tuple())
@@ -208,12 +208,12 @@ def _preorder_traverse(node: BaseNodeType, output: OutputType):
 
 
 def _preorder_traverse_non_recursive(
-        root: BaseNodeType) -> OutputType:
+        root: NodeType) -> OutputType:
     """Perform Pre-Order traversal without recursive.
 
     Parameters
     ----------
-    root : BaseNodeType
+    root : NodeType
         The root of the binary tree.
 
     Returns
@@ -241,12 +241,12 @@ def _preorder_traverse_non_recursive(
     return output
 
 
-def _postorder_traverse(node: BaseNodeType, output: OutputType):
+def _postorder_traverse(node: NodeType, output: OutputType):
     """Perform Post-Order traversal.
 
     Parameters
     ----------
-    node : BaseNodeType
+    node : NodeType
         The root of the binary tree.
 
     output : List(Tuple())
@@ -259,12 +259,12 @@ def _postorder_traverse(node: BaseNodeType, output: OutputType):
 
 
 def _postorder_traverse_non_recursive(
-        root: BaseNodeType) -> OutputType:
+        root: NodeType) -> OutputType:
     """Perform Post-Order traversal without recursive.
 
     Parameters
     ----------
-    root : BaseNodeType
+    root : NodeType
         The root of the binary tree.
 
     Returns
@@ -320,7 +320,7 @@ def _postorder_traverse_non_recursive(
     return output
 
 
-def inorder_traverse(tree: base_tree.TreeType,
+def inorder_traverse(tree: binary_tree.TreeType,
                      recursive: bool = True) -> OutputType:
     """Perform In-Order traversal.
 
@@ -329,7 +329,7 @@ def inorder_traverse(tree: base_tree.TreeType,
 
     Parameters
     ----------
-    tree : base_tree.TreeType
+    tree : binary_tree.TreeType
         A type of binary tree.
 
     Examples
@@ -363,7 +363,7 @@ def inorder_traverse(tree: base_tree.TreeType,
     return _inorder_traverse_non_recursive(root=tree.root)
 
 
-def outorder_traverse(tree: base_tree.TreeType,
+def outorder_traverse(tree: binary_tree.TreeType,
                       recursive: bool = True) -> OutputType:
     """Perform Out-Order traversal.
 
@@ -406,7 +406,7 @@ def outorder_traverse(tree: base_tree.TreeType,
     return _outorder_traverse_non_recursive(root=tree.root)
 
 
-def preorder_traverse(tree: base_tree.TreeType,
+def preorder_traverse(tree: binary_tree.TreeType,
                       recursive: bool = True) -> OutputType:
     """Perform Pre-Order traversal.
 
@@ -449,7 +449,7 @@ def preorder_traverse(tree: base_tree.TreeType,
     return _preorder_traverse_non_recursive(root=tree.root)
 
 
-def postorder_traverse(tree: base_tree.TreeType,
+def postorder_traverse(tree: binary_tree.TreeType,
                        recursive: bool = True) -> OutputType:
     """Perform Post-Order traversal.
 
@@ -458,7 +458,7 @@ def postorder_traverse(tree: base_tree.TreeType,
 
     Parameters
     ----------
-    tree : base_tree.TreeType
+    tree : binary_tree.TreeType
         A type of binary tree.
 
     Examples
@@ -492,7 +492,7 @@ def postorder_traverse(tree: base_tree.TreeType,
     return _postorder_traverse_non_recursive(root=tree.root)
 
 
-def levelorder_traverse(tree: base_tree.TreeType) -> OutputType:
+def levelorder_traverse(tree: binary_tree.TreeType) -> OutputType:
     """Perform Level-Order traversal.
 
     Level-order traversal traverses a tree:
@@ -500,7 +500,7 @@ def levelorder_traverse(tree: base_tree.TreeType) -> OutputType:
 
     Parameters
     ----------
-    tree : base_tree.TreeType
+    tree : binary_tree.TreeType
         A type of binary tree.
 
     Examples

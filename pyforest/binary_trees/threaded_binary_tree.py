@@ -11,15 +11,45 @@ of threaded binary tree:
 - Single Threaded
 - Double Threaded
 """
-from pyforest.binary_trees import base_tree
 
-class ThreadedBinaryTree(base_tree.BaseTree):
+import enum
+
+from dataclasses import dataclass
+from typing import Any, Generic, Optional
+
+from pyforest.binary_trees import binary_tree
+
+
+class SingleThreadedType(enum.Enum):
+    Left = enum.auto()
+    Right = enum.auto()
+
+
+@dataclass
+class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+    left: Optional["SingleThreadNode"] = None
+    right: Optional["SingleThreadNode"] = None
+    isThread: bool = False
+
+
+@dataclass
+class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+    left: Optional["DoubleThreadNode"] = None
+    right: Optional["DoubleThreadNode"] = None
+    leftThread: bool = False
+    rightThread: bool = False
+
+
+class SingleThreadedBinaryTree(binary_tree.BinaryTree):
     """Threaded Binary Tree."""
 
-    def __init__(self):
-        self._left = None
-        self._right = None
-        self._data = None
+    def __init__(self, thread_type: SingleThreadedType,
+                 key: binary_tree.KeyType = None, data: Any = None):
+        binary_tree.BinaryTree.__init__(self)
+        if key and data:
+            self.root = SingleThreadNode(key=key, data=data)
+
+        self._thread_type = thread_type
 
     # Overriding abstract method
     def search(self, value):
@@ -33,14 +63,23 @@ class ThreadedBinaryTree(base_tree.BaseTree):
     def delete(self, value):
         pass
 
-    @property
-    def left(self):
-        return self._left
 
-    @property
-    def right(self):
-        return self._right
+class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
+    """Threaded Binary Tree."""
 
-    @property
-    def data(self):
-        return self._data
+    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+        binary_tree.BinaryTree.__init__(self)
+        if key and data:
+            self.root = DoubleThreadNode(key=key, data=data)
+
+    # Overriding abstract method
+    def search(self, value):
+        pass
+
+    # Overriding abstract method
+    def insert(self, value):
+        pass
+
+    # Overriding abstract method
+    def delete(self, value):
+        pass
