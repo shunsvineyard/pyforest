@@ -18,7 +18,7 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     url="https://github.com/shunsvineyard/pyforest",
     author="Shun Huang",
-    author_email="sincerelygre@protonmail.com",
+    author_email="shunsvineyard@protonmail.com",
     license="MIT",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
