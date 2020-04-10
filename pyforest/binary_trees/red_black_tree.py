@@ -43,15 +43,3 @@ class RBTree(binary_tree.BinaryTree):
     # Overriding abstract method
     def delete(self, value):
         pass
-
-    @property
-    def left(self):
-        return self._left
-
-    @property
-    def right(self):
-        return self._right
-
-    @property
-    def data(self):
-        return self._data

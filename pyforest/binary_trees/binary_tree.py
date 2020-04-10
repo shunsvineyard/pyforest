@@ -11,8 +11,7 @@ from dataclasses import dataclass
 from typing import Any, Generic, NoReturn, Optional, TypeVar
 
 
-@functools.total_ordering
-class _Comparable(abc.ABC):
+class Comparable(abc.ABC):
     @abc.abstractmethod
     def __eq__(self, other: Any) -> bool:
         pass
@@ -21,8 +20,18 @@ class _Comparable(abc.ABC):
     def __lt__(self, other: Any) -> bool:
         pass
 
+    def __gt__(self, other) -> bool:
+        return (not self < other) and self != other
+
+    def __le__(self, other) -> bool:
+        return self < other or self == other
+
+    def __ge__(self, other) -> bool:
+        return (not self < other)
+
+
 # User-defined type for a tree node key. The key must be comparable.
-KeyType = TypeVar("KeyType", bound=_Comparable)
+KeyType = TypeVar("KeyType", bound=Comparable)
 
 
 @dataclass
