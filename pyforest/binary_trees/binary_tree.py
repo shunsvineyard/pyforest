@@ -91,9 +91,9 @@ TreeType = TypeVar("TreeType", bound=BinaryTree)
 
 def verify(tree: TreeType) -> bool:
     """Check if a binary tree is also a binary search tree."""
-    pass
+    raise NotImplementedError
 
 
 def convert(tree: Any) -> TreeType:
     """Convert a general tree to a binary tree."""
-    pass
+    raise NotImplementedError
