@@ -70,11 +70,6 @@ class BinaryTree(abc.ABC):
         self.root: Optional[Node] = None
 
     @abc.abstractmethod
-    def search(self, key: Any) -> Any:
-        """Search data based the given key."""
-        pass
-
-    @abc.abstractmethod
     def insert(self, key: Any, data: Any) -> NoReturn:
         """Insert data and its key into the binary tree."""
         pass
@@ -83,6 +78,86 @@ class BinaryTree(abc.ABC):
     def delete(self, key: Any) -> NoReturn:
         """Delete the data based on the given key."""
         pass
+
+    def search(self, key: Any) -> Any:
+        """Search data based on the given key.
+
+        Parameters
+        ----------
+        key: KeyType
+            The key associated with the data.
+
+        Returns
+        -------
+        Any
+            The data based on the given key; None if the key not found.
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist, `KeyError` will be thrown.
+        """
+        if self.root is None:
+            return None
+
+        return self._search(key=key, node=self.root).data
+
+    def _search(self, key: KeyType, node: Node) -> Node:
+        """Real implementation of search.
+
+        Parameters
+        ----------
+        key: KeyType
+            The key of the data.
+        node: Node
+            The node to check if its key matches the given key.
+
+        Retruns
+        -------
+        Node
+            Return the node if the key matches, or the node for next recursion.
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist, `KeyError` will be thrown.
+        """
+        if key == node.key:
+            return node
+        elif key < node.key:
+            if node.left is not None:
+                return self._search(key=key, node=node.left)
+            else:
+                raise KeyError(f"Key {key} not found")
+        else:  # key > node.key
+            if node.right is not None:
+                return self._search(key=key, node=node.right)
+            else:
+                raise KeyError(f"Key {key} not found")
+
+    def _get_min(self, node: Node) -> Node:
+        """Real implementation of getting the leftmost node.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the tree.
+
+        Retruns
+        -------
+        Node
+            Return the leftmost node in the tree.
+        """
+        current_node = node
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    def get_min(self) -> Any:
+        """Return the minimum key from the tree."""
+        if self.root is None:
+            return None
+        return self._get_min(self.root).key
 
 
 # User-defined type for a binary tree.

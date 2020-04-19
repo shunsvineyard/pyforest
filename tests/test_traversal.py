@@ -64,3 +64,11 @@ def test_red_black_tree_traversal(basic_tree):
 
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
+
+    # FIXME: LeafNode
+    """
+    assert traversal.levelorder_traverse(tree) == [
+        (20, "20"), (7, "7"), (23, "23"), (4, "4"), (11, "11"), (22, "22"),
+        (30, "30"), (1, "1"), (15, "15"), (24, "24"), (34, "34")
+    ]
+    """
