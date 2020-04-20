@@ -212,7 +212,8 @@ class RBTree(binary_tree.BinaryTree):
         if self.root is None:
             return None
 
-        deleting_node = binary_tree.BinaryTree._search(self, key=key, node=self.root)
+        #deleting_node = binary_tree.BinaryTree._search(self, key=key, node=self.root)
+        deleting_node = self._search(key=key, node=self.root)
 
         original_color = deleting_node.color
         temp: Union[RBNode, LeafNode] = self._NIL
@@ -231,12 +232,13 @@ class RBTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = binary_tree.BinaryTree._get_min(self, deleting_node.right)
+            #min_node = binary_tree.BinaryTree._get_min(self, deleting_node.right)
+            min_node = self._get_min(deleting_node.right)
             original_color = min_node.color
             temp = min_node.right
             # if the minimum node is the direct child of the deleting node
             if min_node.parent == deleting_node:
-                temp.parent = deleting_node
+                temp.parent = min_node
             else:
                 self._transplant(min_node, min_node.right)
                 min_node.right = deleting_node.right
@@ -366,7 +368,6 @@ if __name__ == "__main__":
 
     tree.inorder(n=tree.root)
 
-    # FIXME: bug in deleting a node which has two children
-    #tree.delete(key=23)
+    tree.delete(key=23)
 
-    #tree.inorder(n=tree.root)
+    tree.inorder(n=tree.root)
