@@ -528,11 +528,12 @@ def levelorder_traverse(tree: binary_tree.TreeType) -> OutputType:
 
     while len(queue) > 0:
         temp = queue.pop(0)
-        output.append((temp.key, temp.data))
-        if temp.left:
-            queue.append(temp.left)
+        if temp:
+            output.append((temp.key, temp.data))
+            if temp.left:
+                queue.append(temp.left)
 
-        if temp.right:
-            queue.append(temp.right)
+            if temp.right:
+                queue.append(temp.right)
 
     return output

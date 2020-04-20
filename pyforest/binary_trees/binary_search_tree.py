@@ -34,7 +34,7 @@ a BST is as the table.
 +------------+------------+-----------+
 """
 
-from typing import Any, Generic, NoReturn, Optional
+from typing import Any, Optional
 
 from pyforest.binary_trees import binary_tree
 from pyforest.binary_trees import traversal
@@ -136,59 +136,6 @@ class BinarySearchTree(binary_tree.BinaryTree):
             else:
                 node.right = binary_tree.Node(key=key, data=data)
 
-    def _search(self,
-                key: binary_tree.KeyType,
-                node: binary_tree.Node) -> binary_tree.Node:
-        """Real implementation of search.
-
-        Parameters
-        ----------
-        key: KeyType
-            The key of the data.
-        node: Node
-            The node to check if its key matches the given key.
-
-        Retruns
-        -------
-        Node
-            Return the node if the key matches, or the node for next recursion.
-
-        Raises
-        ------
-        KeyError
-            If the key does not exist, `KeyError` will be thrown.
-        """
-        if key == node.key:
-            return node
-        elif key < node.key:
-            if node.left is not None:
-                return self._search(key=key, node=node.left)
-            else:
-                raise KeyError(f"Key {key} not found")
-        else:  # key > node.key
-            if node.right is not None:
-                return self._search(key=key, node=node.right)
-            else:
-                raise KeyError(f"Key {key} not found")
-
-    def _get_min(self, node: binary_tree.Node) -> binary_tree.Node:
-        """Real implementation of getting the leftmost node.
-
-        Parameters
-        ----------
-        node: Node
-            The root of the tree.
-
-        Retruns
-        -------
-        Node
-            Return the leftmost node in the tree.
-        """
-        current_node = node
-        while current_node.left:
-            current_node = current_node.left
-        return current_node
-
     def _height(self, node: Optional[binary_tree.Node]) -> int:
         """Real implementation of getting the height of a given node.
 
@@ -237,30 +184,6 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 return False
 
         return True
-
-    # Overriding abstract method
-    def search(self, key: binary_tree.KeyType) -> Any:
-        """Search data based on the given key.
-
-        Parameters
-        ----------
-        key: KeyType
-            The key associated with the data.
-
-        Returns
-        -------
-        Any
-            The data based on the given key; None if the key not found.
-
-        Raises
-        ------
-        KeyError
-            If the key does not exist, `KeyError` will be thrown.
-        """
-        if self.root is None:
-            return None
-
-        return self._search(key=key, node=self.root).data
 
     # Overriding abstract method
     def insert(self, key: binary_tree.KeyType, data: Any):
@@ -344,7 +267,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 elif key > current.key:
                     current = current.right
 
-        # No children
+        # No children Case
         if current.left is None and current.right is None:
             if parent is not None:
                 if parent.left == current:
@@ -353,7 +276,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
                     parent.right = None
             del(current)
 
-        # Two children
+        # Two children Case
         elif current.left and current.right:
             # Find the min node on the right sub-tree
             candidate = self._delete_helper(node=current.right)
@@ -371,7 +294,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
             # Delete the candidate
             del(candidate)
 
-        # One child
+        # One child Cases
         else:
             # One child (left)
             if current.left and current.right is None:
@@ -396,12 +319,6 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 raise RuntimeError("Fatal error")
 
             del(current)
-
-    def get_min(self) -> Any:
-        """Return the minimum key from the tree."""
-        if self.root is None:
-            return None
-        return self._get_min(self.root).key
 
     def get_max(self) -> Any:
         """Return the maximum key from the tree."""
