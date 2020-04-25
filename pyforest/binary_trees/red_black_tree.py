@@ -208,7 +208,7 @@ class RBTree(binary_tree.BinaryTree):
             self._insert_fixup(node)
 
     # Overriding abstract method
-    def delete(self, key: Any) -> NoReturn:
+    def delete(self, key: Any):
         if self.root is None:
             return None
 
