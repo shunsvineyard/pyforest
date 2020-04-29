@@ -190,17 +190,19 @@ class BinarySearchTree(binary_tree.BinaryTree):
             deleting_node = \
                 binary_tree.BinaryTree._iterative_search(self, key=key)
 
-            # No child or only one left child case
+            # No child or only one right child case
             if deleting_node.left is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one right child case
+            # Only one left child case
             elif deleting_node.right is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
             # Two children
             else:
-                min_node = self._get_min(node=deleting_node.right)
+                min_node = \
+                    binary_tree.BinaryTree._get_min(self,
+                                                    node=deleting_node.right)
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
                     self._transplant(deleting_node=min_node,

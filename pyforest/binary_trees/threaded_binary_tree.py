@@ -132,17 +132,19 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         if self.root:
             deleting_node = self._recursive_search(key=key, node=self.root)
 
-            # No child or only one left child case
+            # No child or only one right child case
             if deleting_node.left is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one right child case
-            elif deleting_node.right is None:
+            # Only one left child case
+            elif deleting_node.right is None and deleting_node.isThread:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
             # Two children
             else:
-                min_node = self._get_min(node=deleting_node.right)
+                min_node: SingleThreadNode = \
+                    binary_tree.BinaryTree._get_min(self,
+                                                    node=deleting_node.right)
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
                     self._transplant(deleting_node=min_node,
