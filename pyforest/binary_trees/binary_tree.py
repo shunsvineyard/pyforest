@@ -42,6 +42,7 @@ class Node(Generic[KeyType]):
     data: Any
     left: Optional["Node"] = None
     right: Optional["Node"] = None
+    parent: Optional["Node"] = None
 
 
 class BinaryTree(abc.ABC):
@@ -100,9 +101,9 @@ class BinaryTree(abc.ABC):
         if self.root is None:
             return None
 
-        return self._search(key=key, node=self.root).data
+        return self._recursive_search(key=key, node=self.root).data
 
-    def _search(self, key: KeyType, node: Node) -> Node:
+    def _recursive_search(self, key: KeyType, node: Node) -> Node:
         """Real implementation of search.
 
         Parameters
@@ -126,14 +127,25 @@ class BinaryTree(abc.ABC):
             return node
         elif key < node.key:
             if node.left is not None:
-                return self._search(key=key, node=node.left)
+                return self._recursive_search(key=key, node=node.left)
             else:
                 raise KeyError(f"Key {key} not found")
         else:  # key > node.key
             if node.right is not None:
-                return self._search(key=key, node=node.right)
+                return self._recursive_search(key=key, node=node.right)
             else:
                 raise KeyError(f"Key {key} not found")
+
+    def _iterative_search(self, key: KeyType) -> Node:
+        temp = self.root
+        while temp is not None:
+            if key < temp.key:
+                temp = temp.left
+            elif key > temp.key:
+                temp = temp.right
+            else:  # Key found
+                return temp
+        raise KeyError(f"Key {key} not found")
 
     def _get_min(self, node: Node) -> Node:
         """Real implementation of getting the leftmost node.
@@ -153,22 +165,60 @@ class BinaryTree(abc.ABC):
             current_node = current_node.left
         return current_node
 
-    def get_min(self) -> Any:
+    def _get_max(self, node: Node) -> Node:
+        current_node = node
+        while current_node.right:
+            current_node = current_node.right
+        return current_node
+
+    def get_min(self) -> Optional[KeyType]:
         """Return the minimum key from the tree."""
         if self.root is None:
             return None
         return self._get_min(self.root).key
 
+    def get_max(self) -> Optional[KeyType]:
+        """Return the maximum key from the tree."""
+        if self.root is None:
+            return None
+        return self._get_max(self.root).key
+
+    def _get_successor(self, node: Node) -> Optional[Node]:
+        if node.right:
+            return self._get_min(node=node.right)
+        parent = node.parent
+        while parent and node == parent.right:
+            node = parent
+            parent = parent.parent
+        return parent
+
+    def _get_predecessor(self, node: Node) -> Optional[Node]:
+        if node.left:
+            return self._get_max(node=node.left)
+        return node.parent
+
+    def _get_height(self, node: Optional[Node]) -> int:
+        """Real implementation of getting the height of a given node.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the tree.
+
+        Retruns
+        -------
+        int
+            Return the height of the given node.
+        """
+        if node is None:
+            return 0
+
+        if node.left is None and node.right is None:
+            return 0
+
+        return max(self._get_height(node.left),
+                   self._get_height(node.right)) + 1
+
 
 # User-defined type for a binary tree.
 TreeType = TypeVar("TreeType", bound=BinaryTree)
-
-
-def verify(tree: TreeType) -> bool:
-    """Check if a binary tree is also a binary search tree."""
-    raise NotImplementedError
-
-
-def convert(tree: Any) -> TreeType:
-    """Convert a general tree to a binary tree."""
-    raise NotImplementedError

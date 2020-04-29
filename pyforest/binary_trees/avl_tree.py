@@ -204,7 +204,7 @@ class AVLTree(binary_tree.BinaryTree):
         if self.root is None:
             return
 
-        deleting_node = binary_tree.BinaryTree._search(self, key=key, node=self.root)
+        deleting_node = binary_tree.BinaryTree._recursive_search(self, key=key, node=self.root)
 
         # No children or only one right child
         if deleting_node.left is None:

@@ -13,7 +13,7 @@ of threaded binary tree:
 """
 
 from dataclasses import dataclass
-from typing import Any, Generic, NoReturn, Optional
+from typing import Any, Generic, Optional
 
 from pyforest.binary_trees import binary_tree
 
@@ -22,6 +22,7 @@ from pyforest.binary_trees import binary_tree
 class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
     left: Optional["SingleThreadNode"] = None
     right: Optional["SingleThreadNode"] = None
+    parent: Optional["SingleThreadNode"] = None
     isThread: bool = False
 
 
@@ -29,6 +30,7 @@ class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
     left: Optional["DoubleThreadNode"] = None
     right: Optional["DoubleThreadNode"] = None
+    parent: Optional["DoubleThreadNode"] = None
     leftThread: bool = False
     rightThread: bool = False
 
@@ -39,7 +41,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
+            self.root: SingleThreadNode = SingleThreadNode(key=key, data=data)
 
     def _get_leftmost(self, node: SingleThreadNode):
 
@@ -61,8 +63,23 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 current = self._get_leftmost(current.right)
 
+    def _recursive_search(self, key: binary_tree.KeyType,
+                          node: SingleThreadNode) -> SingleThreadNode:
+        if key == node.key:
+            return node
+        elif key < node.key:
+            if node.left is not None:
+                return self._recursive_search(key=key, node=node.left)
+            else:
+                raise KeyError(f"Key {key} not found")
+        else:  # key > node.key
+            if node.right is not None and node.isThread is False:
+                return self._recursive_search(key=key, node=node.right)
+            else:
+                raise KeyError(f"Key {key} not found")
+
     # Overriding abstract method
-    def insert(self, key: Any, data: Any) -> NoReturn:
+    def insert(self, key: Any, data: Any):
 
         node = SingleThreadNode(key=key, data=data)
         if self.root is None:
@@ -81,6 +98,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.left = node
                         node.right = temp
                         node.isThread = True
+                        node.parent = temp
                         break
                 # Move to right subtree
                 elif node.key > temp.key:
@@ -92,13 +110,49 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.right = node
                         temp.isThread = False
                         node.isThread = True
+                        node.parent = temp
                         break
                 else:
                     raise ValueError("Duplicate key")
 
-    # Overriding abstract method
-    def delete(self, value):
+    def _transplant(self, deleting_node: SingleThreadNode,
+                    replacing_node: SingleThreadNode):
         pass
+
+    # FIXME: WIP
+    # Overriding abstract method
+    def delete(self, key: binary_tree.KeyType):
+        """Delete the data based on the given key.
+
+        Parameters
+        ----------
+        key: KeyType
+            The key associated with the data.
+        """
+        if self.root:
+            deleting_node = self._recursive_search(key=key, node=self.root)
+
+            # No child or only one left child case
+            if deleting_node.left is None:
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=deleting_node.right)
+            # Only one right child case
+            elif deleting_node.right is None:
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=deleting_node.left)
+            # Two children
+            else:
+                min_node = self._get_min(node=deleting_node.right)
+                # the minmum node is not the direct child of the deleting node
+                if min_node.parent != deleting_node:
+                    self._transplant(deleting_node=min_node,
+                                     replacing_node=min_node.right)
+                    min_node.right = deleting_node.right
+                    min_node.right.parent = min_node
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=min_node)
+                min_node.left = deleting_node.left
+                min_node.left.parent = min_node
 
 
 class LeftThreadedBinaryTree(binary_tree.BinaryTree):
@@ -107,7 +161,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
+            self.root: SingleThreadNode = SingleThreadNode(key=key, data=data)
 
     def _get_rightmost(self, node: SingleThreadNode):
 
@@ -130,7 +184,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                 current = self._get_rightmost(current.left)
 
     # Overriding abstract method
-    def insert(self, key: Any, data: Any) -> NoReturn:
+    def insert(self, key: Any, data: Any):
 
         node = SingleThreadNode(key=key, data=data)
         if self.root is None:
@@ -149,6 +203,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.right = node
                         node.left = temp
                         node.isThread = True
+                        node.parent = temp
                         break
                 # Move to left subtree
                 elif node.key < temp.key:
@@ -160,6 +215,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.left = node
                         temp.isThread = False
                         node.isThread = True
+                        node.parent = temp
                         break
                 else:
                     raise ValueError("Duplicate key")
@@ -175,7 +231,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root = DoubleThreadNode(key=key, data=data)
+            self.root: DoubleThreadNode = DoubleThreadNode(key=key, data=data)
 
     def _get_leftmost(self, node: DoubleThreadNode):
 
@@ -218,7 +274,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                 current = self._get_rightmost(current.left)
 
     # Overriding abstract method
-    def insert(self, key: Any, data: Any) -> NoReturn:
+    def insert(self, key: Any, data: Any):
         node = DoubleThreadNode(key=key, data=data)
         if self.root is None:
             self.root = node
@@ -239,6 +295,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.leftThread = False
                         node.leftThread = True
                         node.rightThread = True
+                        node.parent = temp
                         break
                 # Move to right subtree
                 elif node.key > temp.key:
@@ -252,6 +309,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                         temp.rightThread = False
                         node.leftThread = True
                         node.rightThread = True
+                        node.parent = temp
                         break
                 else:
                     raise ValueError("Duplicate key")
