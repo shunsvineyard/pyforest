@@ -190,11 +190,11 @@ class BinarySearchTree(binary_tree.BinaryTree):
             deleting_node = \
                 binary_tree.BinaryTree._iterative_search(self, key=key)
 
-            # No child or only one right child case
+            # No child or only one right child
             if deleting_node.left is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one left child case
+            # Only one left child
             elif deleting_node.right is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)

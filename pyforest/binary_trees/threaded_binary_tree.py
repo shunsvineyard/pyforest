@@ -41,7 +41,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root: SingleThreadNode = SingleThreadNode(key=key, data=data)
+            self.root: Optional[SingleThreadNode] = SingleThreadNode(key=key, data=data)
 
     def _get_leftmost(self, node: SingleThreadNode):
 
@@ -115,11 +115,40 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 else:
                     raise ValueError("Duplicate key")
 
-    def _transplant(self, deleting_node: SingleThreadNode,
-                    replacing_node: SingleThreadNode):
-        pass
+    # Override
+    def _get_max(self, node: SingleThreadNode) -> SingleThreadNode:
+        current_node = node
+        while current_node.isThread is False and current_node.right:
+            current_node = current_node.right
+        return current_node
 
-    # FIXME: WIP
+    def _transplant(self, deleting_node: SingleThreadNode,
+                    replacing_node: Optional[SingleThreadNode]):
+        if deleting_node.parent is None:
+            self.root = replacing_node
+            if self.root:
+                self.root.isThread = False
+        elif deleting_node == deleting_node.parent.left:
+            deleting_node.parent.left = replacing_node
+            if replacing_node is not None:
+                if replacing_node.isThread:
+                    if replacing_node == deleting_node.left:
+                        replacing_node.right = deleting_node.right
+                    else:
+                        replacing_node.right = deleting_node.parent
+        else:
+            deleting_node.parent.right = replacing_node
+            if replacing_node is None:
+                deleting_node.parent.right = deleting_node.right
+                deleting_node.parent.isThread = True
+            else:
+                if replacing_node.isThread:
+                    if replacing_node == deleting_node.left:
+                        replacing_node.right = deleting_node.right
+
+        if replacing_node:
+            replacing_node.parent = deleting_node.parent
+
     # Overriding abstract method
     def delete(self, key: binary_tree.KeyType):
         """Delete the data based on the given key.
@@ -132,29 +161,54 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         if self.root:
             deleting_node = self._recursive_search(key=key, node=self.root)
 
-            # No child or only one right child case
-            if deleting_node.left is None:
+            # The deleting node has no child
+            if deleting_node.left is None and deleting_node.isThread:
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=None)
+
+            # The deleting node has only one right child
+            elif deleting_node.left is None and deleting_node.isThread is False:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one left child case
-            elif deleting_node.right is None and deleting_node.isThread:
+
+            # The deleting node has only one left child,
+            elif deleting_node.left is not None and deleting_node.isThread:
+                predecessor = \
+                    binary_tree.BinaryTree._get_predecessor(self,
+                                                            node=deleting_node)
+                if predecessor:
+                    predecessor.right = deleting_node.right
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
-            # Two children
+
+            # The deleting node has two children
             else:
+                predecessor = \
+                    binary_tree.BinaryTree._get_predecessor(self,
+                                                            node=deleting_node)
+
                 min_node: SingleThreadNode = \
                     binary_tree.BinaryTree._get_min(self,
                                                     node=deleting_node.right)
+
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
-                    self._transplant(deleting_node=min_node,
-                                     replacing_node=min_node.right)
+                    if min_node.isThread:
+                        self._transplant(deleting_node=min_node,
+                                         replacing_node=None)
+                    else:
+                        self._transplant(deleting_node=min_node,
+                                         replacing_node=min_node.right)
                     min_node.right = deleting_node.right
                     min_node.right.parent = min_node
+                    min_node.isThread = False
+
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=min_node)
                 min_node.left = deleting_node.left
                 min_node.left.parent = min_node
+                if predecessor:
+                    predecessor.right = min_node
 
 
 class LeftThreadedBinaryTree(binary_tree.BinaryTree):
@@ -324,7 +378,6 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
 if __name__ == "__main__":
 
-    """
     test = RightThreadedBinaryTree()
     test.insert(23, "23")
     test.insert(4, "4")
@@ -338,9 +391,21 @@ if __name__ == "__main__":
     test.insert(15, "15")
     test.insert(1, "1")
 
+    #for item in test.inorder_traverse():
+    #    print(item)
+
+    #test.delete(11)
+    #test.delete(30)
+    #test.delete(4)
+    test.delete(15)
+    test.delete(22)
+    test.delete(11)
+    test.delete(20)
+
     for item in test.inorder_traverse():
         print(item)
 
+    """
     test = LeftThreadedBinaryTree()
     test.insert(23, "23")
     test.insert(4, "4")
