@@ -37,14 +37,14 @@ def test_deletion(basic_tree):
 
     # No child
     tree.delete(15)
-    assert traversal.levelorder_traverse(tree) == [
+    assert [item for item in traversal.levelorder_traverse(tree)] == [
         (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
         (24, "24"), (34, "34"), (7, "7"), (20, "20"), (22, "22")
     ]
 
     # One right child
     tree.delete(20)
-    assert traversal.levelorder_traverse(tree) == [
+    assert [item for item in traversal.levelorder_traverse(tree)] == [
         (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
         (24, "24"), (34, "34"), (7, "7"), (22, "22")
     ]
@@ -52,14 +52,14 @@ def test_deletion(basic_tree):
     # One left child
     tree.insert(key=17, data="17")
     tree.delete(22)
-    assert traversal.levelorder_traverse(tree) == [
+    assert [item for item in traversal.levelorder_traverse(tree)] == [
         (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
         (24, "24"), (34, "34"), (7, "7"), (17, "17")
     ]
 
     # Two children
     tree.delete(11)
-    assert traversal.levelorder_traverse(tree) == [
+    assert [item for item in traversal.levelorder_traverse(tree)] == [
         (23, "23"), (4, "4"), (30, "30"), (1, "1"),
         (17, "17"), (24, "24"), (34, "34"), (7, "7")
     ]

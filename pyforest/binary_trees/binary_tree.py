@@ -32,8 +32,8 @@ class Comparable(abc.ABC):
 # User-defined type for a tree node key. The key must be comparable.
 KeyType = TypeVar("KeyType", bound=Comparable)
 
-# Key-Value type. Yield by traversal.
-Pair = Iterator[Tuple[KeyType, Any]]
+# An iterator of Key-Value pairs. Yield by traversal.
+Pairs = Iterator[Tuple[KeyType, Any]]
 
 
 @dataclass

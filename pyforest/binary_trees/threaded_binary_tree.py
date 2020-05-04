@@ -53,7 +53,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.left
         return node
 
-    def inorder_traverse(self) -> binary_tree.Pair:
+    def inorder_traverse(self) -> binary_tree.Pairs:
 
         current = self._get_leftmost(node=self.root)
         while current is not None:
@@ -229,7 +229,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.right
         return node
 
-    def outorder_traverse(self) -> binary_tree.Pair:
+    def outorder_traverse(self) -> binary_tree.Pairs:
 
         current = self._get_rightmost(node=self.root)
         while current is not None:
@@ -299,7 +299,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.left
         return node
 
-    def inorder_traverse(self) -> binary_tree.Pair:
+    def inorder_traverse(self) -> binary_tree.Pairs:
 
         current = self._get_leftmost(node=self.root)
         while current is not None:
@@ -319,7 +319,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.right
         return node
 
-    def outorder_traverse(self) -> binary_tree.Pair:
+    def outorder_traverse(self) -> binary_tree.Pairs:
 
         current = self._get_rightmost(node=self.root)
         while current is not None:
