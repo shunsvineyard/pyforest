@@ -41,9 +41,10 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root: Optional[SingleThreadNode] = SingleThreadNode(key=key, data=data)
+            self.root: Optional[SingleThreadNode] = \
+                SingleThreadNode(key=key, data=data)
 
-    def _get_leftmost(self, node: SingleThreadNode):
+    def _get_leftmost(self, node: Optional[SingleThreadNode]):
 
         if node is None:
             return None
@@ -52,11 +53,11 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.left
         return node
 
-    def inorder_traverse(self):
+    def inorder_traverse(self) -> binary_tree.Pair:
 
         current = self._get_leftmost(node=self.root)
         while current is not None:
-            yield current.data
+            yield (current.key, current.data)
 
             if current.isThread:
                 current = current.right
@@ -228,11 +229,11 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.right
         return node
 
-    def outorder_traverse(self):
+    def outorder_traverse(self) -> binary_tree.Pair:
 
         current = self._get_rightmost(node=self.root)
         while current is not None:
-            yield current.data
+            yield (current.key, current.data)
 
             if current.isThread:
                 current = current.left
@@ -298,11 +299,11 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.left
         return node
 
-    def inorder_traverse(self):
+    def inorder_traverse(self) -> binary_tree.Pair:
 
         current = self._get_leftmost(node=self.root)
         while current is not None:
-            yield current.data
+            yield (current.key, current.data)
 
             if current.rightThread:
                 current = current.right
@@ -318,11 +319,11 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.right
         return node
 
-    def outorder_traverse(self):
+    def outorder_traverse(self) -> binary_tree.Pair:
 
         current = self._get_rightmost(node=self.root)
         while current is not None:
-            yield current.data
+            yield (current.key, current.data)
 
             if current.leftThread:
                 current = current.left

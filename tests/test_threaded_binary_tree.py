@@ -13,7 +13,8 @@ def test_simple_right_threaded_case(basic_tree):
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert ["1", "4", "7", "11", "15", "20", "22", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (15, "15"), (20, "20"),
+            (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
     assert tree.get_min() == 1
@@ -28,8 +29,8 @@ def test_simple_right_threaded_case(basic_tree):
     with pytest.raises(KeyError):
         tree.search(15)
 
-    assert ["1", "4", "11", "23", "24", "30", "34"] == \
-           [item for item in tree.inorder_traverse()]
+    assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"), (30, "30"),
+            (34, "34")] == [item for item in tree.inorder_traverse()]
 
 
 def test_deletion_right_threaded_case(basic_tree):
@@ -42,23 +43,27 @@ def test_deletion_right_threaded_case(basic_tree):
 
     # No child
     tree.delete(15)
-    assert ["1", "4", "7", "11", "20", "22", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (20, "20"), (22, "22"),
+            (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
     # One right child
     tree.delete(20)
-    assert ["1", "4", "7", "11", "22", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (22, "22"), (23, "23"),
+            (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
     # One left child
     tree.insert(key=17, data="17")
     tree.delete(22)
-    assert ["1", "4", "7", "11", "17", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (17, "17"), (23, "23"),
+            (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
     # Two children
     tree.delete(11)
-    assert ["1", "4", "7", "17", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (17, "17"), (23, "23"), (24, "24"),
+            (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
 
@@ -70,8 +75,9 @@ def test_simple_left_threaded_case(basic_tree):
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert ["34", "30", "24", "23", "22", "20", "15", "11", "7", "4", "1"] == \
-           [item for item in tree.outorder_traverse()]
+    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
+            (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
+            (1, "1")] == [item for item in tree.outorder_traverse()]
 
 
 def test_simple_double_threaded_case(basic_tree):
@@ -82,8 +88,10 @@ def test_simple_double_threaded_case(basic_tree):
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert ["34", "30", "24", "23", "22", "20", "15", "11", "7", "4", "1"] == \
-           [item for item in tree.outorder_traverse()]
+    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
+            (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
+            (1, "1")] == [item for item in tree.outorder_traverse()]
 
-    assert ["1", "4", "7", "11", "15", "20", "22", "23", "24", "30", "34"] == \
+    assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (15, "15"), (20, "20"),
+            (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]

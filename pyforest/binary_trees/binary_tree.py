@@ -5,10 +5,9 @@
 """A base class for binary trees."""
 
 import abc
-import functools
 
 from dataclasses import dataclass
-from typing import Any, Generic, NoReturn, Optional, TypeVar
+from typing import Any, Generic, Iterator, NoReturn, Optional, Tuple, TypeVar
 
 
 class Comparable(abc.ABC):
@@ -32,6 +31,9 @@ class Comparable(abc.ABC):
 
 # User-defined type for a tree node key. The key must be comparable.
 KeyType = TypeVar("KeyType", bound=Comparable)
+
+# Key-Value type. Yield by traversal.
+Pair = Iterator[Tuple[KeyType, Any]]
 
 
 @dataclass
