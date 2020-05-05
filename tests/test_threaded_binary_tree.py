@@ -19,7 +19,7 @@ def test_simple_right_threaded_case(basic_tree):
 
     assert tree.get_min() == 1
     assert tree.get_max() == 34
-    assert tree.search(24) == "24"
+    assert tree.search(24, recursive=True) == "24"
 
     tree.delete(15)
     tree.delete(22)
@@ -27,7 +27,7 @@ def test_simple_right_threaded_case(basic_tree):
     tree.delete(20)
 
     with pytest.raises(KeyError):
-        tree.search(15)
+        tree.search(15, recursive=True)
 
     assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"), (30, "30"),
             (34, "34")] == [item for item in tree.inorder_traverse()]

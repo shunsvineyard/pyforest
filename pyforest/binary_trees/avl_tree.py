@@ -26,6 +26,93 @@ class AVLTree(binary_tree.BinaryTree):
         if key and data:
             self.root = AVLNode(key=key, data=data)
 
+    # Override
+    def insert(self, key: binary_tree.KeyType, data: Any):
+        """See :func:`~binary_tree.BinaryTree.insert`."""
+        temp = self.root
+        parent: Optional[AVLNode] = None
+        while temp is not None:
+            parent = temp
+            if key == temp.key:
+                raise ValueError(f"Duplicate key {key}")
+            elif key < temp.key:
+                temp = temp.left
+            else:
+                temp = temp.right
+
+        node = AVLNode(key=key, data=data, parent=parent)
+
+        if parent is None:
+            self.root = node
+        elif node.key < parent.key:
+            parent.left = node
+        else:
+            parent.right = node
+
+        temp = node
+        while parent is not None:
+            parent.height = 1 + max(self._height(parent.left), self._height(parent.right))
+
+            grandparent = parent.parent
+            # grandparent is unbalanced
+            if self._balance_factor(grandparent) <= -2 or self._balance_factor(grandparent) >= 2:
+                if parent == grandparent.left:
+                    # Case 1
+                    if temp == grandparent.left.left:
+                        self._right_rotate(grandparent)
+                    # Case 3
+                    elif temp == grandparent.left.right:
+                        self._left_rotate(parent)
+                        self._right_rotate(grandparent)
+                elif parent == grandparent.right:
+                    # Case 2
+                    if temp == grandparent.right.right:
+                        self._left_rotate(grandparent)
+                    # Case 4
+                    elif temp == grandparent.right.left:
+                        self._right_rotate(parent)
+                        self._left_rotate(grandparent)
+                break
+            parent = parent.parent
+            temp = temp.parent
+
+    # Override
+    def delete(self, key: binary_tree.KeyType):
+        """See :func:`~binary_tree.BinaryTree.delete`."""
+        if self.root is None:
+            return
+
+        deleting_node = binary_tree.BinaryTree._recursive_search(self, key=key, node=self.root)
+
+        # No children or only one right child
+        if deleting_node.left is None:
+            self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.right)
+
+            if deleting_node.right is not None:
+                self._delete_fixup(fixing_node=deleting_node.right)
+
+        # Only one left child
+        elif deleting_node.right is None:
+            self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.left)
+
+            if deleting_node.left is not None:
+                self._delete_fixup(fixing_node=deleting_node.left)
+
+        # Two children
+        else:
+            min_node = binary_tree.BinaryTree._get_min(self, node=deleting_node.right)
+            # The deleting node is not the direct parent of the minimum node.
+            if min_node.parent != deleting_node:
+                self._transplant(min_node, min_node.right)
+                min_node.right = deleting_node.right
+                min_node.right.parent = min_node
+
+            self._transplant(deleting_node, min_node)
+            min_node.left = deleting_node.left
+            min_node.left.parent = min_node
+
+            self._delete_fixup(min_node)
+
     def _height(self, node: Optional[AVLNode]) -> int:
         """Real implementation of getting the height of a given node.
 
@@ -149,91 +236,6 @@ class AVLTree(binary_tree.BinaryTree):
 
             fixing_node = fixing_node.parent
 
-    # Overriding abstract method
-    def insert(self, key: binary_tree.KeyType, data: Any):
-
-        temp = self.root
-        parent: Optional[AVLNode] = None
-        while temp is not None:
-            parent = temp
-            if key == temp.key:
-                raise ValueError(f"Duplicate key {key}")
-            elif key < temp.key:
-                temp = temp.left
-            else:
-                temp = temp.right
-
-        node = AVLNode(key=key, data=data, parent=parent)
-
-        if parent is None:
-            self.root = node
-        elif node.key < parent.key:
-            parent.left = node
-        else:
-            parent.right = node
-
-        temp = node
-        while parent is not None:
-            parent.height = 1 + max(self._height(parent.left), self._height(parent.right))
-
-            grandparent = parent.parent
-            # grandparent is unbalanced
-            if self._balance_factor(grandparent) <= -2 or self._balance_factor(grandparent) >= 2:
-                if parent == grandparent.left:
-                    # Case 1
-                    if temp == grandparent.left.left:
-                        self._right_rotate(grandparent)
-                    # Case 3
-                    elif temp == grandparent.left.right:
-                        self._left_rotate(parent)
-                        self._right_rotate(grandparent)
-                elif parent == grandparent.right:
-                    # Case 2
-                    if temp == grandparent.right.right:
-                        self._left_rotate(grandparent)
-                    # Case 4
-                    elif temp == grandparent.right.left:
-                        self._right_rotate(parent)
-                        self._left_rotate(grandparent)
-                break
-            parent = parent.parent
-            temp = temp.parent
-
-    # Overriding abstract method
-    def delete(self, key: binary_tree.KeyType):
-        if self.root is None:
-            return
-
-        deleting_node = binary_tree.BinaryTree._recursive_search(self, key=key, node=self.root)
-
-        # No children or only one right child
-        if deleting_node.left is None:
-            self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.right)
-
-            if deleting_node.right is not None:
-                self._delete_fixup(fixing_node=deleting_node.right)
-
-        # Only one left child
-        elif deleting_node.right is None:
-            self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.left)
-
-            if deleting_node.left is not None:
-                self._delete_fixup(fixing_node=deleting_node.left)
-
-        # Two children
-        else:
-            min_node = binary_tree.BinaryTree._get_min(self, node=deleting_node.right)
-            # The deleting node is not the direct parent of the minimum node.
-            if min_node.parent != deleting_node:
-                self._transplant(min_node, min_node.right)
-                min_node.right = deleting_node.right
-                min_node.right.parent = min_node
-
-            self._transplant(deleting_node, min_node)
-            min_node.left = deleting_node.left
-            min_node.left.parent = min_node
-
-            self._delete_fixup(min_node)
 
 
 """
