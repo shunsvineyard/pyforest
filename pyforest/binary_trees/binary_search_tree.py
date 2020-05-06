@@ -184,7 +184,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
     def _iterative_insert(self, new_node: binary_tree.Node):
         parent = None
         temp = self.root
-        while temp is not None:
+        while temp:
             parent = temp
             if new_node.key == temp.key:
                 raise ValueError(f"Duplicate key {new_node.key}")

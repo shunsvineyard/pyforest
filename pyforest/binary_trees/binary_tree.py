@@ -149,19 +149,19 @@ class BinaryTree(abc.ABC):
         if key == node.key:
             return node
         elif key < node.key:
-            if node.left is not None:
+            if node.left:
                 return self._recursive_search(key=key, node=node.left)
             else:
                 raise KeyError(f"Key {key} not found")
         else:  # key > node.key
-            if node.right is not None:
+            if node.right:
                 return self._recursive_search(key=key, node=node.right)
             else:
                 raise KeyError(f"Key {key} not found")
 
     def _iterative_search(self, key: KeyType) -> Node:
         temp = self.root
-        while temp is not None:
+        while temp:
             if key < temp.key:
                 temp = temp.left
             elif key > temp.key:

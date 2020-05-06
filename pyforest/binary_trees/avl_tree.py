@@ -31,7 +31,7 @@ class AVLTree(binary_tree.BinaryTree):
         """See :func:`~binary_tree.BinaryTree.insert`."""
         temp = self.root
         parent: Optional[AVLNode] = None
-        while temp is not None:
+        while temp:
             parent = temp
             if key == temp.key:
                 raise ValueError(f"Duplicate key {key}")
@@ -50,7 +50,7 @@ class AVLTree(binary_tree.BinaryTree):
             parent.right = node
 
         temp = node
-        while parent is not None:
+        while parent:
             parent.height = 1 + max(self._height(parent.left), self._height(parent.right))
 
             grandparent = parent.parent
@@ -88,14 +88,14 @@ class AVLTree(binary_tree.BinaryTree):
         if deleting_node.left is None:
             self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.right)
 
-            if deleting_node.right is not None:
+            if deleting_node.right:
                 self._delete_fixup(fixing_node=deleting_node.right)
 
         # Only one left child
         elif deleting_node.right is None:
             self._transplant(deleting_node=deleting_node, replacing_node=deleting_node.left)
 
-            if deleting_node.left is not None:
+            if deleting_node.left:
                 self._delete_fixup(fixing_node=deleting_node.left)
 
         # Two children
@@ -137,7 +137,7 @@ class AVLTree(binary_tree.BinaryTree):
     def _left_rotate(self, node: AVLNode):
         temp = node.right
         node.right = temp.left
-        if temp.left is not None:
+        if temp.left:
             temp.left.parent = node
         temp.parent = node.parent
         if node.parent is None:  # node is the root
@@ -156,7 +156,7 @@ class AVLTree(binary_tree.BinaryTree):
     def _right_rotate(self, node: AVLNode):
         temp = node.left
         node.left = temp.right
-        if temp.right is not None:
+        if temp.right:
             temp.right.parent = node
         temp.parent = node.parent
         if node.parent is None:  # node is the root
@@ -181,7 +181,7 @@ class AVLTree(binary_tree.BinaryTree):
         else:
             deleting_node.parent.right = replacing_node
 
-        if replacing_node is not None:
+        if replacing_node:
             replacing_node.parent = deleting_node.parent
 
     def _balance_factor(self, node: AVLNode):
@@ -192,7 +192,7 @@ class AVLTree(binary_tree.BinaryTree):
     # FIXME
     def _delete_fixup(self, fixing_node: AVLNode):
 
-        while fixing_node is not None:
+        while fixing_node:
             fixing_node.height = 1 + max(self._height(fixing_node.left), self._height(fixing_node.right))
 
             # Case the grandparent is unbalanced

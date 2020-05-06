@@ -17,6 +17,10 @@ def test_simple_right_threaded_case(basic_tree):
             (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
+    assert [(23, "23"), (4, "4"), (1, "1"), (11, "11"), (7, "7"), (20, "20"),
+            (15, "15"), (22, "22"), (30, "30"), (24, "24"), (34, "34")] == \
+           [item for item in tree.preorder_traverse()]
+
     assert tree.get_min() == 1
     assert tree.get_max() == 34
     assert tree.search(24, recursive=True) == "24"

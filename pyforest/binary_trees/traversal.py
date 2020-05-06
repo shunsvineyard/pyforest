@@ -60,7 +60,7 @@ def _inorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
         raise StopIteration
 
     stack = []
-    if root.right is not None:
+    if root.right:
         stack.append(root.right)
         stack.append(root)
 
@@ -68,8 +68,8 @@ def _inorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
 
     while True:
 
-        if current is not None:
-            if current.right is not None:
+        if current:
+            if current.right:
                 stack.append(current.right)
                 stack.append(current)
                 current = current.left
@@ -132,7 +132,7 @@ def _outorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
         raise StopIteration
 
     stack = []
-    if root.left is not None:
+    if root.left:
         stack.append(root.left)
         stack.append(root)
 
@@ -140,8 +140,8 @@ def _outorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
 
     while True:
 
-        if current is not None:
-            if current.left is not None:
+        if current:
+            if current.left:
                 stack.append(current.left)
                 stack.append(current)
                 current = current.right
@@ -210,10 +210,10 @@ def _preorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
         yield (temp.key, temp.data)
 
         # Because stack is FILO, insert right child before left child.
-        if temp.right is not None:
+        if temp.right:
             stack.append(temp.right)
 
-        if temp.left is not None:
+        if temp.left:
             stack.append(temp.left)
 
 
@@ -251,7 +251,7 @@ def _postorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
         raise StopIteration
 
     stack = []
-    if root.right is not None:
+    if root.right:
         stack.append(root.right)
 
     stack.append(root)
@@ -259,8 +259,8 @@ def _postorder_traverse_non_recursive(root: NodeType) -> binary_tree.Pairs:
 
     while True:
 
-        if current is not None:
-            if current.right is not None:
+        if current:
+            if current.right:
                 stack.append(current.right)
                 stack.append(current)
                 current = current.left

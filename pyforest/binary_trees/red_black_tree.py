@@ -331,12 +331,12 @@ class RBTree(binary_tree.BinaryTree):
         if key == node.key:
             return node
         elif key < node.key:
-            if node.left is not None:
+            if node.left:
                 return self._search(key=key, node=node.left)
             else:
                 raise KeyError(f"Key {key} not found")
         else:  # key > node.key
-            if node.right is not None:
+            if node.right:
                 return self._search(key=key, node=node.right)
             else:
                 raise KeyError(f"Key {key} not found")
