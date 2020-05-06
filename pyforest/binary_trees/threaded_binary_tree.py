@@ -127,7 +127,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                                          replacing_node=min_node.right)
                     min_node.right = deleting_node.right
                     min_node.right.parent = min_node
-                    min_node.isThread = False
+                    #min_node.isThread = False
 
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=min_node)
@@ -220,19 +220,16 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             deleting_node.parent.left = replacing_node
             if replacing_node:
                 if replacing_node.isThread:
-                    if replacing_node == deleting_node.left:
-                        replacing_node.right = deleting_node.right
-                    else:
-                        replacing_node.right = deleting_node.parent
-        else:
+                    replacing_node.right = deleting_node.parent
+        else:  # deleting_node == deleting_node.parent.right
             deleting_node.parent.right = replacing_node
-            if replacing_node is None:
-                deleting_node.parent.right = deleting_node.right
-                deleting_node.parent.isThread = True
-            else:
+            if replacing_node:
                 if replacing_node.isThread:
                     if replacing_node == deleting_node.left:
                         replacing_node.right = deleting_node.right
+            else:  # replacing_node is None
+                deleting_node.parent.right = deleting_node.right
+                deleting_node.parent.isThread = True
 
         if replacing_node:
             replacing_node.parent = deleting_node.parent
@@ -324,46 +321,6 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         if key and data:
             self.root: DoubleThreadNode = DoubleThreadNode(key=key, data=data)
 
-    def _get_leftmost(self, node: DoubleThreadNode):
-
-        if node is None:
-            return None
-
-        while node.leftThread is False:
-            node = node.left
-        return node
-
-    def inorder_traverse(self) -> binary_tree.Pairs:
-
-        current = self._get_leftmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
-
-            if current.rightThread:
-                current = current.right
-            else:
-                current = self._get_leftmost(current.right)
-
-    def _get_rightmost(self, node: DoubleThreadNode):
-
-        if node is None:
-            return None
-
-        while node.rightThread is False:
-            node = node.right
-        return node
-
-    def outorder_traverse(self) -> binary_tree.Pairs:
-
-        current = self._get_rightmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
-
-            if current.leftThread:
-                current = current.left
-            else:
-                current = self._get_rightmost(current.left)
-
     # Override
     def insert(self, key: Any, data: Any):
         node = DoubleThreadNode(key=key, data=data)
@@ -408,6 +365,47 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def delete(self, value):
         pass
+
+    def inorder_traverse(self) -> binary_tree.Pairs:
+
+        current = self._get_leftmost(node=self.root)
+        while current:
+            yield (current.key, current.data)
+
+            if current.rightThread:
+                current = current.right
+            else:
+                current = self._get_leftmost(current.right)
+
+    def outorder_traverse(self) -> binary_tree.Pairs:
+
+        current = self._get_rightmost(node=self.root)
+        while current:
+            yield (current.key, current.data)
+
+            if current.leftThread:
+                current = current.left
+            else:
+                current = self._get_rightmost(current.left)
+
+    def _get_leftmost(self, node: DoubleThreadNode):
+
+        if node is None:
+            return None
+
+        while node.leftThread is False:
+            node = node.left
+        return node
+
+    def _get_rightmost(self, node: DoubleThreadNode):
+
+        if node is None:
+            return None
+
+        while node.rightThread is False:
+            node = node.right
+        return node
+
 
 
 
