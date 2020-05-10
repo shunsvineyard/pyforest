@@ -47,6 +47,77 @@ class RBTree(binary_tree.BinaryTree):
                                right=self._NIL, parent=self._NIL,
                                color=Color.Black)
 
+    # Override
+    def insert(self, key: Any, data: Any):
+        """See :func:`~binary_tree.BinaryTree.insert`."""
+        node = RBNode(key=key, data=data, left=self._NIL, right=self._NIL,
+                      parent=self._NIL, color=Color.Red)
+        parent: RBNode = self._NIL
+        temp: RBNode = self.root
+        while temp is not self._NIL:
+            parent = temp
+            if node.key < temp.key:
+                temp = temp.left
+            else:
+                temp = temp.right
+        if parent is self._NIL:
+            node.color = Color.Black
+            self.root = node
+        else:
+            node.parent = parent
+
+            if node.key < parent.key:
+                parent.left = node
+            else:
+                parent.right = node
+
+            self._insert_fixup(node)
+
+    # Override
+    def delete(self, key: Any):
+        """See :func:`~binary_tree.BinaryTree.delete`."""
+        if self.root is None:
+            return None
+
+        deleting_node = self._search(key=key, node=self.root)
+
+        original_color = deleting_node.color
+        temp: Union[RBNode, LeafNode] = self._NIL
+
+        # No children or only one right child
+        if deleting_node.left == self._NIL:
+            temp = deleting_node.right
+            self._transplant(deleting_node=deleting_node,
+                             replacing_node=deleting_node.right)
+
+        # Only one left child
+        elif deleting_node.right == self._NIL:
+            temp = deleting_node.left
+            self._transplant(deleting_node=deleting_node,
+                             replacing_node=deleting_node.left)
+
+        # Two children
+        else:
+            #min_node = binary_tree.BinaryTree._get_min(self, deleting_node.right)
+            min_node = self._get_min(deleting_node.right)
+            original_color = min_node.color
+            temp = min_node.right
+            # if the minimum node is the direct child of the deleting node
+            if min_node.parent == deleting_node:
+                temp.parent = min_node
+            else:
+                self._transplant(min_node, min_node.right)
+                min_node.right = deleting_node.right
+                min_node.right.parent = min_node
+
+            self._transplant(deleting_node, min_node)
+            min_node.left = deleting_node.left
+            min_node.left.parent = min_node
+            min_node.color = deleting_node.color
+
+        if original_color == Color.Black:
+            self._delete_fixup(fixing_node=temp)
+
     def _left_rotate(self, node: RBNode):
 
         temp = node.right
@@ -182,76 +253,6 @@ class RBTree(binary_tree.BinaryTree):
 
         replacing_node.parent = deleting_node.parent
 
-    # Overriding abstract method
-    def insert(self, key: Any, data: Any):
-        node = RBNode(key=key, data=data, left=self._NIL, right=self._NIL,
-                      parent=self._NIL, color=Color.Red)
-        parent: RBNode = self._NIL
-        temp: RBNode = self.root
-        while temp is not self._NIL:
-            parent = temp
-            if node.key < temp.key:
-                temp = temp.left
-            else:
-                temp = temp.right
-        if parent is self._NIL:
-            node.color = Color.Black
-            self.root = node
-        else:
-            node.parent = parent
-
-            if node.key < parent.key:
-                parent.left = node
-            else:
-                parent.right = node
-
-            self._insert_fixup(node)
-
-    # Overriding abstract method
-    def delete(self, key: Any):
-        if self.root is None:
-            return None
-
-        #deleting_node = binary_tree.BinaryTree._search(self, key=key, node=self.root)
-        deleting_node = self._search(key=key, node=self.root)
-
-        original_color = deleting_node.color
-        temp: Union[RBNode, LeafNode] = self._NIL
-
-        # No children or only one right child
-        if deleting_node.left == self._NIL:
-            temp = deleting_node.right
-            self._transplant(deleting_node=deleting_node,
-                             replacing_node=deleting_node.right)
-
-        # Only one left child
-        elif deleting_node.right == self._NIL:
-            temp = deleting_node.left
-            self._transplant(deleting_node=deleting_node,
-                             replacing_node=deleting_node.left)
-
-        # Two children
-        else:
-            #min_node = binary_tree.BinaryTree._get_min(self, deleting_node.right)
-            min_node = self._get_min(deleting_node.right)
-            original_color = min_node.color
-            temp = min_node.right
-            # if the minimum node is the direct child of the deleting node
-            if min_node.parent == deleting_node:
-                temp.parent = min_node
-            else:
-                self._transplant(min_node, min_node.right)
-                min_node.right = deleting_node.right
-                min_node.right.parent = min_node
-
-            self._transplant(deleting_node, min_node)
-            min_node.left = deleting_node.left
-            min_node.left.parent = min_node
-            min_node.color = deleting_node.color
-
-        if original_color == Color.Black:
-            self._delete_fixup(fixing_node=temp)
-
     # Override
     def _get_min(self, node: RBNode) -> RBNode:
         """Real implementation of getting the leftmost node.
@@ -330,12 +331,12 @@ class RBTree(binary_tree.BinaryTree):
         if key == node.key:
             return node
         elif key < node.key:
-            if node.left is not None:
+            if node.left:
                 return self._search(key=key, node=node.left)
             else:
                 raise KeyError(f"Key {key} not found")
         else:  # key > node.key
-            if node.right is not None:
+            if node.right:
                 return self._search(key=key, node=node.right)
             else:
                 raise KeyError(f"Key {key} not found")

@@ -5,10 +5,9 @@
 """A base class for binary trees."""
 
 import abc
-import functools
 
 from dataclasses import dataclass
-from typing import Any, Generic, NoReturn, Optional, TypeVar
+from typing import Any, Generic, Iterator, Optional, Tuple, TypeVar
 
 
 class Comparable(abc.ABC):
@@ -33,6 +32,9 @@ class Comparable(abc.ABC):
 # User-defined type for a tree node key. The key must be comparable.
 KeyType = TypeVar("KeyType", bound=Comparable)
 
+# An iterator of Key-Value pairs. Yield by traversal functions.
+Pairs = Iterator[Tuple[KeyType, Any]]
+
 
 @dataclass
 class Node(Generic[KeyType]):
@@ -42,6 +44,7 @@ class Node(Generic[KeyType]):
     data: Any
     left: Optional["Node"] = None
     right: Optional["Node"] = None
+    parent: Optional["Node"] = None
 
 
 class BinaryTree(abc.ABC):
@@ -70,22 +73,47 @@ class BinaryTree(abc.ABC):
         self.root: Optional[Node] = None
 
     @abc.abstractmethod
-    def insert(self, key: Any, data: Any) -> NoReturn:
-        """Insert data and its key into the binary tree."""
-        pass
+    def insert(self, key: Any, data: Any):
+        """Insert data and its key into the binary tree.
+
+        Parameters
+        ----------
+        key: `KeyType`
+            A unique key associated with the data.
+
+        data: Any
+            The data to be inserted into the tree.
+
+        Raises
+        ------
+        ValueError
+            If the input data has existed in the tree, `ValueError`
+            will be thrown.
+        """
+        raise NotImplementedError
 
     @abc.abstractmethod
-    def delete(self, key: Any) -> NoReturn:
-        """Delete the data based on the given key."""
-        pass
+    def delete(self, key: Any):
+        """Delete the data based on the given key.
 
-    def search(self, key: Any) -> Any:
+        Parameters
+        ----------
+        key: KeyType
+            The key associated with the data.
+        """
+        raise NotImplementedError
+
+    def search(self, key: Any, recursive: bool = False) -> Any:
         """Search data based on the given key.
 
         Parameters
         ----------
         key: KeyType
             The key associated with the data.
+
+        recursive: bool
+            A binary tree can search a key recursively or iteratively.
+            If True, use recursive implementation; False, otherwise.
 
         Returns
         -------
@@ -100,75 +128,84 @@ class BinaryTree(abc.ABC):
         if self.root is None:
             return None
 
-        return self._search(key=key, node=self.root).data
+        if recursive:
+            return self._recursive_search(key=key, node=self.root).data
 
-    def _search(self, key: KeyType, node: Node) -> Node:
-        """Real implementation of search.
+        return self._iterative_search(key=key).data
 
-        Parameters
-        ----------
-        key: KeyType
-            The key of the data.
-        node: Node
-            The node to check if its key matches the given key.
-
-        Retruns
-        -------
-        Node
-            Return the node if the key matches, or the node for next recursion.
-
-        Raises
-        ------
-        KeyError
-            If the key does not exist, `KeyError` will be thrown.
-        """
-        if key == node.key:
-            return node
-        elif key < node.key:
-            if node.left is not None:
-                return self._search(key=key, node=node.left)
-            else:
-                raise KeyError(f"Key {key} not found")
-        else:  # key > node.key
-            if node.right is not None:
-                return self._search(key=key, node=node.right)
-            else:
-                raise KeyError(f"Key {key} not found")
-
-    def _get_min(self, node: Node) -> Node:
-        """Real implementation of getting the leftmost node.
-
-        Parameters
-        ----------
-        node: Node
-            The root of the tree.
-
-        Retruns
-        -------
-        Node
-            Return the leftmost node in the tree.
-        """
-        current_node = node
-        while current_node.left:
-            current_node = current_node.left
-        return current_node
-
-    def get_min(self) -> Any:
+    def get_min(self) -> Optional[KeyType]:
         """Return the minimum key from the tree."""
         if self.root is None:
             return None
         return self._get_min(self.root).key
 
+    def get_max(self) -> Optional[KeyType]:
+        """Return the maximum key from the tree."""
+        if self.root is None:
+            return None
+        return self._get_max(self.root).key
+
+    def _recursive_search(self, key: KeyType, node: Node) -> Node:
+        if key == node.key:
+            return node
+        elif key < node.key:
+            if node.left:
+                return self._recursive_search(key=key, node=node.left)
+            else:
+                raise KeyError(f"Key {key} not found")
+        else:  # key > node.key
+            if node.right:
+                return self._recursive_search(key=key, node=node.right)
+            else:
+                raise KeyError(f"Key {key} not found")
+
+    def _iterative_search(self, key: KeyType) -> Node:
+        temp = self.root
+        while temp:
+            if key < temp.key:
+                temp = temp.left
+            elif key > temp.key:
+                temp = temp.right
+            else:  # Key found
+                return temp
+        raise KeyError(f"Key {key} not found")
+
+    def _get_min(self, node: Node) -> Node:
+        current_node = node
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    def _get_max(self, node: Node) -> Node:
+        current_node = node
+        while current_node.right:
+            current_node = current_node.right
+        return current_node
+
+    def _get_successor(self, node: Node) -> Optional[Node]:
+        if node.right:
+            return self._get_min(node=node.right)
+        parent = node.parent
+        while parent and node == parent.right:
+            node = parent
+            parent = parent.parent
+        return parent
+
+    def _get_predecessor(self, node: Node) -> Optional[Node]:
+        if node.left:
+            return self._get_max(node=node.left)
+        return node.parent
+
+    def _get_height(self, node: Optional[Node]) -> int:
+        if node is None:
+            return 0
+
+        if node.left is None and node.right is None:
+            return 0
+
+        return max(self._get_height(node.left),
+                   self._get_height(node.right)) + 1
+
 
 # User-defined type for a binary tree.
 TreeType = TypeVar("TreeType", bound=BinaryTree)
-
-
-def verify(tree: TreeType) -> bool:
-    """Check if a binary tree is also a binary search tree."""
-    raise NotImplementedError
-
-
-def convert(tree: Any) -> TreeType:
-    """Convert a general tree to a binary tree."""
-    raise NotImplementedError

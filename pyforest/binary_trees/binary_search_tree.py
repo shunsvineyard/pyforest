@@ -37,7 +37,6 @@ a BST is as the table.
 from typing import Any, Optional
 
 from pyforest.binary_trees import binary_tree
-from pyforest.binary_trees import traversal
 
 
 class BinarySearchTree(binary_tree.BinaryTree):
@@ -102,288 +101,113 @@ class BinarySearchTree(binary_tree.BinaryTree):
         if key and data:
             self.root = binary_tree.Node(key=key, data=data)
 
-    def _insert(self,
-                key: binary_tree.KeyType,
-                data: Any,
-                node: binary_tree.Node):
-        """Real implementation of tree insertion.
-
-        Parameters
-        ----------
-        key: KeyType
-            The key of the data.
-        data: Any
-            The data to be inserted into the tree.
-        node: Node
-            The parent node of the input data.
-
-        Raises
-        ------
-        ValueError
-            If the input data has existed in the tree, `ValueError`
-            will be thrown.
-        """
-        if key == node.key:
-            raise ValueError("Duplicate key")
-        elif key < node.key:
-            if node.left is not None:
-                self._insert(key=key, data=data, node=node.left)
-            else:
-                node.left = binary_tree.Node(key=key, data=data)
-        else:  # key > node.key
-            if node.right is not None:
-                self._insert(key=key, data=data, node=node.right)
-            else:
-                node.right = binary_tree.Node(key=key, data=data)
-
-    def _height(self, node: Optional[binary_tree.Node]) -> int:
-        """Real implementation of getting the height of a given node.
-
-        Parameters
-        ----------
-        node: Node
-            The root of the tree.
-
-        Retruns
-        -------
-        int
-            Return the height of the given node.
-        """
-        if node is None:
-            return 0
-
-        if node.left is None and node.right is None:
-            return 0
-
-        return max(self._height(node.left), self._height(node.right)) + 1
-
-    def _is_balance(self, node: binary_tree.Node) -> bool:
-        """Real implementation of checking if a tree is balance.
-
-        Parameters
-        ----------
-        node: Node
-            The root of the tree.
-
-        Retruns
-        -------
-        bool
-            Return True if the tree is balance; False otherwise.
-        """
-        left_hight = self._height(node.left)
-        right_height = self._height(node.right)
-
-        if (abs(left_hight - right_height) > 1):
-            return False
-
-        if node.left:
-            if not self._is_balance(node=node.left):
-                return False
-        if node.right:
-            if not self._is_balance(node=node.right):
-                return False
-
-        return True
-
-    # Overriding abstract method
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: binary_tree.KeyType, data: Any,
+               recursive: bool = False):
         """Insert data and its key into the binary tree.
 
         Parameters
         ----------
-        key: KeyType
+        key: `KeyType`
             A unique key associated with the data.
 
         data: Any
             The data to be inserted into the tree.
 
+        recursive: bool
+            A binary tree insertion can be implemented by either
+            recursive or iterative. If True, use recursive implementation;
+            False, otherwise.
+
         Raises
         ------
         ValueError
             If the input data has existed in the tree, `ValueError`
             will be thrown.
         """
+        node = binary_tree.Node(key=key, data=data)
         if self.root is None:
-            self.root = binary_tree.Node(key=key, data=data)
+            self.root = node
         else:
-            self._insert(key=key, data=data, node=self.root)
-
-    def _delete_helper(self, node: binary_tree.Node) -> binary_tree.Node:
-        """Find the minimum node, return it, and update its parent's left.
-
-        Parameters
-        ----------
-        node : `binary_tree.Node`
-            The root of the right sub tree of the deleting node.
-
-        Returns
-        -------
-        node : `binary_tree.Node`
-            The node has the minimum key of the right sub tree of the deleting
-            node.
-        """
-        parent = node
-        current = node
-        # Find the node has the minimum key and its parent.
-        while True:
-            if current.left:
-                parent = current
-                current = current.left
+            if recursive:
+                self._recursive_insert(new_node=node, node=self.root)
             else:
-                break
+                self._iterative_insert(new_node=node)
 
-        # When the parent equals the current node, it means the current node
-        # is the node which has the minimum key.
-        if parent == current:
-            return current
-        else:
-            parent.left = None
-            return current
-
-    # Overriding abstract method
+    # Override
     def delete(self, key: binary_tree.KeyType):
-        """Delete the data based on the given key.
+        """See :func:`~binary_tree.BinaryTree.delete`."""
+        if self.root:
+            deleting_node = \
+                binary_tree.BinaryTree._iterative_search(self, key=key)
 
-        Parameters
-        ----------
-        key: KeyType
-            The key associated with the data.
-        """
-        parent: Optional[binary_tree.Node] = None
-        current: Optional[binary_tree.Node] = self.root
-
-        # Find the deleting node and its parent.
-        while True:
-            if current is None:
-                raise KeyError("Key {key} not found")
-
-            if key == current.key:
-                break
+            # No child or only one right child
+            if deleting_node.left is None:
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=deleting_node.right)
+            # Only one left child
+            elif deleting_node.right is None:
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=deleting_node.left)
+            # Two children
             else:
-                parent = current
+                min_node = \
+                    binary_tree.BinaryTree._get_min(self,
+                                                    node=deleting_node.right)
+                # the minmum node is not the direct child of the deleting node
+                if min_node.parent != deleting_node:
+                    self._transplant(deleting_node=min_node,
+                                     replacing_node=min_node.right)
+                    min_node.right = deleting_node.right
+                    min_node.right.parent = min_node
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=min_node)
+                min_node.left = deleting_node.left
+                min_node.left.parent = min_node
 
-                if key < current.key:
-                    current = current.left
-                elif key > current.key:
-                    current = current.right
+    def _recursive_insert(self, new_node: binary_tree.Node,
+                          node: binary_tree.Node):
+        if new_node.key == node.key:
+            raise ValueError(f"Duplicate key {new_node.key}")
+        elif new_node.key < node.key:
+            if node.left:
+                self._recursive_insert(new_node=new_node, node=node.left)
+            else:
+                node.left = new_node
+                new_node.parent = node
+        else:  # new_node.key > node.key
+            if node.right:
+                self._recursive_insert(new_node=new_node, node=node.right)
+            else:
+                node.right = new_node
+                new_node.parent = node
 
-        # No children Case
-        if current.left is None and current.right is None:
-            if parent is not None:
-                if parent.left == current:
-                    parent.left = None
-                else:
-                    parent.right = None
-            del(current)
-
-        # Two children Case
-        elif current.left and current.right:
-            # Find the min node on the right sub-tree
-            candidate = self._delete_helper(node=current.right)
-
-            # Copy the candidate to the deleting node
-            # After the copy, the deleting node become the new node
-            current.key = candidate.key
-            current.data = candidate.data
-
-            # If the min node on the right sub-tree is the replacement of the
-            # deleting node, the candidate's right pointer needs to be copied.
-            if current.right == candidate:
-                current.right = candidate.right
-
-            # Delete the candidate
-            del(candidate)
-
-        # One child Cases
+    def _iterative_insert(self, new_node: binary_tree.Node):
+        parent = None
+        temp = self.root
+        while temp:
+            parent = temp
+            if new_node.key == temp.key:
+                raise ValueError(f"Duplicate key {new_node.key}")
+            elif new_node.key < temp.key:
+                temp = temp.left
+            else:
+                temp = temp.right
+        new_node.parent = parent
+        # If the tree is empty
+        if parent is None:
+            self.root = new_node
+        elif new_node.key < parent.key:
+            parent.left = new_node
         else:
-            # One child (left)
-            if current.left and current.right is None:
-                if parent is None:
-                    self.root = current.left
-                else:
-                    if parent.left == current:
-                        parent.left = current.left
-                    else:
-                        parent.right = current.left
-            # One child (right)
-            elif current.right and current.left is None:
-                if parent is None:
-                    self.root = current.right
-                else:
-                    if parent.left == current:
-                        parent.left = current.right
-                    else:
-                        parent.right = current.right
-            # Should never happen
-            else:
-                raise RuntimeError("Fatal error")
+            parent.right = new_node
 
-            del(current)
-
-    def get_max(self) -> Any:
-        """Return the maximum key from the tree."""
-        if self.root is None:
-            return None
-
-        node: binary_tree.Node = self.root
-
-        while node.right is not None:
-            node = node.right
-
-        return node.key
-
-    def get_height(self) -> int:
-        """Return the height of the tree."""
-        return self._height(self.root)
-
-    def is_balance(self) -> bool:
-        """Check if the tree is balance.
-
-        Returns
-        -------
-        bool
-            True is the tree is balance; False otherwise.
-        """
-        if self.root is None:
-            return True
-
-        return self._is_balance(node=self.root)
-
-
-def is_valid_binary_search_tree(tree: binary_tree.TreeType):
-    """Check if a binary tree is a valid BST.
-
-    Parameters
-    ----------
-    tree : binary_tree.TreeType
-        A type of binary tree.
-
-    Returns
-    -------
-    bool
-        True is the tree is a BST; False otherwise.
-
-    Examples
-    --------
-    >>> from pyforest.binary_trees import binary_search_tree
-    >>> tree = binary_search_tree.BinarySearchTree()
-    >>> tree.insert(key=23, data="23")
-    >>> tree.insert(key=4, data="4")
-    >>> tree.insert(key=30, data="30")
-    >>> tree.insert(key=11, data="11")
-    >>> tree.insert(key=7, data="7")
-    >>> tree.insert(key=34, data="34")
-    >>> tree.insert(key=20, data="20")
-    >>> tree.insert(key=24, data="24")
-    >>> tree.insert(key=22, data="22")
-    >>> tree.insert(key=15, data="15")
-    >>> tree.insert(key=1, data="1")
-    >>> binary_search_tree.is_valid_binary_search_tree(tree)
-    True
-    """
-    in_order_result = traversal.inorder_traverse(tree=tree)
-
-    for index in range(len(in_order_result) - 1):
-        if in_order_result[index] > in_order_result[index + 1]:
-            return False
-    return True
+    def _transplant(self, deleting_node: binary_tree.Node,
+                    replacing_node: Optional[binary_tree.Node]):
+        if deleting_node.parent is None:
+            self.root = replacing_node
+        elif deleting_node == deleting_node.parent.left:
+            deleting_node.parent.left = replacing_node
+        else:
+            deleting_node.parent.right = replacing_node
+        if replacing_node:
+            replacing_node.parent = deleting_node.parent
