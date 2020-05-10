@@ -157,14 +157,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 current = current.left
 
     # Override
-    def _get_successor(self,
-                       node: SingleThreadNode) -> Optional[SingleThreadNode]:
-        if node.isThread:
-            return node.right
-        else:
-            return self._get_leftmost(node=node.right)
-
-    # Override
     def _recursive_search(self, key: binary_tree.KeyType,
                           node: SingleThreadNode) -> SingleThreadNode:
         if key == node.key:
@@ -193,6 +185,14 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 if current.isThread is False:
                     current = current.right
         raise KeyError(f"Key {key} not found")
+
+    # Override
+    def _get_successor(self,
+                       node: SingleThreadNode) -> Optional[SingleThreadNode]:
+        if node.isThread:
+            return node.right
+        else:
+            return self._get_leftmost(node=node.right)
 
     # Override
     def _get_max(self, node: SingleThreadNode) -> SingleThreadNode:
@@ -347,19 +347,19 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                 current = self._get_rightmost(current.left)
 
     # Override
-    def _get_min(self, node: SingleThreadNode) -> SingleThreadNode:
-        current_node = node
-        while current_node.left and current_node.isThread is False:
-            current_node = current_node.left
-        return current_node
-
-    # Override
     def _get_predecessor(self,
                          node: SingleThreadNode) -> Optional[SingleThreadNode]:
         if node.isThread:
             return node.left
         else:
             return self._get_rightmost(node=node.left)
+
+    # Override
+    def _get_min(self, node: SingleThreadNode) -> SingleThreadNode:
+        current_node = node
+        while current_node.left and current_node.isThread is False:
+            current_node = current_node.left
+        return current_node
 
     def _get_rightmost(self, node: Optional[SingleThreadNode]):
 
@@ -578,6 +578,13 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         else:
             return self._get_leftmost(node=node.right)
 
+    # Override
+    def _get_min(self, node: DoubleThreadNode) -> DoubleThreadNode:
+        current_node = node
+        while current_node.left and current_node.leftThread is False:
+            current_node = current_node.left
+        return current_node
+
     def _get_leftmost(self, node: DoubleThreadNode):
 
         if node is None:
@@ -595,14 +602,6 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         while node.right and node.rightThread is False:
             node = node.right
         return node
-
-    # Override
-    def _get_min(self, node: DoubleThreadNode) -> DoubleThreadNode:
-        current_node = node
-        while current_node.left and current_node.leftThread is False:
-            current_node = current_node.left
-        return current_node
-
 
     def _transplant(self, deleting_node: DoubleThreadNode,
                     replacing_node: Optional[DoubleThreadNode]):
@@ -651,49 +650,3 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
         if replacing_node:
             replacing_node.parent = deleting_node.parent
-
-
-if __name__ == "__main__":
-
-    test = DoubleThreadedBinaryTree()
-    test.insert(23, "23")
-    test.insert(4, "4")
-    test.insert(30, "30")
-    test.insert(11, "11")
-    test.insert(7, "7")
-    test.insert(34, "34")
-    test.insert(20, "20")
-    test.insert(24, "24")
-    test.insert(22, "22")
-    test.insert(15, "15")
-    test.insert(1, "1")
-
-
-    test.delete(15)
-    print([item for item in test.inorder_traverse()])
-    test.delete(20)
-    print([item for item in test.inorder_traverse()])
-    test.insert(17, "17")
-    print([item for item in test.inorder_traverse()])
-    test.delete(22)
-    print([item for item in test.inorder_traverse()])
-    test.delete(11)
-    print([item for item in test.inorder_traverse()])
-
-
-    #print(test.get_min())
-
-    """
-    for item in test.inorder_traverse():
-        print(item)
-    """
-
-    """
-    for item in test.outorder_traverse():
-        print(item)
-    """
-
-    """
-    for item in test.preorder_traverse():
-        print(item)
-    """
