@@ -133,7 +133,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=min_node)
                 min_node.left = deleting_node.left
                 min_node.left.parent = min_node
-                if predecessor:
+                if predecessor and predecessor.isThread:
                     predecessor.right = min_node
 
     def inorder_traverse(self) -> binary_tree.Pairs:
@@ -309,31 +309,31 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
             # The deleting node has two children
             else:
+                min_node: SingleThreadNode = \
+                    self._get_min(node=deleting_node.right)
+
                 successor = \
                     binary_tree.BinaryTree._get_successor(self,
-                                                            node=deleting_node)
-
-                max_node: SingleThreadNode = \
-                    binary_tree.BinaryTree._get_max(self,
-                                                    node=deleting_node.left)
+                                                            node=min_node)
 
                 # the minmum node is not the direct child of the deleting node
-                if max_node.parent != deleting_node:
-                    if max_node.isThread:
-                        self._transplant(deleting_node=max_node,
+                if min_node.parent != deleting_node:
+                    if min_node.isThread:
+                        self._transplant(deleting_node=min_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=max_node,
-                                         replacing_node=max_node.right)
-                    max_node.right = deleting_node.right
-                    max_node.right.parent = max_node
+                        self._transplant(deleting_node=min_node,
+                                         replacing_node=min_node.right)
+                    min_node.right = deleting_node.right
+                    min_node.right.parent = min_node
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=max_node)
-                max_node.right = deleting_node.right
-                max_node.right.parent = max_node
-                if successor:
-                    successor.left = max_node
+                                 replacing_node=min_node)
+                min_node.left = deleting_node.left
+                min_node.left.parent = min_node
+                min_node.isThread = False
+                if successor and successor.isThread:
+                    successor.left = min_node
 
     def outorder_traverse(self) -> binary_tree.Pairs:
 
