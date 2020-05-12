@@ -82,7 +82,7 @@ class AVLTree(binary_tree.BinaryTree):
         if self.root is None:
             return
 
-        deleting_node = binary_tree.BinaryTree._recursive_search(self, key=key, node=self.root)
+        deleting_node = binary_tree.BinaryTree.search(self, key=key)
 
         # No children or only one right child
         if deleting_node.left is None:
@@ -100,7 +100,7 @@ class AVLTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = binary_tree.BinaryTree._get_min(self, node=deleting_node.right)
+            min_node = binary_tree.BinaryTree.get_min(self, node=deleting_node.right)
             # The deleting node is not the direct parent of the minimum node.
             if min_node.parent != deleting_node:
                 self._transplant(min_node, min_node.right)

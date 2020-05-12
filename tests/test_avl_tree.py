@@ -14,10 +14,10 @@ def test_simple_case(basic_tree):
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert tree.get_min() == 1
-    assert tree.search(24) == "24"
+    assert tree.get_min(node=tree.root).key == 1
+    assert tree.search(key=24).data == "24"
 
-    tree.delete(15)
+    tree.delete(key=15)
 
     with pytest.raises(KeyError):
-        tree.search(15)
+        tree.search(key=15)

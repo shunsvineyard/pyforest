@@ -103,17 +103,13 @@ class BinaryTree(abc.ABC):
         """
         raise NotImplementedError
 
-    def search(self, key: Any, recursive: bool = False) -> Any:
+    def search(self, key: Any) -> Node:
         """Search data based on the given key.
 
         Parameters
         ----------
         key: KeyType
             The key associated with the data.
-
-        recursive: bool
-            A binary tree can search a key recursively or iteratively.
-            If True, use recursive implementation; False, otherwise.
 
         Returns
         -------
@@ -125,41 +121,6 @@ class BinaryTree(abc.ABC):
         KeyError
             If the key does not exist, `KeyError` will be thrown.
         """
-        if self.root is None:
-            return None
-
-        if recursive:
-            return self._recursive_search(key=key, node=self.root).data
-
-        return self._iterative_search(key=key).data
-
-    def get_min(self) -> Optional[KeyType]:
-        """Return the minimum key from the tree."""
-        if self.root is None:
-            return None
-        return self._get_min(self.root).key
-
-    def get_max(self) -> Optional[KeyType]:
-        """Return the maximum key from the tree."""
-        if self.root is None:
-            return None
-        return self._get_max(self.root).key
-
-    def _recursive_search(self, key: KeyType, node: Node) -> Node:
-        if key == node.key:
-            return node
-        elif key < node.key:
-            if node.left:
-                return self._recursive_search(key=key, node=node.left)
-            else:
-                raise KeyError(f"Key {key} not found")
-        else:  # key > node.key
-            if node.right:
-                return self._recursive_search(key=key, node=node.right)
-            else:
-                raise KeyError(f"Key {key} not found")
-
-    def _iterative_search(self, key: KeyType) -> Node:
         temp = self.root
         while temp:
             if key < temp.key:
@@ -170,41 +131,119 @@ class BinaryTree(abc.ABC):
                 return temp
         raise KeyError(f"Key {key} not found")
 
-    def _get_min(self, node: Node) -> Node:
+    def get_min(self, node: Node) -> Node:
+        """Get the node whose key is the smallest from the subtree.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the subtree.
+
+        Returns
+        -------
+        Node
+            The node whose key is the smallest from the subtree of
+            the given node.
+        """
+        if node is None:
+            raise KeyError(f"{node} does not have min node")
         current_node = node
         while current_node.left:
             current_node = current_node.left
         return current_node
 
-    def _get_max(self, node: Node) -> Node:
+    def get_max(self, node: Node) -> Optional[Node]:
+        """Get the node whose key is the biggest from the subtree.
+
+        Parameters
+        ----------
+        node: Node
+            The root of the subtree.
+
+        Returns
+        -------
+        Node
+            The node whose key is the biggest from the subtree of
+            the given node.
+        """
         current_node = node
-        while current_node.right:
-            current_node = current_node.right
+        if current_node:
+            while current_node.right:
+                current_node = current_node.right
         return current_node
 
-    def _get_successor(self, node: Node) -> Optional[Node]:
+    def get_successor(self, node: Node) -> Optional[Node]:
+        """Get the successor node in the in-order order.
+
+        Parameters
+        ----------
+        node: Node
+            The node to get its successor.
+
+        Returns
+        -------
+        Node
+            The successor node.
+        """
         if node.right:
-            return self._get_min(node=node.right)
+            return self.get_min(node=node.right)
         parent = node.parent
         while parent and node == parent.right:
             node = parent
             parent = parent.parent
         return parent
 
-    def _get_predecessor(self, node: Node) -> Optional[Node]:
+    def get_predecessor(self, node: Node) -> Optional[Node]:
+        """Get the predecessor node in the in-order order.
+
+        Parameters
+        ----------
+        node: Node
+            The node to get its predecessor.
+
+        Returns
+        -------
+        Node
+            The predecessor node.
+        """
         if node.left:
-            return self._get_max(node=node.left)
+            return self.get_max(node=node.left)
         return node.parent
 
-    def _get_height(self, node: Optional[Node]) -> int:
+    def get_height(self, node: Optional[Node]) -> int:
+        """Get the height from the given node.
+
+        Parameters
+        ----------
+        node: Node
+            The node to get its height.
+
+        Returns
+        -------
+        int
+            The height from the given node.
+        """
         if node is None:
             return 0
 
         if node.left is None and node.right is None:
             return 0
 
-        return max(self._get_height(node.left),
-                   self._get_height(node.right)) + 1
+        return max(self.get_height(node.left),
+                   self.get_height(node.right)) + 1
+
+    @property
+    def empty(self) -> bool:
+        """Return if the tree is empty.
+
+        Returns
+        -------
+        bool
+            True if the tree is empty; False otherwise.
+        """
+        if self.root:
+            return False
+        return True
 
 
 # User-defined type for a binary tree.
