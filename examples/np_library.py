@@ -14,14 +14,13 @@ simulate a disk. And use binary search tree to build two indexes, name and
 size, so it can perform sorting operation by name and size.
 """
 
-from pyforest.binary_trees import binary_search_tree
-from pyforest.binary_trees import traversal
+import enum
 
 from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, List, NoReturn, Tuple
+from typing import Any, List, Tuple
 
-import enum
+from pyforest.binary_trees import binary_search_tree
+from pyforest.binary_trees import traversal
 
 
 class SortType(enum.Enum):
