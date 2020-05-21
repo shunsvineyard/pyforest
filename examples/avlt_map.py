@@ -2,34 +2,34 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""The module demonstrates using Red-Black Tree to implement Map."""
+"""The module demonstrates using AVL Tree to implement Map."""
 
-from pyforest.binary_trees import red_black_tree
+from pyforest.binary_trees import avl_tree
 from pyforest.binary_trees import traversal
 
 
 class Map:
-    """Map example implemented by Red-Black Tree."""
+    """Map example implemented by AVL Tree."""
 
     def __init__(self):
-        self._rbt = red_black_tree.RBTree()
+        self._avlt = avl_tree.AVLTree()
 
     def __setitem__(self, key, value):
-        self._rbt.insert(key=key, data=value)
+        self._avlt.insert(key=key, data=value)
 
     def __getitem__(self, key):
-        return self._rbt.search(key=key).data
+        return self._avlt.search(key=key).data
 
     def __delitem__(self, key):
-        self._rbt.delete(key=key)
+        self._avlt.delete(key=key)
 
     def __iter__(self):
-        return traversal.inorder_traverse(tree=self._rbt)
+        return traversal.inorder_traverse(tree=self._avlt)
 
     @property
     def empty(self) -> bool:
         """Return `True` if the map is empty; `False` otherwise."""
-        return self._rbt.empty
+        return self._avlt.empty
 
 
 if __name__ == "__main__":
