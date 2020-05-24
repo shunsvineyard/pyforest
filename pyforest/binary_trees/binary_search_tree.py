@@ -42,7 +42,16 @@ from pyforest.binary_trees import binary_tree
 
 
 class BinarySearchTree(binary_tree.BinaryTree):
-    """Binary Search Tree (BST) class.
+    """Binary Search Tree (BST).
+
+    Parameters
+    ----------
+    key: `KeyType`
+        The key of the root when the tree is initialized.
+        Default is `None`.
+    data: `Any`
+        The data of the root when the tree is initialized.
+        Default is `None`.
 
     Attributes
     ----------

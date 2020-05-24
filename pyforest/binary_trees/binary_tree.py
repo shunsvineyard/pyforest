@@ -42,7 +42,7 @@ Pairs = Iterator[Tuple[KeyType, Any]]
 
 @dataclass
 class Node(Generic[KeyType]):
-    """The `Node` class defines the basic binary tree node."""
+    """Basic binary tree node definition."""
 
     key: KeyType
     data: Any

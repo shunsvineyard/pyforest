@@ -32,7 +32,7 @@ def test_simple_right_threaded_case(basic_tree):
     tree.delete(key=7)
     tree.delete(key=20)
 
-    with pytest.raises(KeyError):
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(key=15)
 
     assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"), (30, "30"),
@@ -175,7 +175,7 @@ def test_simple_double_threaded_case(basic_tree):
     tree.delete(key=7)
     tree.delete(key=20)
 
-    with pytest.raises(KeyError):
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(key=15)
 
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (11, "11"),

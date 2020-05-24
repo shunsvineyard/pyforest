@@ -7,11 +7,15 @@
 from dataclasses import dataclass
 from typing import Any, Generic, Optional
 
+from pyforest import tree_exceptions
+
 from pyforest.binary_trees import binary_tree
 
 
 @dataclass
 class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+    """AVL Tree node definition."""
+
     left: Optional["AVLNode"] = None
     right: Optional["AVLNode"] = None
     parent: Optional["AVLNode"] = None
@@ -34,7 +38,7 @@ class AVLTree(binary_tree.BinaryTree):
         while temp:
             parent = temp
             if key == temp.key:
-                raise ValueError(f"Duplicate key {key}")
+                raise tree_exceptions.DuplicateKeyError(key=key)
             elif key < temp.key:
                 temp = temp.left
             else:
