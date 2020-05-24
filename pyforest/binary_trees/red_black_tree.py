@@ -7,18 +7,24 @@
 import enum
 
 from dataclasses import dataclass
-from typing import Any, Generic, NoReturn, Optional, TypeVar, Union
+from typing import Any, Generic, Union
+
+from pyforest import tree_exceptions
 
 from pyforest.binary_trees import binary_tree
 
 
 class Color(enum.Enum):
+    """Color definition for Red-Black Tree."""
+
     Red = enum.auto()
     Black = enum.auto()
 
 
 @dataclass
 class LeafNode():
+    """Definition Red-Black Tree Leaf node whose color is always black."""
+
     left = None
     right = None
     parent = None
@@ -27,6 +33,8 @@ class LeafNode():
 
 @dataclass
 class RBNode(Generic[binary_tree.KeyType]):
+    """Red-Black Tree non-leaf node definition."""
+
     key: binary_tree.KeyType
     data: Any
     left: Union["RBNode", LeafNode]
@@ -326,7 +334,7 @@ class RBTree(binary_tree.BinaryTree):
         """
 
         if node is self._NIL:
-            raise KeyError(f"Key {key} not found")
+            raise tree_exceptions.KeyNotFoundError(key=key)
 
         if key == node.key:
             return node
@@ -334,12 +342,12 @@ class RBTree(binary_tree.BinaryTree):
             if node.left:
                 return self._search(key=key, node=node.left)
             else:
-                raise KeyError(f"Key {key} not found")
+                raise tree_exceptions.KeyNotFoundError(key=key)
         else:  # key > node.key
             if node.right:
                 return self._search(key=key, node=node.right)
             else:
-                raise KeyError(f"Key {key} not found")
+                raise tree_exceptions.KeyNotFoundError(key=key)
 
     # FIXME: test only
     def inorder(self, n):

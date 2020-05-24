@@ -2,6 +2,8 @@
 
 import pytest
 
+from pyforest import tree_exceptions
+
 from pyforest.binary_trees import threaded_binary_tree
 
 
@@ -21,17 +23,17 @@ def test_simple_right_threaded_case(basic_tree):
             (15, "15"), (22, "22"), (30, "30"), (24, "24"), (34, "34")] == \
            [item for item in tree.preorder_traverse()]
 
-    assert tree.get_min() == 1
-    assert tree.get_max() == 34
-    assert tree.search(24, recursive=True) == "24"
+    assert tree.get_min(node=tree.root).key == 1
+    assert tree.get_max(node=tree.root).key == 34
+    assert tree.search(key=24).data == "24"
 
-    tree.delete(15)
-    tree.delete(22)
-    tree.delete(7)
-    tree.delete(20)
+    tree.delete(key=15)
+    tree.delete(key=22)
+    tree.delete(key=7)
+    tree.delete(key=20)
 
-    with pytest.raises(KeyError):
-        tree.search(15, recursive=True)
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
+        tree.search(key=15)
 
     assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"), (30, "30"),
             (34, "34")] == [item for item in tree.inorder_traverse()]
@@ -89,17 +91,17 @@ def test_simple_left_threaded_case(basic_tree):
             (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
             (1, "1")] == [item for item in tree.outorder_traverse()]
 
-    assert tree.get_min() == 1
-    assert tree.get_max() == 34
-    assert tree.search(24, recursive=True) == "24"
+    assert tree.get_min(node=tree.root).key == 1
+    assert tree.get_max(node=tree.root).key == 34
+    assert tree.search(key=24).data == "24"
 
-    tree.delete(15)
-    tree.delete(22)
-    tree.delete(7)
-    tree.delete(20)
+    tree.delete(key=15)
+    tree.delete(key=22)
+    tree.delete(key=7)
+    tree.delete(key=20)
 
-    with pytest.raises(KeyError):
-        tree.search(15, recursive=True)
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
+        tree.search(key=15)
 
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (11, "11"),
             (4, "4"), (1, "1")] == [item for item in tree.outorder_traverse()]
@@ -164,17 +166,17 @@ def test_simple_double_threaded_case(basic_tree):
             (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
-    assert tree.get_min() == 1
-    assert tree.get_max() == 34
-    assert tree.search(24, recursive=True) == "24"
+    assert tree.get_min(node=tree.root).key == 1
+    assert tree.get_max(node=tree.root).key == 34
+    assert tree.search(key=24).data == "24"
 
-    tree.delete(15)
-    tree.delete(22)
-    tree.delete(7)
-    tree.delete(20)
+    tree.delete(key=15)
+    tree.delete(key=22)
+    tree.delete(key=7)
+    tree.delete(key=20)
 
-    with pytest.raises(KeyError):
-        tree.search(15, recursive=True)
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
+        tree.search(key=15)
 
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (11, "11"),
             (4, "4"), (1, "1")] == [item for item in tree.outorder_traverse()]

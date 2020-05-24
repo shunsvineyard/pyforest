@@ -2,6 +2,8 @@
 
 import pytest
 
+from pyforest import tree_exceptions
+
 from pyforest.binary_trees import red_black_tree
 from pyforest.binary_trees import traversal
 
@@ -19,7 +21,7 @@ def test_simple_case(basic_tree):
 
     tree.delete(15)
 
-    with pytest.raises(KeyError):
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(15)
 
 

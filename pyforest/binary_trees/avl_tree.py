@@ -7,11 +7,15 @@
 from dataclasses import dataclass
 from typing import Any, Generic, Optional
 
+from pyforest import tree_exceptions
+
 from pyforest.binary_trees import binary_tree
 
 
 @dataclass
 class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+    """AVL Tree node definition."""
+
     left: Optional["AVLNode"] = None
     right: Optional["AVLNode"] = None
     parent: Optional["AVLNode"] = None
@@ -34,7 +38,7 @@ class AVLTree(binary_tree.BinaryTree):
         while temp:
             parent = temp
             if key == temp.key:
-                raise ValueError(f"Duplicate key {key}")
+                raise tree_exceptions.DuplicateKeyError(key=key)
             elif key < temp.key:
                 temp = temp.left
             else:
@@ -82,7 +86,7 @@ class AVLTree(binary_tree.BinaryTree):
         if self.root is None:
             return
 
-        deleting_node = binary_tree.BinaryTree._recursive_search(self, key=key, node=self.root)
+        deleting_node = binary_tree.BinaryTree.search(self, key=key)
 
         # No children or only one right child
         if deleting_node.left is None:
@@ -100,7 +104,7 @@ class AVLTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = binary_tree.BinaryTree._get_min(self, node=deleting_node.right)
+            min_node = binary_tree.BinaryTree.get_min(self, node=deleting_node.right)
             # The deleting node is not the direct parent of the minimum node.
             if min_node.parent != deleting_node:
                 self._transplant(min_node, min_node.right)
