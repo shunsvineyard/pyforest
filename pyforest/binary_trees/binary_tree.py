@@ -9,8 +9,12 @@ import abc
 from dataclasses import dataclass
 from typing import Any, Generic, Iterator, Optional, Tuple, TypeVar
 
+from pyforest import tree_exceptions
+
 
 class Comparable(abc.ABC):
+    """Custom defined `Comparable` type for type hint."""
+
     @abc.abstractmethod
     def __eq__(self, other: Any) -> bool:
         pass
@@ -53,18 +57,14 @@ class BinaryTree(abc.ABC):
     This base class defines the basic properties and methods that all types of
     binary tress should provide.
 
-    Methods
-    -------
-    search(value: Any)
-        Search a binary tree for a specific value.
+    Attributes
+    ----------
+    root: `Optional[Node]`
+        The root of the tree. The default is `None`.
 
-    insert(value: Any)
-        Insert a value into a binary tree.
-
-    delete(value: Any)
-        Delete a value from a binary treeW.
-
-    Note: One reason to use abstract base class for all types of binary trees
+    Notes
+    -----
+    One reason to use abstract base class for all types of binary trees
     is to make sure the type of binary trees is compatable. Therefore, binary
     tree traversal can be performed on any type of binary trees.
     """
@@ -73,53 +73,57 @@ class BinaryTree(abc.ABC):
         self.root: Optional[Node] = None
 
     @abc.abstractmethod
-    def insert(self, key: Any, data: Any):
+    def insert(self, key: KeyType, data: Any):
         """Insert data and its key into the binary tree.
 
         Parameters
         ----------
         key: `KeyType`
-            A unique key associated with the data.
+            The key associated with the data.
 
-        data: Any
-            The data to be inserted into the tree.
+        data: `Any`
+            The data to be inserted.
 
         Raises
         ------
-        ValueError
-            If the input data has existed in the tree, `ValueError`
-            will be thrown.
+        `DuplicateKeyError`
+            Raised if the input data has existed in the tree.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abc.abstractmethod
-    def delete(self, key: Any):
-        """Delete the data based on the given key.
+    def delete(self, key: KeyType):
+        """Delete the node based on the given key.
 
         Parameters
         ----------
-        key: KeyType
-            The key associated with the data.
-        """
-        raise NotImplementedError
+        key: `KeyType`
+            The key of the node to be deleted.
 
-    def search(self, key: Any) -> Node:
+        Raises
+        ------
+        `KeyNotFoundError`
+            Raised if the key does not exist.
+        """
+        raise NotImplementedError()
+
+    def search(self, key: KeyType) -> Node:
         """Search data based on the given key.
 
         Parameters
         ----------
-        key: KeyType
+        key: `KeyType`
             The key associated with the data.
 
         Returns
         -------
-        Any
-            The data based on the given key; None if the key not found.
+        `Node`
+            The node based on the given key.
 
         Raises
         ------
-        KeyError
-            If the key does not exist, `KeyError` will be thrown.
+        `KeyNotFoundError`
+            Raised if the key does not exist.
         """
         temp = self.root
         while temp:
@@ -129,44 +133,68 @@ class BinaryTree(abc.ABC):
                 temp = temp.right
             else:  # Key found
                 return temp
-        raise KeyError(f"Key {key} not found")
+        raise tree_exceptions.KeyNotFoundError(key=key)
 
-    def get_min(self, node: Node) -> Node:
+    def get_min(self, node: Optional[Node] = None) -> Node:
         """Get the node whose key is the smallest from the subtree.
 
         Parameters
         ----------
-        node: Node
-            The root of the subtree.
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
 
         Returns
         -------
-        Node
+        `Node`
             The node whose key is the smallest from the subtree of
             the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
         """
-        if node is None:
-            raise KeyError(f"{node} does not have min node")
-        current_node = node
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
         while current_node.left:
             current_node = current_node.left
         return current_node
 
-    def get_max(self, node: Node) -> Optional[Node]:
+    def get_max(self, node: Optional[Node]) -> Node:
         """Get the node whose key is the biggest from the subtree.
 
         Parameters
         ----------
-        node: Node
-            The root of the subtree.
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
 
         Returns
         -------
-        Node
+        `Node`
             The node whose key is the biggest from the subtree of
             the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
         """
-        current_node = node
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
         if current_node:
             while current_node.right:
                 current_node = current_node.right
@@ -177,12 +205,12 @@ class BinaryTree(abc.ABC):
 
         Parameters
         ----------
-        node: Node
+        node: `Node`
             The node to get its successor.
 
         Returns
         -------
-        Node
+        `Node`
             The successor node.
         """
         if node.right:
@@ -198,12 +226,12 @@ class BinaryTree(abc.ABC):
 
         Parameters
         ----------
-        node: Node
+        node: `Node`
             The node to get its predecessor.
 
         Returns
         -------
-        Node
+        `Node`
             The predecessor node.
         """
         if node.left:
@@ -215,12 +243,12 @@ class BinaryTree(abc.ABC):
 
         Parameters
         ----------
-        node: Node
+        node: `Node`
             The node to get its height.
 
         Returns
         -------
-        int
+        `int`
             The height from the given node.
         """
         if node is None:
@@ -234,12 +262,11 @@ class BinaryTree(abc.ABC):
 
     @property
     def empty(self) -> bool:
-        """Return if the tree is empty.
+        """bool: `True` if the tree is empty; `False` otherwise.
 
-        Returns
-        -------
-        bool
-            True if the tree is empty; False otherwise.
+        Notes
+        -----
+        The property, `empty`, is read-only.
         """
         if self.root:
             return False

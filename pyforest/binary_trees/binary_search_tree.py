@@ -36,6 +36,8 @@ a BST is as the table.
 
 from typing import Any, Optional
 
+from pyforest import tree_exceptions
+
 from pyforest.binary_trees import binary_tree
 
 
@@ -44,27 +46,29 @@ class BinarySearchTree(binary_tree.BinaryTree):
 
     Attributes
     ----------
-    root: node
+    root: `Optional[node]`
         The root node of the binary search tree.
+    empty: `bool`
+        `True` if the tree is empty; `False` otherwise.
 
     Methods
     -------
-    delete(key: KeyType)
-        Delete data from a tree based on the key.
-    get_height()
-        Return the height of the tree.
-    get_max()
-        Return the maximum key from the tree.
-    get_min()
-        Return the minimum key from the tree.
-    insert(key: KeyType, data: Any)
-        Insert a key and data pair into a tree.
-    is_balance()
-        Check if the tree is balance.
-    search(key: KeyType)
-        Look for the key in a tree.
-    size()
-        Return the total number of nodes of the tree.
+    search(key: `KeyType`)
+        Look for a node based on the given key.
+    insert(key: `KeyType`, data: `Any`)
+        Insert a (key, data) pair into a binary tree.
+    delete(key: `KeyType`)
+        Delete a node based on the given key from the binary tree.
+    get_min(node: `Optional[Node]` = `None`)
+        Return the node whose key is the smallest from the given subtree.
+    get_max(node: `Optional[Node]` = `None`)
+        Return the node whose key is the biggest from the given subtree.
+    get_successor(node: `Node`)
+        Return the successor node in the in-order order.
+    get_predecessor(node: `Node`)
+        Return the predecessor node in the in-order order.
+    get_height(node: `Optional[Node]`)
+        Return the height of the given node.
 
     Examples
     --------
@@ -81,18 +85,18 @@ class BinarySearchTree(binary_tree.BinaryTree):
     >>> tree.insert(key=22, data="22")
     >>> tree.insert(key=15, data="15")
     >>> tree.insert(key=1, data="1")
-    >>> tree.size()
-    11
-    >>> tree.get_min()
+    >>> tree.get_min().key
     1
-    >>> tree.get_max()
+    >>> tree.get_min().data
+    '1'
+    >>> tree.get_max().key
     34
-    >>> tree.get_height()
+    >>> tree.get_max().data
+    "34"
+    >>> tree.get_height(tree.root)
     4
-    >>> tree.is_balance()
-    False
-    >>> tree.search(24)
-    24
+    >>> tree.search(24).data
+    `24`
     >>> tree.delete(15)
     """
 
@@ -102,34 +106,14 @@ class BinarySearchTree(binary_tree.BinaryTree):
             self.root = binary_tree.Node(key=key, data=data)
 
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """Insert data and its key into the binary tree.
-
-        Parameters
-        ----------
-        key: `KeyType`
-            A unique key associated with the data.
-
-        data: Any
-            The data to be inserted into the tree.
-
-        recursive: bool
-            A binary tree insertion can be implemented by either
-            recursive or iterative. If True, use recursive implementation;
-            False, otherwise.
-
-        Raises
-        ------
-        ValueError
-            If the input data has existed in the tree, `ValueError`
-            will be thrown.
-        """
+        """See :func:`~binary_tree.BinaryTree.insert`."""
         new_node = binary_tree.Node(key=key, data=data)
         parent = None
         temp = self.root
         while temp:
             parent = temp
             if new_node.key == temp.key:
-                raise ValueError(f"Duplicate key {new_node.key}")
+                raise tree_exceptions.DuplicateKeyError(key=new_node.key)
             elif new_node.key < temp.key:
                 temp = temp.left
             else:
