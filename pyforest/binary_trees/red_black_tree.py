@@ -349,12 +349,32 @@ class RBTree(binary_tree.BinaryTree):
             else:
                 raise tree_exceptions.KeyNotFoundError(key=key)
 
-    # FIXME: test only
-    def inorder(self, n):
-        if n != self._NIL:
-            self.inorder(n.left)
-            print(n.data)
-            self.inorder(n.right)
+    def inorder_traverse(self):
+        return self._inorder_traverse(node=self.root)
+
+    def _inorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
+        if node != self._NIL:
+            yield from self._inorder_traverse(node.left)
+            yield (node.key, node.data)
+            yield from self._inorder_traverse(node.right)
+
+    def preorder_traverse(self):
+        return self._preorder_traverse(node=self.root)
+
+    def _preorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
+        if node != self._NIL:
+            yield (node.key, node.data)
+            yield from self._preorder_traverse(node.left)
+            yield from self._preorder_traverse(node.right)
+
+    def postorder_traverse(self):
+        return self._postorder_traverse(node=self.root)
+
+    def _postorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
+        if node != self._NIL:
+            yield from self._postorder_traverse(node.left)
+            yield from self._postorder_traverse(node.right)
+            yield (node.key, node.data)
 
 
 if __name__ == "__main__":
@@ -371,12 +391,5 @@ if __name__ == "__main__":
     tree.insert(key=15, data=15)
     tree.insert(key=1, data=1)
 
-    tree.inorder(n=tree.root)
-
-    tree.delete(key=11)
-
-    tree.inorder(n=tree.root)
-
-    tree.delete(key=23)
-
-    tree.inorder(n=tree.root)
+    for item in tree.preorder_traverse():
+        print(item)

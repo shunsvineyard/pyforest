@@ -5,7 +5,6 @@ import pytest
 from pyforest import tree_exceptions
 
 from pyforest.binary_trees import red_black_tree
-from pyforest.binary_trees import traversal
 
 
 def test_simple_case(basic_tree):
@@ -26,40 +25,38 @@ def test_simple_case(basic_tree):
 
 
 def test_deletion(basic_tree):
-    """Test the deletion of a binary search tree."""
+    """Test the deletion of a red black tree."""
     tree = red_black_tree.RBTree()
 
     # 23, 4, 30, 11, 7, 34, 20, 24, 22, 15, 1
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    """
     # No child
     tree.delete(15)
-    assert traversal.levelorder_traverse(tree) == [
-        (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
-        (24, "24"), (34, "34"), (7, "7"), (20, "20"), (22, "22")
+    assert [item for item in tree.inorder_traverse()] == [
+        (1, "1"), (4, "4"), (7, "7"), (11, "11"), (20, "20"),
+        (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
     # One right child
     tree.delete(20)
-    assert traversal.levelorder_traverse(tree) == [
-        (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
-        (24, "24"), (34, "34"), (7, "7"), (22, "22")
+    assert [item for item in tree.inorder_traverse()] == [
+        (1, "1"), (4, "4"), (7, "7"), (11, "11"), (22, "22"),
+        (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
     # One left child
     tree.insert(key=17, data="17")
     tree.delete(22)
-    assert traversal.levelorder_traverse(tree) == [
-        (23, "23"), (4, "4"), (30, "30"), (1, "1"), (11, "11"),
-        (24, "24"), (34, "34"), (7, "7"), (17, "17")
+    assert [item for item in tree.inorder_traverse()] == [
+        (1, "1"), (4, "4"), (7, "7"), (11, "11"), (17, "17"),
+        (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
     # Two children
     tree.delete(11)
-    assert traversal.levelorder_traverse(tree) == [
-        (23, "23"), (4, "4"), (30, "30"), (1, "1"),
-        (17, "17"), (24, "24"), (34, "34"), (7, "7")
+    assert [item for item in tree.inorder_traverse()] == [
+        (1, "1"), (4, "4"), (7, "7"), (17, "17"),
+        (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
-    """

@@ -28,12 +28,12 @@ class AVLTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root = AVLNode(key=key, data=data)
+            self.root: AVLNode = AVLNode(key=key, data=data)
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
         """See :func:`~binary_tree.BinaryTree.insert`."""
-        temp = self.root
+        temp: Optional[AVLNode] = self.root
         parent: Optional[AVLNode] = None
         while temp:
             parent = temp
@@ -55,11 +55,13 @@ class AVLTree(binary_tree.BinaryTree):
 
         temp = node
         while parent:
-            parent.height = 1 + max(self._height(parent.left), self._height(parent.right))
+            parent.height = 1 + max(self._height(parent.left),
+                                    self._height(parent.right))
 
             grandparent = parent.parent
             # grandparent is unbalanced
-            if self._balance_factor(grandparent) <= -2 or self._balance_factor(grandparent) >= 2:
+            if self._balance_factor(grandparent) <= -2 or \
+               self._balance_factor(grandparent) >= 2:
                 if parent == grandparent.left:
                     # Case 1
                     if temp == grandparent.left.left:
@@ -83,10 +85,7 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def delete(self, key: binary_tree.KeyType):
         """See :func:`~binary_tree.BinaryTree.delete`."""
-        if self.root is None:
-            return
-
-        deleting_node = binary_tree.BinaryTree.search(self, key=key)
+        deleting_node: AVLNode = binary_tree.BinaryTree.search(self, key=key)
 
         # No children or only one right child
         if deleting_node.left is None:
@@ -188,7 +187,7 @@ class AVLTree(binary_tree.BinaryTree):
         if replacing_node:
             replacing_node.parent = deleting_node.parent
 
-    def _balance_factor(self, node: AVLNode):
+    def _balance_factor(self, node: Optional[AVLNode]):
         if node is None:
             return -1
         return self._height(node.left) - self._height(node.right)
@@ -242,7 +241,6 @@ class AVLTree(binary_tree.BinaryTree):
 
 
 
-"""
 from pyforest.binary_trees import traversal
 
 if __name__ == "__main__":
@@ -261,11 +259,12 @@ if __name__ == "__main__":
 
     print(test.root.height)
 
-    print(traversal.inorder_traverse(tree=test))
+    for item in traversal.inorder_traverse(tree=test):
+        print(item)
 
     test.delete(20)
     test.delete(11)
 
     print(traversal.inorder_traverse(tree=test))
-    #print(traversal.preorder_traverse(tree=test))
-"""
+    print(traversal.preorder_traverse(tree=test))
+
