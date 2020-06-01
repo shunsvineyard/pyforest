@@ -109,7 +109,7 @@ def preorder_traverse(tree: binary_tree.TreeType,
     >>> tree.insert(key=22, data="22")
     >>> tree.insert(key=15, data="15")
     >>> tree.insert(key=1, data="1")
-    >>> [item for item in traversal.preorder_traverse(tree)] 
+    >>> [item for item in traversal.preorder_traverse(tree)]
     [(23, '23'), (4, '4'), (1, '1'), (11, '11'), (7, '7'), (20, '20'),
      (15, '15'), (22, '22'), (30, '30'), (24, '24'), (34, '34')]
     """

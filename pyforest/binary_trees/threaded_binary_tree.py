@@ -72,15 +72,15 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         In-order traversal by using thr right threads.
     preorder_traverse()
         Pre-order traversal by using thr right threads.
-    get_min(node: `Optional[Node]` = `None`)
+    get_min(node: `Optional[SingleThreadNode]` = `None`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[Node]` = `None`)
+    get_max(node: `Optional[SingleThreadNode]` = `None`)
         Return the node whose key is the biggest from the given subtree.
-    get_successor(node: `Node`)
+    get_successor(node: `SingleThreadNode`)
         Return the successor node in the in-order order.
-    get_predecessor(node: `Node`)
+    get_predecessor(node: `SingleThreadNode`)
         Return the predecessor node in the in-order order.
-    get_height(node: `Optional[Node]`)
+    get_height(node: `Optional[SingleThreadNode]`)
         Return the height of the given node.
 
     Examples
@@ -218,7 +218,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 if predecessor and predecessor.isThread:
                     predecessor.right = min_node
 
-    # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.search`."""
         current = self.root
@@ -269,7 +268,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 current = current.left
 
-    # Override
     def get_successor(self,
                       node: SingleThreadNode) -> Optional[SingleThreadNode]:
         """See :func:`~binary_tree.BinaryTree.get_successor`."""
@@ -278,7 +276,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         else:
             return self._get_leftmost(node=node.right)
 
-    # Override
     def get_max(self, node: SingleThreadNode) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         current_node = node
@@ -350,15 +347,15 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         Delete a node based on the given key from the tree.
     outorder_traverse()
         Reversed In-order traversal by using thr left threads.
-    get_min(node: `Optional[Node]` = `None`)
+    get_min(node: `Optional[SingleThreadNode]` = `None`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[Node]` = `None`)
+    get_max(node: `Optional[SingleThreadNode]` = `None`)
         Return the node whose key is the biggest from the given subtree.
-    get_successor(node: `Node`)
+    get_successor(node: `SingleThreadNode`)
         Return the successor node in the in-order order.
-    get_predecessor(node: `Node`)
+    get_predecessor(node: `SingleThreadNode`)
         Return the predecessor node in the in-order order.
-    get_height(node: `Optional[Node]`)
+    get_height(node: `Optional[SingleThreadNode]`)
         Return the height of the given node.
 
     Examples
@@ -573,7 +570,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     Attributes
     ----------
-    root: `Optional[SingleThreadNode]`
+    root: `Optional[DoubleThreadNode]`
         The root node of the left threaded binary search tree.
     empty: `bool`
         `True` if the tree is empty; `False` otherwise.
@@ -592,15 +589,15 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         Pre-order traversal by using thr right threads.
     outorder_traverse()
         Reversed In-order traversal by using thr left threads.
-    get_min(node: `Optional[Node]` = `None`)
+    get_min(node: `Optional[DoubleThreadNode]` = `None`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[Node]` = `None`)
+    get_max(node: `Optional[DoubleThreadNode]` = `None`)
         Return the node whose key is the biggest from the given subtree.
-    get_successor(node: `Node`)
+    get_successor(node: `DoubleThreadNode`)
         Return the successor node in the in-order order.
-    get_predecessor(node: `Node`)
+    get_predecessor(node: `DoubleThreadNode`)
         Return the predecessor node in the in-order order.
-    get_height(node: `Optional[Node]`)
+    get_height(node: `Optional[DoubleThreadNode]`)
         Return the height of the given node.
 
     Examples
