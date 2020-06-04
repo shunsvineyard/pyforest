@@ -31,6 +31,19 @@ class AVLTree(binary_tree.BinaryTree):
             self.root: AVLNode = AVLNode(key=key, data=data)
 
     # Override
+    def search(self, key: binary_tree.KeyType) -> AVLNode:
+        """See :func:`~binary_tree.BinaryTree.search`."""
+        temp = self.root
+        while temp:
+            if key < temp.key:
+                temp = temp.left
+            elif key > temp.key:
+                temp = temp.right
+            else:  # Key found
+                return temp
+        raise tree_exceptions.KeyNotFoundError(key=key)
+
+    # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
         """See :func:`~binary_tree.BinaryTree.insert`."""
         temp: Optional[AVLNode] = self.root
@@ -85,7 +98,7 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def delete(self, key: binary_tree.KeyType):
         """See :func:`~binary_tree.BinaryTree.delete`."""
-        deleting_node: AVLNode = binary_tree.BinaryTree.search(self, key=key)
+        deleting_node: AVLNode = self.search(key=key)
 
         # No children or only one right child
         if deleting_node.left is None:
@@ -103,7 +116,7 @@ class AVLTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = binary_tree.BinaryTree.get_min(self, node=deleting_node.right)
+            min_node = self.get_min(node=deleting_node.right)
             # The deleting node is not the direct parent of the minimum node.
             if min_node.parent != deleting_node:
                 self._transplant(min_node, min_node.right)
@@ -115,6 +128,138 @@ class AVLTree(binary_tree.BinaryTree):
             min_node.left.parent = min_node
 
             self._delete_fixup(min_node)
+
+    # Override
+    def get_min(self, node: AVLNode) -> AVLNode:
+        """Get the node whose key is the smallest from the subtree.
+
+        Parameters
+        ----------
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
+
+        Returns
+        -------
+        `Node`
+            The node whose key is the smallest from the subtree of
+            the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    # Override
+    def get_max(self, node: AVLNode) -> AVLNode:
+        """Get the node whose key is the biggest from the subtree.
+
+        Parameters
+        ----------
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
+
+        Returns
+        -------
+        `Node`
+            The node whose key is the biggest from the subtree of
+            the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        if current_node:
+            while current_node.right:
+                current_node = current_node.right
+        return current_node
+
+    # Override
+    def get_successor(self,
+                      node: AVLNode) -> Optional[AVLNode]:
+        """Get the successor node in the in-order order.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its successor.
+
+        Returns
+        -------
+        `Node`
+            The successor node.
+        """
+        if node.right:
+            return self.get_min(node=node.right)
+        parent = node.parent
+        while parent and node == parent.right:
+            node = parent
+            parent = parent.parent
+        return parent
+
+    # Override
+    def get_predecessor(self,
+                        node: AVLNode) -> Optional[AVLNode]:
+        """Get the predecessor node in the in-order order.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its predecessor.
+
+        Returns
+        -------
+        `Node`
+            The predecessor node.
+        """
+        if node.left:
+            return self.get_max(node=node.left)
+        return node.parent
+
+    # Override
+    def get_height(self, node: Optional[AVLNode]) -> int:
+        """Get the height from the given node.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its height.
+
+        Returns
+        -------
+        `int`
+            The height from the given node.
+        """
+        if node is None:
+            return 0
+
+        if node.left is None and node.right is None:
+            return 0
+
+        return max(self.get_height(node.left),
+                   self.get_height(node.right)) + 1
 
     def _height(self, node: Optional[AVLNode]) -> int:
         """Real implementation of getting the height of a given node.

@@ -114,6 +114,20 @@ class BinarySearchTree(binary_tree.BinaryTree):
         if key and data:
             self.root = binary_tree.Node(key=key, data=data)
 
+    # Override
+    def search(self, key: binary_tree.KeyType) -> binary_tree.Node:
+        """See :func:`~binary_tree.BinaryTree.search`."""
+        temp = self.root
+        while temp:
+            if key < temp.key:
+                temp = temp.left
+            elif key > temp.key:
+                temp = temp.right
+            else:  # Key found
+                return temp
+        raise tree_exceptions.KeyNotFoundError(key=key)
+
+    # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
         """See :func:`~binary_tree.BinaryTree.insert`."""
         new_node = binary_tree.Node(key=key, data=data)
@@ -140,7 +154,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
     def delete(self, key: binary_tree.KeyType):
         """See :func:`~binary_tree.BinaryTree.delete`."""
         if self.root:
-            deleting_node = binary_tree.BinaryTree.search(self, key=key)
+            deleting_node = self.search(key=key)
 
             # No child or only one right child
             if deleting_node.left is None:
@@ -153,8 +167,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
             # Two children
             else:
                 min_node = \
-                    binary_tree.BinaryTree.get_min(self,
-                                                   node=deleting_node.right)
+                    self.get_min(node=deleting_node.right)
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
                     self._transplant(deleting_node=min_node,
@@ -165,6 +178,138 @@ class BinarySearchTree(binary_tree.BinaryTree):
                                  replacing_node=min_node)
                 min_node.left = deleting_node.left
                 min_node.left.parent = min_node
+
+    # Override
+    def get_min(self, node: binary_tree.Node) -> binary_tree.Node:
+        """Get the node whose key is the smallest from the subtree.
+
+        Parameters
+        ----------
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
+
+        Returns
+        -------
+        `Node`
+            The node whose key is the smallest from the subtree of
+            the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    # Override
+    def get_max(self, node: binary_tree.Node) -> binary_tree.Node:
+        """Get the node whose key is the biggest from the subtree.
+
+        Parameters
+        ----------
+        node: `Optional[Node]`
+            The root of the subtree. If the parameter is not present,
+            root will be used.
+
+        Returns
+        -------
+        `Node`
+            The node whose key is the biggest from the subtree of
+            the given node.
+
+        Raises
+        ------
+        `EmptyTreeError`
+            Raised if the tree is empty.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        if current_node:
+            while current_node.right:
+                current_node = current_node.right
+        return current_node
+
+    # Override
+    def get_successor(self,
+                      node: binary_tree.Node) -> Optional[binary_tree.Node]:
+        """Get the successor node in the in-order order.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its successor.
+
+        Returns
+        -------
+        `Node`
+            The successor node.
+        """
+        if node.right:
+            return self.get_min(node=node.right)
+        parent = node.parent
+        while parent and node == parent.right:
+            node = parent
+            parent = parent.parent
+        return parent
+
+    # Override
+    def get_predecessor(self,
+                        node: binary_tree.Node) -> Optional[binary_tree.Node]:
+        """Get the predecessor node in the in-order order.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its predecessor.
+
+        Returns
+        -------
+        `Node`
+            The predecessor node.
+        """
+        if node.left:
+            return self.get_max(node=node.left)
+        return node.parent
+
+    # Override
+    def get_height(self, node: Optional[binary_tree.Node]) -> int:
+        """Get the height from the given node.
+
+        Parameters
+        ----------
+        node: `Node`
+            The node to get its height.
+
+        Returns
+        -------
+        `int`
+            The height from the given node.
+        """
+        if node is None:
+            return 0
+
+        if node.left is None and node.right is None:
+            return 0
+
+        return max(self.get_height(node.left),
+                   self.get_height(node.right)) + 1
 
     def _transplant(self, deleting_node: binary_tree.Node,
                     replacing_node: Optional[binary_tree.Node]):

@@ -43,7 +43,7 @@ class RBNode(Generic[binary_tree.KeyType]):
     color: Color
 
 
-class RBTree:
+class RBTree(binary_tree.BinaryTree):
     """Red-Black Tree.
 
     Parameters
@@ -124,6 +124,7 @@ class RBTree:
     """
 
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+        binary_tree.BinaryTree.__init__(self)
         self._NIL: LeafNode = LeafNode()
         self.root: Union[LeafNode, RBNode] = self._NIL
         if key and data:
@@ -249,109 +250,6 @@ class RBTree:
         if original_color == Color.Black:
             self._delete_fixup(fixing_node=temp)
 
-    def inorder_traverse(self) -> binary_tree.Pairs:
-        """Perform In-Order traversal.
-
-        In-order traversal traverses a tree by the order:
-        left subtree, current node, right subtree (LDR)
-
-        Yields
-        ------
-        `Pairs`
-            The next (key, data) pair in the in-order traversal.
-
-        Examples
-        --------
-        >>> from pyforest.binary_trees import red_black_tree
-        >>> tree = red_black_tree.RBTree()
-        >>> tree.insert(key=23, data="23")
-        >>> tree.insert(key=4, data="4")
-        >>> tree.insert(key=30, data="30")
-        >>> tree.insert(key=11, data="11")
-        >>> tree.insert(key=7, data="7")
-        >>> tree.insert(key=34, data="34")
-        >>> tree.insert(key=20, data="20")
-        >>> tree.insert(key=24, data="24")
-        >>> tree.insert(key=22, data="22")
-        >>> tree.insert(key=15, data="15")
-        >>> tree.insert(key=1, data="1")
-        >>> [item for item in tree.preorder_traverse()]
-        [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
-        (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
-        """
-        return self._inorder_traverse(node=self.root)
-
-    def preorder_traverse(self) -> binary_tree.Pairs:
-        """Perform Pre-Order traversal.
-
-        Pre-order traversal traverses a tree by the order:
-        current node, left subtree, right subtree (DLR)
-
-        Yields
-        ------
-        `Pairs`
-            The next (key, data) pair in the pre-order traversal.
-
-        Examples
-        --------
-        >>> from pyforest.binary_trees import red_black_tree
-        >>> tree = red_black_tree.RBTree()
-        >>> tree.insert(key=23, data="23")
-        >>> tree.insert(key=4, data="4")
-        >>> tree.insert(key=30, data="30")
-        >>> tree.insert(key=11, data="11")
-        >>> tree.insert(key=7, data="7")
-        >>> tree.insert(key=34, data="34")
-        >>> tree.insert(key=20, data="20")
-        >>> tree.insert(key=24, data="24")
-        >>> tree.insert(key=22, data="22")
-        >>> tree.insert(key=15, data="15")
-        >>> tree.insert(key=1, data="1")
-        >>> [item for item in tree.preorder_traverse()]
-        [(20, "20"), (7, "7"), (4, "4"), (1, "1"), (11, "11"), (15, "15"),
-        (23, "23"), (22, "22"), (30, "30"), (24, "24"), (34, "34")]
-        """
-        return self._preorder_traverse(node=self.root)
-
-    def postorder_traverse(self) -> binary_tree.Pairs:
-        """Perform Post-Order traversal.
-
-        Post-order traversal traverses a tree by the order:
-        left subtree, right subtree, current node (LRD)
-
-        Parameters
-        ----------
-        tree : `TreeType`
-            A type of binary tree.
-        recursive: `bool`
-            Perform traversal recursively or not.
-
-        Yields
-        ------
-        `Pairs`
-            The next (key, data) pair in the post-order traversal.
-
-        Examples
-        --------
-        >>> from pyforest.binary_trees import red_black_tree
-        >>> tree = red_black_tree.RBTree()
-        >>> tree.insert(key=23, data="23")
-        >>> tree.insert(key=4, data="4")
-        >>> tree.insert(key=30, data="30")
-        >>> tree.insert(key=11, data="11")
-        >>> tree.insert(key=7, data="7")
-        >>> tree.insert(key=34, data="34")
-        >>> tree.insert(key=20, data="20")
-        >>> tree.insert(key=24, data="24")
-        >>> tree.insert(key=22, data="22")
-        >>> tree.insert(key=15, data="15")
-        >>> tree.insert(key=1, data="1")
-        >>> [item for item in tree.postorder_traverse()]
-        [(1, "1"), (4, "4"), (15, "15"), (11, "11"), (7, "7"), (22, "22"),
-        (24, "24"), (34, "34"), (30, "30"), (23, "23"), (20, "20")]
-        """
-        return self._postorder_traverse(node=self.root)
-
     def get_min(self, node: Optional[RBNode] = None) -> RBNode:
         """Get the node whose key is the smallest from the subtree.
 
@@ -476,6 +374,109 @@ class RBTree:
 
         return max(self.get_height(node.left),
                    self.get_height(node.right)) + 1
+
+    def inorder_traverse(self) -> binary_tree.Pairs:
+        """Perform In-Order traversal.
+
+        In-order traversal traverses a tree by the order:
+        left subtree, current node, right subtree (LDR)
+
+        Yields
+        ------
+        `Pairs`
+            The next (key, data) pair in the in-order traversal.
+
+        Examples
+        --------
+        >>> from pyforest.binary_trees import red_black_tree
+        >>> tree = red_black_tree.RBTree()
+        >>> tree.insert(key=23, data="23")
+        >>> tree.insert(key=4, data="4")
+        >>> tree.insert(key=30, data="30")
+        >>> tree.insert(key=11, data="11")
+        >>> tree.insert(key=7, data="7")
+        >>> tree.insert(key=34, data="34")
+        >>> tree.insert(key=20, data="20")
+        >>> tree.insert(key=24, data="24")
+        >>> tree.insert(key=22, data="22")
+        >>> tree.insert(key=15, data="15")
+        >>> tree.insert(key=1, data="1")
+        >>> [item for item in tree.preorder_traverse()]
+        [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
+        (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
+        """
+        return self._inorder_traverse(node=self.root)
+
+    def preorder_traverse(self) -> binary_tree.Pairs:
+        """Perform Pre-Order traversal.
+
+        Pre-order traversal traverses a tree by the order:
+        current node, left subtree, right subtree (DLR)
+
+        Yields
+        ------
+        `Pairs`
+            The next (key, data) pair in the pre-order traversal.
+
+        Examples
+        --------
+        >>> from pyforest.binary_trees import red_black_tree
+        >>> tree = red_black_tree.RBTree()
+        >>> tree.insert(key=23, data="23")
+        >>> tree.insert(key=4, data="4")
+        >>> tree.insert(key=30, data="30")
+        >>> tree.insert(key=11, data="11")
+        >>> tree.insert(key=7, data="7")
+        >>> tree.insert(key=34, data="34")
+        >>> tree.insert(key=20, data="20")
+        >>> tree.insert(key=24, data="24")
+        >>> tree.insert(key=22, data="22")
+        >>> tree.insert(key=15, data="15")
+        >>> tree.insert(key=1, data="1")
+        >>> [item for item in tree.preorder_traverse()]
+        [(20, "20"), (7, "7"), (4, "4"), (1, "1"), (11, "11"), (15, "15"),
+        (23, "23"), (22, "22"), (30, "30"), (24, "24"), (34, "34")]
+        """
+        return self._preorder_traverse(node=self.root)
+
+    def postorder_traverse(self) -> binary_tree.Pairs:
+        """Perform Post-Order traversal.
+
+        Post-order traversal traverses a tree by the order:
+        left subtree, right subtree, current node (LRD)
+
+        Parameters
+        ----------
+        tree : `TreeType`
+            A type of binary tree.
+        recursive: `bool`
+            Perform traversal recursively or not.
+
+        Yields
+        ------
+        `Pairs`
+            The next (key, data) pair in the post-order traversal.
+
+        Examples
+        --------
+        >>> from pyforest.binary_trees import red_black_tree
+        >>> tree = red_black_tree.RBTree()
+        >>> tree.insert(key=23, data="23")
+        >>> tree.insert(key=4, data="4")
+        >>> tree.insert(key=30, data="30")
+        >>> tree.insert(key=11, data="11")
+        >>> tree.insert(key=7, data="7")
+        >>> tree.insert(key=34, data="34")
+        >>> tree.insert(key=20, data="20")
+        >>> tree.insert(key=24, data="24")
+        >>> tree.insert(key=22, data="22")
+        >>> tree.insert(key=15, data="15")
+        >>> tree.insert(key=1, data="1")
+        >>> [item for item in tree.postorder_traverse()]
+        [(1, "1"), (4, "4"), (15, "15"), (11, "11"), (7, "7"), (22, "22"),
+        (24, "24"), (34, "34"), (30, "30"), (23, "23"), (20, "20")]
+        """
+        return self._postorder_traverse(node=self.root)
 
     def _left_rotate(self, node: Union[LeafNode, RBNode]):
         temp = node.right
