@@ -73,6 +73,10 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
     def __init__(self):
         self.root: Optional[NodeType] = None
 
+    def __repr__(self):
+        return f"{type(self)}, root={self.root}, " \
+               f"tree_height={str(self.get_height(self.root))}"
+
     @abc.abstractmethod
     def search(self, key: KeyType) -> NodeType:
         """Search data based on the given key.
@@ -130,18 +134,18 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_min(self, node: NodeType) -> NodeType:
+    def get_min(self, node: Optional[NodeType]) -> NodeType:
         """Get the node whose key is the smallest from the subtree.
 
         Parameters
         ----------
-        node: `Optional[Node]`
+        node: `Optional[NodeType]`
             The root of the subtree. If the parameter is not present,
             root will be used.
 
         Returns
         -------
-        `Node`
+        `NodeType`
             The node whose key is the smallest from the subtree of
             the given node.
 
@@ -153,18 +157,18 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_max(self, node: NodeType) -> NodeType:
+    def get_max(self, node: Optional[NodeType]) -> NodeType:
         """Get the node whose key is the biggest from the subtree.
 
         Parameters
         ----------
-        node: `Optional[Node]`
+        node: `Optional[NodeType]`
             The root of the subtree. If the parameter is not present,
             root will be used.
 
         Returns
         -------
-        `Node`
+        `NodeType`
             The node whose key is the biggest from the subtree of
             the given node.
 
@@ -231,7 +235,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         -----
         The property, `empty`, is read-only.
         """
-        if self.root:
+        if isinstance(self.root, Node):
             return False
         return True
 

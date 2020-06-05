@@ -57,7 +57,7 @@ class RBTree(binary_tree.BinaryTree):
 
     Attributes
     ----------
-    root: `Union[LeafNode, RBNode]`
+    root: `Union[RBNode, LeafNode]`
         The root node of the right threaded binary search tree.
     empty: `bool`
         `True` if the tree is `LeafNode`; `False` otherwise.
@@ -126,31 +126,16 @@ class RBTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         self._NIL: LeafNode = LeafNode()
-        self.root: Union[LeafNode, RBNode] = self._NIL
+        self.root: Union[RBNode, LeafNode] = self._NIL
         if key and data:
             self.root = RBNode(key=key, data=data, left=self._NIL,
                                right=self._NIL, parent=self._NIL,
                                color=Color.Black)
 
+    # Override
     def search(self, key: binary_tree.KeyType) -> RBNode:
-        """Search data based on the given key.
-
-        Parameters
-        ----------
-        key: `KeyType`
-            The key associated with the data.
-
-        Returns
-        -------
-        `RBNode`
-            The node based on the given key.
-
-        Raises
-        ------
-        `KeyNotFoundError`
-            Raised if the key does not exist.
-        """
-        temp: Union[LeafNode, RBNode] = self.root
+        """See :func:`~binary_tree.BinaryTree.search`."""
+        temp: Union[RBNode, LeafNode] = self.root
         while isinstance(temp, RBNode):
             if key < temp.key:
                 temp = temp.left
@@ -160,26 +145,13 @@ class RBTree(binary_tree.BinaryTree):
                 return temp
         raise tree_exceptions.KeyNotFoundError(key=key)
 
+    # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """Insert data and its key into the binary tree.
-
-        Parameters
-        ----------
-        key: `KeyType`
-            The key associated with the data.
-
-        data: `Any`
-            The data to be inserted.
-
-        Raises
-        ------
-        `DuplicateKeyError`
-            Raised if the input data has existed in the tree.
-        """
+        """See :func:`~binary_tree.BinaryTree.insert`."""
         node = RBNode(key=key, data=data, left=self._NIL, right=self._NIL,
                       parent=self._NIL, color=Color.Red)
-        parent: Union[LeafNode, RBNode] = self._NIL
-        temp: Union[LeafNode, RBNode] = self.root
+        parent: Union[RBNode, LeafNode] = self._NIL
+        temp: Union[RBNode, LeafNode] = self.root
         while isinstance(temp, RBNode):
             parent = temp
             if node.key < temp.key:
@@ -199,20 +171,10 @@ class RBTree(binary_tree.BinaryTree):
 
             self._insert_fixup(node)
 
+    # Override
     def delete(self, key: binary_tree.KeyType):
-        """Delete the node based on the given key.
-
-        Parameters
-        ----------
-        key: `KeyType`
-            The key of the node to be deleted.
-
-        Raises
-        ------
-        `KeyNotFoundError`
-            Raised if the key does not exist.
-        """
-        deleting_node: Union[LeafNode, RBNode] = self.search(key=key)
+        """See :func:`~binary_tree.BinaryTree.delete`."""
+        deleting_node: RBNode = self.search(key=key)
 
         original_color = deleting_node.color
         temp: Union[RBNode, LeafNode] = self._NIL
@@ -251,25 +213,7 @@ class RBTree(binary_tree.BinaryTree):
             self._delete_fixup(fixing_node=temp)
 
     def get_min(self, node: Optional[RBNode] = None) -> RBNode:
-        """Get the node whose key is the smallest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[RBNode]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `RBNode`
-            The node whose key is the smallest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
         else:
@@ -283,25 +227,7 @@ class RBTree(binary_tree.BinaryTree):
         return current_node
 
     def get_max(self, node: Optional[RBNode] = None) -> RBNode:
-        """Get the node whose key is the biggest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[RBNode]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `RBNode`
-            The node whose key is the biggest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
         else:
@@ -314,19 +240,8 @@ class RBTree(binary_tree.BinaryTree):
             current_node = current_node.right
         return current_node
 
-    def get_successor(self, node: RBNode) -> Union[LeafNode, RBNode]:
-        """Get the successor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `RBNode`
-            The node to get its successor.
-
-        Returns
-        -------
-        `RBNode`
-            The successor node.
-        """
+    def get_successor(self, node: RBNode) -> Union[RBNode, LeafNode]:
+        """See :func:`~binary_tree.BinaryTree.get_successor`."""
         if isinstance(node.right, RBNode):
             return self.get_min(node=node.right)
         parent = node.parent
@@ -335,36 +250,14 @@ class RBTree(binary_tree.BinaryTree):
             parent = parent.parent
         return parent
 
-    def get_predecessor(self, node: RBNode) -> Union[LeafNode, RBNode]:
-        """Get the predecessor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `RBNode`
-            The node to get its predecessor.
-
-        Returns
-        -------
-        `RBNode`
-            The predecessor node.
-        """
+    def get_predecessor(self, node: RBNode) -> Union[RBNode, LeafNode]:
+        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
         if isinstance(node.left, RBNode):
             return self.get_max(node=node.left)
         return node.parent
 
     def get_height(self, node: Union[None, LeafNode, RBNode]) -> int:
-        """Get the height from the given node.
-
-        Parameters
-        ----------
-        node: `RBNode`
-            The node to get its height.
-
-        Returns
-        -------
-        `int`
-            The height from the given node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_height`."""
         if node is None:
             return 0
 
@@ -478,7 +371,7 @@ class RBTree(binary_tree.BinaryTree):
         """
         return self._postorder_traverse(node=self.root)
 
-    def _left_rotate(self, node: Union[LeafNode, RBNode]):
+    def _left_rotate(self, node: Union[RBNode, LeafNode]):
         temp = node.right
         node.right = temp.left
         if isinstance(temp.left, RBNode):
@@ -495,7 +388,7 @@ class RBTree(binary_tree.BinaryTree):
         temp.left = node
         node.parent = temp
 
-    def _right_rotate(self, node: Union[LeafNode, RBNode]):
+    def _right_rotate(self, node: Union[RBNode, LeafNode]):
         temp = node.left
         node.left = temp.right
         if isinstance(temp.right, RBNode):
@@ -546,7 +439,8 @@ class RBTree(binary_tree.BinaryTree):
         self.root.color = Color.Black
 
     def _delete_fixup(self, fixing_node: RBNode):
-        while (fixing_node is not self.root) and (fixing_node.color == Color.Black):
+        while (fixing_node is not self.root) and \
+              (fixing_node.color == Color.Black):
             if fixing_node == fixing_node.parent.left:
                 sibling = fixing_node.parent.right
 
@@ -602,8 +496,9 @@ class RBTree(binary_tree.BinaryTree):
 
         fixing_node.color = Color.Black
 
-    def _transplant(self, deleting_node: RBNode, replacing_node: RBNode):
-        if deleting_node.parent == self._NIL:
+    def _transplant(self, deleting_node: RBNode,
+                    replacing_node: Union[RBNode, LeafNode]):
+        if isinstance(deleting_node.parent, LeafNode):
             self.root = replacing_node
         elif deleting_node == deleting_node.parent.left:
             deleting_node.parent.left = replacing_node
@@ -612,20 +507,20 @@ class RBTree(binary_tree.BinaryTree):
 
         replacing_node.parent = deleting_node.parent
 
-    def _inorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
-        if node != self._NIL:
+    def _inorder_traverse(self, node: Union[RBNode, LeafNode]):
+        if isinstance(node, RBNode):
             yield from self._inorder_traverse(node.left)
             yield (node.key, node.data)
             yield from self._inorder_traverse(node.right)
 
-    def _preorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
-        if node != self._NIL:
+    def _preorder_traverse(self, node: Union[RBNode, LeafNode]):
+        if isinstance(node, RBNode):
             yield (node.key, node.data)
             yield from self._preorder_traverse(node.left)
             yield from self._preorder_traverse(node.right)
 
-    def _postorder_traverse(self, node: Union[Any, RBNode, LeafNode]):
-        if node != self._NIL:
+    def _postorder_traverse(self, node: Union[RBNode, LeafNode]):
+        if isinstance(node, RBNode):
             yield from self._postorder_traverse(node.left)
             yield from self._postorder_traverse(node.right)
             yield (node.key, node.data)

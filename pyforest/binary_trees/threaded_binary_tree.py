@@ -128,7 +128,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.search`."""
         current = self.root
-
         while current:
             if key == current.key:
                 return current
@@ -207,7 +206,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 predecessor = self.get_predecessor(node=deleting_node)
 
-                min_node: SingleThreadNode = self.get_min(node=deleting_node.right)
+                min_node: SingleThreadNode = \
+                    self.get_min(node=deleting_node.right)
 
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
@@ -229,7 +229,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                     predecessor.right = min_node
 
     # Override
-    def get_min(self, node: SingleThreadNode) -> SingleThreadNode:
+    def get_min(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
@@ -244,9 +244,16 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: SingleThreadNode) -> SingleThreadNode:
+    def get_max(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
-        current_node = node
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
         while current_node.isThread is False and current_node.right:
             current_node = current_node.right
         return current_node
@@ -425,19 +432,23 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root: SingleThreadNode = SingleThreadNode(key=key, data=data)
+            self.root = SingleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.search`."""
-        temp = self.root
-        while temp:
-            if key < temp.key:
-                temp = temp.left
-            elif key > temp.key:
-                temp = temp.right
-            else:  # Key found
-                return temp
+        current = self.root
+
+        while current:
+            if key == current.key:
+                return current
+            elif key < current.key:
+                if current.isThread is False:
+                    current = current.left
+                else:
+                    break
+            else:  # key > current.key:
+                current = current.right
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
@@ -497,7 +508,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.right)
 
             # The deleting node has only one left child
-            elif deleting_node.right is None and deleting_node.isThread is False:
+            elif (deleting_node.right is None) and \
+                 (deleting_node.isThread is False):
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
 
@@ -528,15 +540,22 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self, node: SingleThreadNode) -> SingleThreadNode:
+    def get_min(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
-        current_node = node
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
         while current_node.left and current_node.isThread is False:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_max(self, node: SingleThreadNode) -> SingleThreadNode:
+    def get_max(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
@@ -585,7 +604,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                    self.get_height(node.right)) + 1
 
     def outorder_traverse(self) -> binary_tree.Pairs:
-        """Use the left threads to traverse the tree in reversed in-order order.
+        """Use the left threads to traverse the tree in reversed in-order.
 
         Yields
         ------
@@ -722,7 +741,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
         if key and data:
-            self.root: DoubleThreadNode = DoubleThreadNode(key=key, data=data)
+            self.root = DoubleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:
@@ -853,15 +872,22 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self, node: DoubleThreadNode) -> DoubleThreadNode:
+    def get_min(self, node: Optional[DoubleThreadNode]) -> DoubleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
-        current_node = node
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
         while current_node.left and current_node.leftThread is False:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_max(self, node: DoubleThreadNode) -> DoubleThreadNode:
+    def get_max(self, node: Optional[DoubleThreadNode]) -> DoubleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
@@ -959,7 +985,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 current = self._get_rightmost(current.left)
 
-    def _get_leftmost(self, node: DoubleThreadNode):
+    def _get_leftmost(self, node: Optional[DoubleThreadNode]):
 
         if node is None:
             return None
@@ -968,7 +994,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             node = node.left
         return node
 
-    def _get_rightmost(self, node: DoubleThreadNode):
+    def _get_rightmost(self, node: Optional[DoubleThreadNode]):
 
         if node is None:
             return None

@@ -117,14 +117,15 @@ class BinarySearchTree(binary_tree.BinaryTree):
     # Override
     def search(self, key: binary_tree.KeyType) -> binary_tree.Node:
         """See :func:`~binary_tree.BinaryTree.search`."""
-        temp = self.root
-        while temp:
-            if key < temp.key:
-                temp = temp.left
-            elif key > temp.key:
-                temp = temp.right
-            else:  # Key found
-                return temp
+        current = self.root
+
+        while current:
+            if key == current.key:
+                return current
+            elif key < current.key:
+                current = current.left
+            else:  # key > current.key:
+                current = current.right
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
@@ -180,26 +181,8 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 min_node.left.parent = min_node
 
     # Override
-    def get_min(self, node: binary_tree.Node) -> binary_tree.Node:
-        """Get the node whose key is the smallest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[Node]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `Node`
-            The node whose key is the smallest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+    def get_min(self, node: Optional[binary_tree.Node]) -> binary_tree.Node:
+        """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
         else:
@@ -213,26 +196,8 @@ class BinarySearchTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: binary_tree.Node) -> binary_tree.Node:
-        """Get the node whose key is the biggest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[Node]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `Node`
-            The node whose key is the biggest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+    def get_max(self, node: Optional[binary_tree.Node]) -> binary_tree.Node:
+        """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
         else:
@@ -249,18 +214,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: binary_tree.Node) -> Optional[binary_tree.Node]:
-        """Get the successor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its successor.
-
-        Returns
-        -------
-        `Node`
-            The successor node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_successor`."""
         if node.right:
             return self.get_min(node=node.right)
         parent = node.parent
@@ -272,36 +226,14 @@ class BinarySearchTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: binary_tree.Node) -> Optional[binary_tree.Node]:
-        """Get the predecessor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its predecessor.
-
-        Returns
-        -------
-        `Node`
-            The predecessor node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
         if node.left:
             return self.get_max(node=node.left)
         return node.parent
 
     # Override
     def get_height(self, node: Optional[binary_tree.Node]) -> int:
-        """Get the height from the given node.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its height.
-
-        Returns
-        -------
-        `int`
-            The height from the given node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_height`."""
         if node is None:
             return 0
 

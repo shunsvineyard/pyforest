@@ -33,14 +33,15 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def search(self, key: binary_tree.KeyType) -> AVLNode:
         """See :func:`~binary_tree.BinaryTree.search`."""
-        temp = self.root
-        while temp:
-            if key < temp.key:
-                temp = temp.left
-            elif key > temp.key:
-                temp = temp.right
-            else:  # Key found
-                return temp
+        current = self.root
+
+        while current:
+            if key == current.key:
+                return current
+            elif key < current.key:
+                current = current.left
+            else:  # key > current.key:
+                current = current.right
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
@@ -68,8 +69,8 @@ class AVLTree(binary_tree.BinaryTree):
 
         temp = node
         while parent:
-            parent.height = 1 + max(self._height(parent.left),
-                                    self._height(parent.right))
+            parent.height = 1 + max(self.get_height(parent.left),
+                                    self.get_height(parent.right))
 
             grandparent = parent.parent
             # grandparent is unbalanced
@@ -130,26 +131,8 @@ class AVLTree(binary_tree.BinaryTree):
             self._delete_fixup(min_node)
 
     # Override
-    def get_min(self, node: AVLNode) -> AVLNode:
-        """Get the node whose key is the smallest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[Node]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `Node`
-            The node whose key is the smallest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+    def get_min(self, node: Optional[AVLNode]) -> AVLNode:
+        """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
         else:
@@ -163,26 +146,8 @@ class AVLTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: AVLNode) -> AVLNode:
-        """Get the node whose key is the biggest from the subtree.
-
-        Parameters
-        ----------
-        node: `Optional[Node]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
-
-        Returns
-        -------
-        `Node`
-            The node whose key is the biggest from the subtree of
-            the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
-        """
+    def get_max(self, node: Optional[AVLNode]) -> AVLNode:
+        """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
         else:
@@ -199,18 +164,7 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: AVLNode) -> Optional[AVLNode]:
-        """Get the successor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its successor.
-
-        Returns
-        -------
-        `Node`
-            The successor node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_successor`."""
         if node.right:
             return self.get_min(node=node.right)
         parent = node.parent
@@ -222,36 +176,14 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: AVLNode) -> Optional[AVLNode]:
-        """Get the predecessor node in the in-order order.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its predecessor.
-
-        Returns
-        -------
-        `Node`
-            The predecessor node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
         if node.left:
             return self.get_max(node=node.left)
         return node.parent
 
     # Override
     def get_height(self, node: Optional[AVLNode]) -> int:
-        """Get the height from the given node.
-
-        Parameters
-        ----------
-        node: `Node`
-            The node to get its height.
-
-        Returns
-        -------
-        `int`
-            The height from the given node.
-        """
+        """See :func:`~binary_tree.BinaryTree.get_height`."""
         if node is None:
             return 0
 
@@ -260,27 +192,6 @@ class AVLTree(binary_tree.BinaryTree):
 
         return max(self.get_height(node.left),
                    self.get_height(node.right)) + 1
-
-    def _height(self, node: Optional[AVLNode]) -> int:
-        """Real implementation of getting the height of a given node.
-
-        Parameters
-        ----------
-        node: Node
-            The root of the tree.
-
-        Retruns
-        -------
-        int
-            Return the height of the given node.
-        """
-        if node is None:
-            return 0
-
-        if node.left is None and node.right is None:
-            return 0
-
-        return max(self._height(node.left), self._height(node.right)) + 1
 
     def _left_rotate(self, node: AVLNode):
         temp = node.right
@@ -298,8 +209,8 @@ class AVLTree(binary_tree.BinaryTree):
         temp.left = node
         node.parent = temp
 
-        node.height = 1 + max(self._height(node.left), self._height(node.right))
-        temp.height = 1 + max(self._height(temp.left), self._height(temp.right))
+        node.height = 1 + max(self.get_height(node.left), self.get_height(node.right))
+        temp.height = 1 + max(self.get_height(temp.left), self.get_height(temp.right))
 
     def _right_rotate(self, node: AVLNode):
         temp = node.left
@@ -317,8 +228,8 @@ class AVLTree(binary_tree.BinaryTree):
         temp.right = node
         node.parent = temp
 
-        node.height = 1 + max(self._height(node.left), self._height(node.right))
-        temp.height = 1 + max(self._height(temp.left), self._height(temp.right))
+        node.height = 1 + max(self.get_height(node.left), self.get_height(node.right))
+        temp.height = 1 + max(self.get_height(temp.left), self.get_height(temp.right))
 
     def _transplant(self, deleting_node: AVLNode, replacing_node: AVLNode):
 
@@ -335,13 +246,13 @@ class AVLTree(binary_tree.BinaryTree):
     def _balance_factor(self, node: Optional[AVLNode]):
         if node is None:
             return -1
-        return self._height(node.left) - self._height(node.right)
+        return self.get_height(node.left) - self.get_height(node.right)
 
     # FIXME
     def _delete_fixup(self, fixing_node: AVLNode):
 
         while fixing_node:
-            fixing_node.height = 1 + max(self._height(fixing_node.left), self._height(fixing_node.right))
+            fixing_node.height = 1 + max(self.get_height(fixing_node.left), self.get_height(fixing_node.right))
 
             # Case the grandparent is unbalanced
             if (self._balance_factor(fixing_node) <= -2) or (self._balance_factor(fixing_node) >= 2):
@@ -390,6 +301,7 @@ from pyforest.binary_trees import traversal
 
 if __name__ == "__main__":
     test = AVLTree()
+
     test.insert(23, "23")
     test.insert(4, "4")
     test.insert(30, "30")
@@ -401,6 +313,8 @@ if __name__ == "__main__":
     test.insert(22, "22")
     test.insert(15, "15")
     test.insert(1, "1")
+
+    print(repr(test))
 
     print(test.root.height)
 
