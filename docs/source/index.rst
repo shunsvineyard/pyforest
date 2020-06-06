@@ -9,7 +9,7 @@ Welcome to The Forest Documentation
 .. toctree::
    :maxdepth: 2
 
-   README
+   readme
    modules
 
 Indices and tables
