@@ -55,7 +55,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
 
     Attributes
     ----------
-    root: `Optional[node]`
+    root: `Optional[Node]`
         The root node of the binary search tree.
     empty: `bool`
         `True` if the tree is empty; `False` otherwise.
@@ -114,8 +114,33 @@ class BinarySearchTree(binary_tree.BinaryTree):
         if key and data:
             self.root = binary_tree.Node(key=key, data=data)
 
+    # Override
+    def search(self, key: binary_tree.KeyType) -> binary_tree.Node:
+        """Look for a node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
+        current = self.root
+
+        while current:
+            if key == current.key:
+                return current
+            elif key < current.key:
+                current = current.left
+            else:  # key > current.key:
+                current = current.right
+        raise tree_exceptions.KeyNotFoundError(key=key)
+
+    # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the binary search tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         new_node = binary_tree.Node(key=key, data=data)
         parent = None
         temp = self.root
@@ -138,9 +163,14 @@ class BinarySearchTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         if self.root:
-            deleting_node = binary_tree.BinaryTree.search(self, key=key)
+            deleting_node = self.search(key=key)
 
             # No child or only one right child
             if deleting_node.left is None:
@@ -153,8 +183,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
             # Two children
             else:
                 min_node = \
-                    binary_tree.BinaryTree.get_min(self,
-                                                   node=deleting_node.right)
+                    self.get_min(node=deleting_node.right)
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
                     self._transplant(deleting_node=min_node,
@@ -165,6 +194,96 @@ class BinarySearchTree(binary_tree.BinaryTree):
                                  replacing_node=min_node)
                 min_node.left = deleting_node.left
                 min_node.left.parent = min_node
+
+    # Override
+    def get_min(self,
+                node: Optional[binary_tree.Node] = None) -> binary_tree.Node:
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        while current_node.left:
+            current_node = current_node.left
+        return current_node
+
+    # Override
+    def get_max(self,
+                node: Optional[binary_tree.Node] = None) -> binary_tree.Node:
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
+        if node:
+            current_node = node
+        else:
+            if self.root:
+                current_node = self.root
+            else:
+                raise tree_exceptions.EmptyTreeError()
+
+        if current_node:
+            while current_node.right:
+                current_node = current_node.right
+        return current_node
+
+    # Override
+    def get_successor(self,
+                      node: binary_tree.Node) -> Optional[binary_tree.Node]:
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
+        if node.right:
+            return self.get_min(node=node.right)
+        parent = node.parent
+        while parent and node == parent.right:
+            node = parent
+            parent = parent.parent
+        return parent
+
+    # Override
+    def get_predecessor(self,
+                        node: binary_tree.Node) -> Optional[binary_tree.Node]:
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
+        if node.left:
+            return self.get_max(node=node.left)
+        return node.parent
+
+    # Override
+    def get_height(self, node: Optional[binary_tree.Node]) -> int:
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
+        if node is None:
+            return 0
+
+        if node.left is None and node.right is None:
+            return 0
+
+        return max(self.get_height(node.left),
+                   self.get_height(node.right)) + 1
 
     def _transplant(self, deleting_node: binary_tree.Node,
                     replacing_node: Optional[binary_tree.Node]):

@@ -9,8 +9,6 @@ import abc
 from dataclasses import dataclass
 from typing import Any, Generic, Iterator, Optional, Tuple, TypeVar
 
-from pyforest import tree_exceptions
-
 
 class Comparable(abc.ABC):
     """Custom defined `Comparable` type for type hint."""
@@ -51,7 +49,10 @@ class Node(Generic[KeyType]):
     parent: Optional["Node"] = None
 
 
-class BinaryTree(abc.ABC):
+NodeType = TypeVar("NodeType", bound=Node)
+
+
+class BinaryTree(abc.ABC, Generic[NodeType]):
     """An abstract base class for any types of binary trees.
 
     This base class defines the basic properties and methods that all types of
@@ -59,7 +60,7 @@ class BinaryTree(abc.ABC):
 
     Attributes
     ----------
-    root: `Optional[Node]`
+    root: `Optional[NodeType]`
         The root of the tree. The default is `None`.
 
     Notes
@@ -70,7 +71,34 @@ class BinaryTree(abc.ABC):
     """
 
     def __init__(self):
-        self.root: Optional[Node] = None
+        self.root: Optional[NodeType] = None
+
+    def __repr__(self):
+        return f"{type(self)}, root={self.root}, " \
+               f"tree_height={str(self.get_height(self.root))}"
+
+    @abc.abstractmethod
+    def search(self, key: KeyType) -> NodeType:
+        """Search data based on the given key.
+
+        Parameters
+        ----------
+        key: `KeyType`
+            The key associated with the data.
+
+        Returns
+        -------
+        `NodeType`
+            The found node whose key is the same as the given key.
+        Note that the type of the node depends on the derived class, and
+        the node type should derive from `NodeType`.
+
+        Raises
+        ------
+        `KeyNotFoundError`
+            Raised if the key does not exist.
+        """
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def insert(self, key: KeyType, data: Any):
@@ -107,46 +135,19 @@ class BinaryTree(abc.ABC):
         """
         raise NotImplementedError()
 
-    def search(self, key: KeyType) -> Node:
-        """Search data based on the given key.
-
-        Parameters
-        ----------
-        key: `KeyType`
-            The key associated with the data.
-
-        Returns
-        -------
-        `Node`
-            The node based on the given key.
-
-        Raises
-        ------
-        `KeyNotFoundError`
-            Raised if the key does not exist.
-        """
-        temp = self.root
-        while temp:
-            if key < temp.key:
-                temp = temp.left
-            elif key > temp.key:
-                temp = temp.right
-            else:  # Key found
-                return temp
-        raise tree_exceptions.KeyNotFoundError(key=key)
-
-    def get_min(self, node: Optional[Node] = None) -> Node:
+    @abc.abstractmethod
+    def get_min(self, node: Optional[NodeType] = None) -> NodeType:
         """Get the node whose key is the smallest from the subtree.
 
         Parameters
         ----------
-        node: `Optional[Node]`
+        node: `Optional[NodeType]`
             The root of the subtree. If the parameter is not present,
             root will be used.
 
         Returns
         -------
-        `Node`
+        `NodeType`
             The node whose key is the smallest from the subtree of
             the given node.
 
@@ -155,30 +156,21 @@ class BinaryTree(abc.ABC):
         `EmptyTreeError`
             Raised if the tree is empty.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        raise NotImplementedError()
 
-        while current_node.left:
-            current_node = current_node.left
-        return current_node
-
-    def get_max(self, node: Optional[Node]) -> Node:
+    @abc.abstractmethod
+    def get_max(self, node: Optional[NodeType] = None) -> NodeType:
         """Get the node whose key is the biggest from the subtree.
 
         Parameters
         ----------
-        node: `Optional[Node]`
+        node: `Optional[NodeType]`
             The root of the subtree. If the parameter is not present,
             root will be used.
 
         Returns
         -------
-        `Node`
+        `NodeType`
             The node whose key is the biggest from the subtree of
             the given node.
 
@@ -187,78 +179,55 @@ class BinaryTree(abc.ABC):
         `EmptyTreeError`
             Raised if the tree is empty.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        raise NotImplementedError()
 
-        if current_node:
-            while current_node.right:
-                current_node = current_node.right
-        return current_node
-
-    def get_successor(self, node: Node) -> Optional[Node]:
+    @abc.abstractmethod
+    def get_successor(self, node: NodeType) -> Optional[NodeType]:
         """Get the successor node in the in-order order.
 
         Parameters
         ----------
-        node: `Node`
+        node: `NodeType`
             The node to get its successor.
 
         Returns
         -------
-        `Node`
+        `Optional[NodeType]`
             The successor node.
         """
-        if node.right:
-            return self.get_min(node=node.right)
-        parent = node.parent
-        while parent and node == parent.right:
-            node = parent
-            parent = parent.parent
-        return parent
+        raise NotImplementedError()
 
-    def get_predecessor(self, node: Node) -> Optional[Node]:
+    @abc.abstractmethod
+    def get_predecessor(self, node: NodeType) -> Optional[NodeType]:
         """Get the predecessor node in the in-order order.
 
         Parameters
         ----------
-        node: `Node`
+        node: `NodeType`
             The node to get its predecessor.
 
         Returns
         -------
-        `Node`
+        `Optional[NodeType]`
             The predecessor node.
         """
-        if node.left:
-            return self.get_max(node=node.left)
-        return node.parent
+        raise NotImplementedError()
 
-    def get_height(self, node: Optional[Node]) -> int:
-        """Get the height from the given node.
+    @abc.abstractmethod
+    def get_height(self, node: Optional[NodeType]) -> int:
+        """Get the height of the given node.
 
         Parameters
         ----------
-        node: `Node`
+        node: `Optional[NodeType]`
             The node to get its height.
 
         Returns
         -------
         `int`
-            The height from the given node.
+            The height of the given node.
         """
-        if node is None:
-            return 0
-
-        if node.left is None and node.right is None:
-            return 0
-
-        return max(self.get_height(node.left),
-                   self.get_height(node.right)) + 1
+        raise NotImplementedError()
 
     @property
     def empty(self) -> bool:
@@ -268,10 +237,6 @@ class BinaryTree(abc.ABC):
         -----
         The property, `empty`, is read-only.
         """
-        if self.root:
+        if isinstance(self.root, Node):
             return False
         return True
-
-
-# User-defined type for a binary tree.
-TreeType = TypeVar("TreeType", bound=BinaryTree)
