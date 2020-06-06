@@ -134,7 +134,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_min(self, node: Optional[NodeType]) -> NodeType:
+    def get_min(self, node: Optional[NodeType] = None) -> NodeType:
         """Get the node whose key is the smallest from the subtree.
 
         Parameters
@@ -157,7 +157,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_max(self, node: Optional[NodeType]) -> NodeType:
+    def get_max(self, node: Optional[NodeType] = None) -> NodeType:
         """Get the node whose key is the biggest from the subtree.
 
         Parameters

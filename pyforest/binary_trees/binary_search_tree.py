@@ -181,7 +181,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 min_node.left.parent = min_node
 
     # Override
-    def get_min(self, node: Optional[binary_tree.Node]) -> binary_tree.Node:
+    def get_min(self, node: Optional[binary_tree.Node] = None) -> binary_tree.Node:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
@@ -196,7 +196,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[binary_tree.Node]) -> binary_tree.Node:
+    def get_max(self, node: Optional[binary_tree.Node] = None) -> binary_tree.Node:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node

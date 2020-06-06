@@ -872,7 +872,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self, node: Optional[DoubleThreadNode]) -> DoubleThreadNode:
+    def get_min(self, node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
@@ -887,7 +887,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[DoubleThreadNode]) -> DoubleThreadNode:
+    def get_max(self, node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node

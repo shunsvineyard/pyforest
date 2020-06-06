@@ -44,25 +44,25 @@ def test_deletion(basic_tree):
     ]
 
     # One right child
-    tree.delete(20)
+    tree.delete(7)
     assert [item for item in tree.inorder_traverse()] == [
-        (1, "1"), (4, "4"), (7, "7"), (11, "11"), (22, "22"),
+        (1, "1"), (4, "4"), (11, "11"), (20, "20"), (22, "22"),
         (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
     # One left child
-    tree.insert(key=17, data="17")
-    tree.delete(22)
+    tree.insert(key=9, data="9")
+    tree.delete(11)
     assert [item for item in tree.inorder_traverse()] == [
-        (1, "1"), (4, "4"), (7, "7"), (11, "11"), (17, "17"),
+        (1, "1"), (4, "4"), (9, "9"), (20, "20"), (22, "22"),
         (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
     # Two children
-    tree.delete(11)
+    tree.delete(23)
     assert [item for item in tree.inorder_traverse()] == [
-        (1, "1"), (4, "4"), (7, "7"), (17, "17"),
-        (23, "23"), (24, "24"), (30, "30"), (34, "34")
+        (1, "1"), (4, "4"), (9, "9"), (20, "20"), (22, "22"),
+        (24, "24"), (30, "30"), (34, "34")
     ]
 
 

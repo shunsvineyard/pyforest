@@ -74,8 +74,8 @@ class AVLTree(binary_tree.BinaryTree):
 
             grandparent = parent.parent
             # grandparent is unbalanced
-            if self._balance_factor(grandparent) <= -2 or \
-               self._balance_factor(grandparent) >= 2:
+            if self._balance_factor(grandparent) < -1 or \
+               self._balance_factor(grandparent) > 1:
                 if parent == grandparent.left:
                     # Case 1
                     if temp == grandparent.left.left:
@@ -128,10 +128,11 @@ class AVLTree(binary_tree.BinaryTree):
             min_node.left = deleting_node.left
             min_node.left.parent = min_node
 
-            self._delete_fixup(min_node)
+            if min_node:
+                self._delete_fixup(min_node)
 
     # Override
-    def get_min(self, node: Optional[AVLNode]) -> AVLNode:
+    def get_min(self, node: Optional[AVLNode] = None) -> AVLNode:
         """See :func:`~binary_tree.BinaryTree.get_min`."""
         if node:
             current_node = node
@@ -146,7 +147,7 @@ class AVLTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[AVLNode]) -> AVLNode:
+    def get_max(self, node: Optional[AVLNode] = None) -> AVLNode:
         """See :func:`~binary_tree.BinaryTree.get_max`."""
         if node:
             current_node = node
@@ -185,13 +186,8 @@ class AVLTree(binary_tree.BinaryTree):
     def get_height(self, node: Optional[AVLNode]) -> int:
         """See :func:`~binary_tree.BinaryTree.get_height`."""
         if node is None:
-            return 0
-
-        if node.left is None and node.right is None:
-            return 0
-
-        return max(self.get_height(node.left),
-                   self.get_height(node.right)) + 1
+            return -1
+        return node.height
 
     def _left_rotate(self, node: AVLNode):
         temp = node.right
@@ -255,16 +251,14 @@ class AVLTree(binary_tree.BinaryTree):
             fixing_node.height = 1 + max(self.get_height(fixing_node.left), self.get_height(fixing_node.right))
 
             # Case the grandparent is unbalanced
-            if (self._balance_factor(fixing_node) <= -2) or (self._balance_factor(fixing_node) >= 2):
+            if (self._balance_factor(fixing_node) < -1) or (self._balance_factor(fixing_node) > 1):
                 temp = fixing_node
 
-                y = None
                 if temp.left.height > temp.right.height:
                     y = temp.left
                 else:
                     y = temp.right
 
-                z = None
                 if y.left.height > y.right.height:
                     z = y.left
                 elif y.left.height < y.right.height:
@@ -316,10 +310,12 @@ if __name__ == "__main__":
 
     print(repr(test))
 
-    print(test.root.height)
+    #print(test.get_height(test.root))
+
 
     for item in traversal.inorder_traverse(tree=test):
         print(item)
+
 
     test.delete(20)
     test.delete(11)
