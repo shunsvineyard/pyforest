@@ -6,17 +6,14 @@
 
 Routines
 --------
-inorder_traverse(tree: `TreeType`, recursive: `bool`)
+inorder_traverse(tree: `SupportedTreeType`, recursive: `bool`)
     Perform in-order traversal.
 
-preorder_traverse(tree: `TreeType`, recursive: `bool`)
+preorder_traverse(tree: `SupportedTreeType`, recursive: `bool`)
     Perform pre-order traversal.
 
-postorder_traverse(tree: base_tree.TreeType)
+postorder_traverse(tree: SupportedTreeType, recursive: `bool`)
     Perform post-order traversal.
-
-levelorder_traverse(tree: base_tree.TreeType)
-    Perform level order traversal.
 """
 
 from typing import Union
@@ -43,7 +40,7 @@ def inorder_traverse(tree: SupportedTreeType,
 
     Parameters
     ----------
-    tree : `TreeType`
+    tree : `SupportedTreeType`
         A type of binary tree.
     recursive: `bool`
         Perform traversal recursively or not.
@@ -88,7 +85,7 @@ def preorder_traverse(tree: SupportedTreeType,
 
     Parameters
     ----------
-    tree : `TreeType`
+    tree : `SupportedTreeType`
         A type of binary tree.
     recursive: `bool`
         Perform traversal recursively or not.
@@ -133,7 +130,7 @@ def postorder_traverse(tree: SupportedTreeType,
 
     Parameters
     ----------
-    tree : `TreeType`
+    tree : `SupportedTreeType`
         A type of binary tree.
     recursive: `bool`
         Perform traversal recursively or not.
@@ -178,7 +175,7 @@ def outorder_traverse(tree: SupportedTreeType,
 
     Parameters
     ----------
-    tree : `TreeType`
+    tree : `SupportedTreeType`
         A type of binary tree.
     recursive: `bool`
         Perform traversal recursively or not.
@@ -223,7 +220,7 @@ def levelorder_traverse(tree: SupportedTreeType) -> binary_tree.Pairs:
 
     Parameters
     ----------
-    tree : `TreeType`
+    tree : `SupportedTreeType`
         A type of binary tree.
 
     Yields

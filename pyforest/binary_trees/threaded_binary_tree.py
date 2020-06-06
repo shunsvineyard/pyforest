@@ -126,7 +126,12 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.search`."""
+        """Look for a node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
         current = self.root
         while current:
             if key == current.key:
@@ -142,7 +147,12 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the right threaded binary tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         node = SingleThreadNode(key=key, data=data)
         if self.root is None:
             self.root = node
@@ -179,7 +189,12 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         if self.root:
             deleting_node = self.search(key=key)
 
@@ -229,8 +244,14 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                     predecessor.right = min_node
 
     # Override
-    def get_min(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_min`."""
+    def get_min(self,
+                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
         if node:
             current_node = node
         else:
@@ -244,8 +265,14 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+    def get_max(self,
+                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
         if node:
             current_node = node
         else:
@@ -261,7 +288,12 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: SingleThreadNode) -> Optional[SingleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_successor`."""
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
         if node.isThread:
             return node.right
         else:
@@ -270,14 +302,24 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: SingleThreadNode) -> Optional[SingleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
         if node.left:
             return self.get_max(node=node.left)
         return node.parent
 
     # Override
     def get_height(self, node: Optional[binary_tree.Node]) -> int:
-        """See :func:`~binary_tree.BinaryTree.get_height`."""
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
         if node is None:
             return 0
 
@@ -436,7 +478,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.search`."""
+        """Look for a node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
         current = self.root
 
         while current:
@@ -453,7 +500,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the left threaded binary tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         node = SingleThreadNode(key=key, data=data)
         if self.root is None:
             self.root = node
@@ -490,7 +542,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         if self.root:
             deleting_node = self.search(key=key)
 
@@ -540,8 +597,14 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_min`."""
+    def get_min(self,
+                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
         if node:
             current_node = node
         else:
@@ -555,8 +618,14 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[SingleThreadNode]) -> SingleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+    def get_max(self,
+                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
         if node:
             current_node = node
         else:
@@ -573,7 +642,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: SingleThreadNode) -> Optional[SingleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
         if node.right:
             return self.get_min(node=node.right)
         parent = node.parent
@@ -585,7 +659,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: SingleThreadNode) -> Optional[SingleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
         if node.isThread:
             return node.left
         else:
@@ -593,7 +672,12 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def get_height(self, node: Optional[SingleThreadNode]) -> int:
-        """See :func:`~binary_tree.BinaryTree.get_height`."""
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
         if node is None:
             return 0
 
@@ -745,7 +829,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.search`."""
+        """Look for a node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
         current = self.root
         while current:
             if key == current.key:
@@ -764,7 +853,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the double threaded binary tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         node = DoubleThreadNode(key=key, data=data)
         if self.root is None:
             self.root = node
@@ -808,7 +902,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         if self.root:
             deleting_node = self.search(key=key)
 
@@ -872,8 +971,14 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self, node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_min`."""
+    def get_min(self,
+                node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
         if node:
             current_node = node
         else:
@@ -887,8 +992,14 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+    def get_max(self,
+                node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
         if node:
             current_node = node
         else:
@@ -905,7 +1016,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: DoubleThreadNode) -> Optional[DoubleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_successor`."""
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
         if node.rightThread:
             return node.right
         else:
@@ -914,7 +1030,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: DoubleThreadNode) -> Optional[DoubleThreadNode]:
-        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
         if node.leftThread:
             return node.left
         else:
@@ -922,7 +1043,12 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     # Override
     def get_height(self, node: Optional[DoubleThreadNode]) -> int:
-        """See :func:`~binary_tree.BinaryTree.get_height`."""
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
         if node is None:
             return 0
 

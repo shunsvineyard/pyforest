@@ -23,7 +23,72 @@ class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 
 
 class AVLTree(binary_tree.BinaryTree):
-    """AVL Tree."""
+    """AVL Tree.
+
+    Parameters
+    ----------
+    key: `KeyType`
+        The key of the root when the tree is initialized.
+        Default is `None`.
+    data: `Any`
+        The data of the root when the tree is initialized.
+        Default is `None`.
+
+    Attributes
+    ----------
+    root: `Optional[AVLNode]`
+        The root node of the binary search tree.
+    empty: `bool`
+        `True` if the tree is empty; `False` otherwise.
+
+    Methods
+    -------
+    search(key: `KeyType`)
+        Look for a node based on the given key.
+    insert(key: `KeyType`, data: `Any`)
+        Insert a (key, data) pair into a binary tree.
+    delete(key: `KeyType`)
+        Delete a node based on the given key from the binary tree.
+    get_min(node: `Optional[AVLNode]` = `None`)
+        Return the node whose key is the smallest from the given subtree.
+    get_max(node: `Optional[AVLNode]` = `None`)
+        Return the node whose key is the biggest from the given subtree.
+    get_successor(node: `AVLNode`)
+        Return the successor node in the in-order order.
+    get_predecessor(node: `AVLNode`)
+        Return the predecessor node in the in-order order.
+    get_height(node: `Optional[AVLNode]`)
+        Return the height of the given node.
+
+    Examples
+    --------
+    >>> from pyforest.binary_trees import avl_tree
+    >>> tree = avl_tree.AVLTree()
+    >>> tree.insert(key=23, data="23")
+    >>> tree.insert(key=4, data="4")
+    >>> tree.insert(key=30, data="30")
+    >>> tree.insert(key=11, data="11")
+    >>> tree.insert(key=7, data="7")
+    >>> tree.insert(key=34, data="34")
+    >>> tree.insert(key=20, data="20")
+    >>> tree.insert(key=24, data="24")
+    >>> tree.insert(key=22, data="22")
+    >>> tree.insert(key=15, data="15")
+    >>> tree.insert(key=1, data="1")
+    >>> tree.get_min().key
+    1
+    >>> tree.get_min().data
+    '1'
+    >>> tree.get_max().key
+    34
+    >>> tree.get_max().data
+    "34"
+    >>> tree.get_height(tree.root)
+    4
+    >>> tree.search(24).data
+    `24`
+    >>> tree.delete(15)
+    """
 
     def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
         binary_tree.BinaryTree.__init__(self)
@@ -32,7 +97,12 @@ class AVLTree(binary_tree.BinaryTree):
 
     # Override
     def search(self, key: binary_tree.KeyType) -> AVLNode:
-        """See :func:`~binary_tree.BinaryTree.search`."""
+        """Look for an AVL node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
         current = self.root
 
         while current:
@@ -46,7 +116,12 @@ class AVLTree(binary_tree.BinaryTree):
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the AVL tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         temp: Optional[AVLNode] = self.root
         parent: Optional[AVLNode] = None
         while temp:
@@ -98,7 +173,12 @@ class AVLTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         deleting_node: AVLNode = self.search(key=key)
 
         # No children or only one right child
@@ -133,7 +213,12 @@ class AVLTree(binary_tree.BinaryTree):
 
     # Override
     def get_min(self, node: Optional[AVLNode] = None) -> AVLNode:
-        """See :func:`~binary_tree.BinaryTree.get_min`."""
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
         if node:
             current_node = node
         else:
@@ -148,7 +233,12 @@ class AVLTree(binary_tree.BinaryTree):
 
     # Override
     def get_max(self, node: Optional[AVLNode] = None) -> AVLNode:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
         if node:
             current_node = node
         else:
@@ -165,7 +255,12 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def get_successor(self,
                       node: AVLNode) -> Optional[AVLNode]:
-        """See :func:`~binary_tree.BinaryTree.get_successor`."""
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
         if node.right:
             return self.get_min(node=node.right)
         parent = node.parent
@@ -177,14 +272,24 @@ class AVLTree(binary_tree.BinaryTree):
     # Override
     def get_predecessor(self,
                         node: AVLNode) -> Optional[AVLNode]:
-        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
         if node.left:
             return self.get_max(node=node.left)
         return node.parent
 
     # Override
     def get_height(self, node: Optional[AVLNode]) -> int:
-        """See :func:`~binary_tree.BinaryTree.get_height`."""
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
         if node is None:
             return -1
         return node.height
@@ -288,38 +393,3 @@ class AVLTree(binary_tree.BinaryTree):
                         self._left_rotate(temp)
 
             fixing_node = fixing_node.parent
-
-
-
-from pyforest.binary_trees import traversal
-
-if __name__ == "__main__":
-    test = AVLTree()
-
-    test.insert(23, "23")
-    test.insert(4, "4")
-    test.insert(30, "30")
-    test.insert(11, "11")
-    test.insert(7, "7")
-    test.insert(34, "34")
-    test.insert(20, "20")
-    test.insert(24, "24")
-    test.insert(22, "22")
-    test.insert(15, "15")
-    test.insert(1, "1")
-
-    print(repr(test))
-
-    #print(test.get_height(test.root))
-
-
-    for item in traversal.inorder_traverse(tree=test):
-        print(item)
-
-
-    test.delete(20)
-    test.delete(11)
-
-    print(traversal.inorder_traverse(tree=test))
-    print(traversal.preorder_traverse(tree=test))
-

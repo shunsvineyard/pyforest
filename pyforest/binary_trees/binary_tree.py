@@ -60,7 +60,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
 
     Attributes
     ----------
-    root: `Optional[Node]`
+    root: `Optional[NodeType]`
         The root of the tree. The default is `None`.
 
     Notes
@@ -88,8 +88,10 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
 
         Returns
         -------
-        `Node`
-            The node based on the given key.
+        `NodeType`
+            The found node whose key is the same as the given key.
+        Note that the type of the node depends on the derived class, and
+        the node type should derive from `NodeType`.
 
         Raises
         ------
@@ -185,12 +187,12 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
 
         Parameters
         ----------
-        node: `Node`
+        node: `NodeType`
             The node to get its successor.
 
         Returns
         -------
-        `Node`
+        `Optional[NodeType]`
             The successor node.
         """
         raise NotImplementedError()
@@ -201,29 +203,29 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
 
         Parameters
         ----------
-        node: `Node`
+        node: `NodeType`
             The node to get its predecessor.
 
         Returns
         -------
-        `Node`
+        `Optional[NodeType]`
             The predecessor node.
         """
         raise NotImplementedError()
 
     @abc.abstractmethod
     def get_height(self, node: Optional[NodeType]) -> int:
-        """Get the height from the given node.
+        """Get the height of the given node.
 
         Parameters
         ----------
-        node: `Node`
+        node: `Optional[NodeType]`
             The node to get its height.
 
         Returns
         -------
         `int`
-            The height from the given node.
+            The height of the given node.
         """
         raise NotImplementedError()
 
@@ -238,7 +240,3 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         if isinstance(self.root, Node):
             return False
         return True
-
-
-# User-defined type for a binary tree.
-TreeType = TypeVar("TreeType", bound=BinaryTree)

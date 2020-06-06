@@ -1,6 +1,11 @@
 pyforest package
 ================
 
+.. automodule:: pyforest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -12,19 +17,7 @@ Subpackages
 Submodules
 ----------
 
-pyforest.tree\_exceptions module
---------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pyforest.tree_exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: pyforest
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   pyforest.tree_exceptions

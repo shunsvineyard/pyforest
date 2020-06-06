@@ -89,8 +89,8 @@ class RBTree(binary_tree.BinaryTree):
 
     Examples
     --------
-    >>> from pyforest.binary_trees import threaded_binary_tree
-    >>> tree = threaded_binary_tree.RightThreadedBinaryTree()
+    >>> from pyforest.binary_trees import red_black_tree
+    >>> tree = red_black_tree.RBTree()
     >>> tree.insert(key=23, data="23")
     >>> tree.insert(key=4, data="4")
     >>> tree.insert(key=30, data="30")
@@ -134,7 +134,12 @@ class RBTree(binary_tree.BinaryTree):
 
     # Override
     def search(self, key: binary_tree.KeyType) -> RBNode:
-        """See :func:`~binary_tree.BinaryTree.search`."""
+        """Look for a node by a given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.search`.
+        """
         temp: Union[RBNode, LeafNode] = self.root
         while isinstance(temp, RBNode):
             if key < temp.key:
@@ -147,7 +152,12 @@ class RBTree(binary_tree.BinaryTree):
 
     # Override
     def insert(self, key: binary_tree.KeyType, data: Any):
-        """See :func:`~binary_tree.BinaryTree.insert`."""
+        """Insert a (key, data) pair into the Red-Black tree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
+        """
         node = RBNode(key=key, data=data, left=self._NIL, right=self._NIL,
                       parent=self._NIL, color=Color.Red)
         parent: Union[RBNode, LeafNode] = self._NIL
@@ -173,7 +183,12 @@ class RBTree(binary_tree.BinaryTree):
 
     # Override
     def delete(self, key: binary_tree.KeyType):
-        """See :func:`~binary_tree.BinaryTree.delete`."""
+        """Delete the node by the given key.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.delete`.
+        """
         deleting_node: RBNode = self.search(key=key)
 
         original_color = deleting_node.color
@@ -212,8 +227,14 @@ class RBTree(binary_tree.BinaryTree):
         if original_color == Color.Black:
             self._delete_fixup(fixing_node=temp)
 
+    # Override
     def get_min(self, node: Optional[RBNode] = None) -> RBNode:
-        """See :func:`~binary_tree.BinaryTree.get_min`."""
+        """Return the node which has the smallest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        """
         if node:
             current_node = node
         else:
@@ -226,8 +247,14 @@ class RBTree(binary_tree.BinaryTree):
             current_node = current_node.left
         return current_node
 
+    # Override
     def get_max(self, node: Optional[RBNode] = None) -> RBNode:
-        """See :func:`~binary_tree.BinaryTree.get_max`."""
+        """Return the node which has the biggest key from the subtree.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        """
         if node:
             current_node = node
         else:
@@ -240,8 +267,14 @@ class RBTree(binary_tree.BinaryTree):
             current_node = current_node.right
         return current_node
 
+    # Override
     def get_successor(self, node: RBNode) -> Union[RBNode, LeafNode]:
-        """See :func:`~binary_tree.BinaryTree.get_successor`."""
+        """Return the successor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
+        """
         if isinstance(node.right, RBNode):
             return self.get_min(node=node.right)
         parent = node.parent
@@ -250,14 +283,26 @@ class RBTree(binary_tree.BinaryTree):
             parent = parent.parent
         return parent
 
+    # Override
     def get_predecessor(self, node: RBNode) -> Union[RBNode, LeafNode]:
-        """See :func:`~binary_tree.BinaryTree.get_predecessor`."""
+        """Return the predecessor node in the in-order order.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
+        """
         if isinstance(node.left, RBNode):
             return self.get_max(node=node.left)
         return node.parent
 
+    # Override
     def get_height(self, node: Union[None, LeafNode, RBNode]) -> int:
-        """See :func:`~binary_tree.BinaryTree.get_height`."""
+        """Return the height of the given node.
+
+        See Also
+        --------
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_height`.
+        """
         if node is None:
             return 0
 
@@ -337,13 +382,6 @@ class RBTree(binary_tree.BinaryTree):
 
         Post-order traversal traverses a tree by the order:
         left subtree, right subtree, current node (LRD)
-
-        Parameters
-        ----------
-        tree : `TreeType`
-            A type of binary tree.
-        recursive: `bool`
-            Perform traversal recursively or not.
 
         Yields
         ------
