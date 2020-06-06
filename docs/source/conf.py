@@ -46,6 +46,8 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Force Read the Docs set master doc to index instead of the default.
+master_doc = 'index'
 
 # -- Options for HTML output -------------------------------------------------
 
