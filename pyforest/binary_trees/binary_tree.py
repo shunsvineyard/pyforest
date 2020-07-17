@@ -2,7 +2,17 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""A base class for binary trees."""
+"""A base class for binary trees.
+
+Notes
+-----
+The module provides some custom types for type checking.
+- `KeyType`: the key type for a tree node. The key must be comparable.
+
+- `Paris`: an iterator of Key-Value pairs. Yield by traversal functions.
+
+- `NodeType`: the type that a derived node class should bound to.
+"""
 
 import abc
 
@@ -31,11 +41,11 @@ class Comparable(abc.ABC):
         return (not self < other)
 
 
-# User-defined type for a tree node key. The key must be comparable.
 KeyType = TypeVar("KeyType", bound=Comparable)
+"""Type of a tree node key. The key must be comparable."""
 
-# An iterator of Key-Value pairs. Yield by traversal functions.
 Pairs = Iterator[Tuple[KeyType, Any]]
+"""An iterator of Key-Value pairs. Yield by traversal functions."""
 
 
 @dataclass
@@ -50,6 +60,7 @@ class Node(Generic[KeyType]):
 
 
 NodeType = TypeVar("NodeType", bound=Node)
+"""Type of a tree node that a derived node class should bound to."""
 
 
 class BinaryTree(abc.ABC, Generic[NodeType]):

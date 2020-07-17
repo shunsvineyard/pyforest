@@ -919,7 +919,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
             # The deleting node has only one right child
             elif (deleting_node.leftThread or deleting_node.left is None) and \
-                  deleting_node.rightThread is False:
+                    deleting_node.rightThread is False:
 
                 successor = self.get_successor(node=deleting_node)
                 if successor:
@@ -928,9 +928,9 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.right)
 
             # The deleting node has only one left child,
-            elif (deleting_node.rightThread or 
+            elif (deleting_node.rightThread or
                   deleting_node.right is None) and \
-                  deleting_node.leftThread is False:
+                    deleting_node.leftThread is False:
 
                 predecessor = self.get_predecessor(node=deleting_node)
                 if predecessor:
@@ -1095,7 +1095,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                 current = self._get_leftmost(current.right)
 
     def outorder_traverse(self) -> binary_tree.Pairs:
-        """Use the left threads to traverse the tree in reversed in-order order.
+        """Use the left threads to traverse the tree in reversed in-order.
 
         Yields
         ------
