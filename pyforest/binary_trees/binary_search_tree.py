@@ -266,7 +266,11 @@ class BinarySearchTree(binary_tree.BinaryTree):
         """
         if node.left:
             return self.get_max(node=node.left)
-        return node.parent
+        parent = node.parent
+        while parent and node == parent.left:
+            node = parent
+            parent = parent.parent
+        return parent
 
     # Override
     def get_height(self, node: Optional[binary_tree.Node]) -> int:
