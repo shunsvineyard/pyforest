@@ -58,28 +58,27 @@ class BinarySearchTree:
         if self.root:
             deleting_node = self.search(key=key)
 
-            # No child or only one right child
+            # Case 1: No child or Case 2: only one right child
             if deleting_node.left is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one left child
+            # Case 2: Only one left child
             elif deleting_node.right is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
-            # Two children
+            # Case 3: Two children
             else:
                 min_node = self.get_min(node=deleting_node.right)
-                # the minmum node is not the direct child of the deleting node
-                if min_node:
-                    if min_node.parent != deleting_node:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                        min_node.right = deleting_node.right
-                        min_node.right.parent = min_node
-                    self._transplant(deleting_node=deleting_node,
-                                     replacing_node=min_node)
-                    min_node.left = deleting_node.left
-                    min_node.left.parent = min_node
+                # the min node is not the direct child of the deleting node
+                if min_node.parent != deleting_node:
+                    self._transplant(deleting_node=min_node,
+                                     replacing_node=min_node.right)
+                    min_node.right = deleting_node.right
+                    min_node.right.parent = min_node
+                self._transplant(deleting_node=deleting_node,
+                                 replacing_node=min_node)
+                min_node.left = deleting_node.left
+                min_node.left.parent = min_node
 
     def get_min(self, node: Optional[Node] = None) -> Optional[Node]:
         if node:
