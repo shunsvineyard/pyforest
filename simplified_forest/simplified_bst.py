@@ -70,15 +70,19 @@ class BinarySearchTree:
             else:
                 min_node = self.get_min(node=deleting_node.right)
                 # the min node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    self._transplant(deleting_node=min_node,
-                                     replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
-                self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
+                if min_node:
+                    if min_node.parent != deleting_node:
+                        self._transplant(deleting_node=min_node,
+                                         replacing_node=min_node.right)
+                        min_node.right = deleting_node.right
+                        min_node.right.parent = min_node
+                    self._transplant(deleting_node=deleting_node,
+                                     replacing_node=min_node)
+                    min_node.left = deleting_node.left
+                    min_node.left.parent = min_node
+                else:
+                    raise RuntimeError("Leftmost node must exist when \
+                                        deleting node has two children")
 
     def get_min(self, node: Optional[Node] = None) -> Optional[Node]:
         if node:
@@ -142,14 +146,14 @@ class Contact:
     def __init__(self):
         self._bst = BinarySearchTree()
 
-    def __setitem__(self, key, value):
-        self._bst.insert(key=key, data=value)
+    def __setitem__(self, name: str, email: str):
+        self._bst.insert(key=name, data=email)
 
-    def __getitem__(self, key):
-        return self._bst.search(key=key).data
+    def __getitem__(self, name: str):
+        return self._bst.search(key=name).data
 
-    def __delitem__(self, key):
-        self._bst.delete(key=key)
+    def __delitem__(self, name: str):
+        self._bst.delete(key=name)
 
     def list_all(self, ascending: bool = True):
 
@@ -169,7 +173,7 @@ class Contact:
 
 if __name__ == "__main__":
 
-    # Initialize the Map instance.
+    # Initialize the Contact instance.
     contacts = Contact()
 
     # Add some items.

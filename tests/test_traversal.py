@@ -42,12 +42,13 @@ def test_binary_search_tree_traversal(basic_tree):
         (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")
     ]
 
-    assert [item for item in traversal.outorder_traverse(tree)] == [
+    assert [item for item in traversal.reverse_inorder_traverse(tree)] == [
         (34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
         (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"), (1, "1")
     ]
 
-    assert [item for item in traversal.outorder_traverse(tree, False)] == [
+    assert [
+        item for item in traversal.reverse_inorder_traverse(tree, False)] == [
         (34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
         (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"), (1, "1")
     ]

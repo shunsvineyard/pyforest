@@ -166,8 +166,8 @@ def postorder_traverse(tree: SupportedTreeType,
     return _postorder_traverse_non_recursive(root=tree.root)
 
 
-def outorder_traverse(tree: SupportedTreeType,
-                      recursive: bool = True) -> binary_tree.Pairs:
+def reverse_inorder_traverse(tree: SupportedTreeType,
+                             recursive: bool = True) -> binary_tree.Pairs:
     """Perform reversed In-Order traversal.
 
     Reversed in-order traversal traverses a tree by the order:
@@ -183,7 +183,7 @@ def outorder_traverse(tree: SupportedTreeType,
     Yields
     ------
     `Pairs`
-        The next (key, data) pair in the out-order traversal.
+        The next (key, data) pair in the reversed in-order traversal.
 
     Examples
     --------
@@ -201,14 +201,14 @@ def outorder_traverse(tree: SupportedTreeType,
     >>> tree.insert(key=22, data="22")
     >>> tree.insert(key=15, data="15")
     >>> tree.insert(key=1, data="1")
-    >>> [item for item in traversal.outorder_traverse(tree)]
+    >>> [item for item in traversal.reverse_inorder_traverse(tree)]
     [(34, '34'), (30, '30'), (24, '24'), (23, '23'), (22, '22'), (20, '20'),
      (15, '15'), (11, '11'), (7, '7'), (4, '4'), (1, '1')]
     """
     if recursive:
-        return _outorder_traverse(node=tree.root)
+        return _reverse_inorder_traverse(node=tree.root)
 
-    return _outorder_traverse_non_recursive(root=tree.root)
+    return _reverse_inorder_traverse_non_recursive(root=tree.root)
 
 
 # FIXME: level order can be used for n-binary (n > 2). Should move it.
@@ -315,14 +315,14 @@ def _inorder_traverse_non_recursive(
                 break
 
 
-def _outorder_traverse(node: SupportedNodeType) -> binary_tree.Pairs:
+def _reverse_inorder_traverse(node: SupportedNodeType) -> binary_tree.Pairs:
     if node:
-        yield from _outorder_traverse(node.right)
+        yield from _reverse_inorder_traverse(node.right)
         yield (node.key, node.data)
-        yield from _outorder_traverse(node.left)
+        yield from _reverse_inorder_traverse(node.left)
 
 
-def _outorder_traverse_non_recursive(
+def _reverse_inorder_traverse_non_recursive(
         root: SupportedNodeType) -> binary_tree.Pairs:
     if root is None:
         raise StopIteration
