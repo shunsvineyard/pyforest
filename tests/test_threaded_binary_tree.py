@@ -23,8 +23,8 @@ def test_simple_right_threaded_case(basic_tree):
             (15, "15"), (22, "22"), (30, "30"), (24, "24"), (34, "34")] == \
            [item for item in tree.preorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)
@@ -91,8 +91,8 @@ def test_simple_left_threaded_case(basic_tree):
             (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
             (1, "1")] == [item for item in tree.outorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)
@@ -166,8 +166,8 @@ def test_simple_double_threaded_case(basic_tree):
             (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)

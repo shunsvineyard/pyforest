@@ -33,11 +33,11 @@ class RightThreadedBinaryTree:
     def delete(self, key: KeyType):
         # ...
 
-    def get_min(self,
+    def get_leftmost(self,
                 node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
         # ...
 
-    def get_max(self,
+    def get_rightmost(self,
                 node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
         # ...
 

@@ -76,9 +76,9 @@ class RBTree(binary_tree.BinaryTree):
         Perform Pre-order traversal.
     postorder_traverse()
         Perform Post-order traversal.
-    get_min(node: `Optional[RBNode]` = `None`)
+    get_leftmost(node: `Optional[RBNode]` = `None`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[RBNode]` = `None`)
+    get_rightmost(node: `Optional[RBNode]` = `None`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `RBNode`)
         Return the successor node in the in-order order.
@@ -108,13 +108,13 @@ class RBTree(binary_tree.BinaryTree):
     >>> [item for item in tree.preorder_traverse()]
     [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
      (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
-    >>> tree.get_min().key
+    >>> tree.get_leftmost().key
     1
-    >>> tree.get_min().data
+    >>> tree.get_leftmost().data
     '1'
-    >>> tree.get_max().key
+    >>> tree.get_rightmost().key
     34
-    >>> tree.get_max().data
+    >>> tree.get_rightmost().data
     "34"
     >>> tree.get_height(tree.root)
     4
@@ -208,7 +208,7 @@ class RBTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node: RBNode = self.get_min(deleting_node.right)
+            min_node: RBNode = self.get_leftmost(deleting_node.right)
             original_color = min_node.color
             temp = min_node.right
             # if the minimum node is the direct child of the deleting node
@@ -228,12 +228,12 @@ class RBTree(binary_tree.BinaryTree):
             self._delete_fixup(fixing_node=temp)
 
     # Override
-    def get_min(self, node: Optional[RBNode] = None) -> RBNode:
-        """Return the node which has the smallest key from the subtree.
+    def get_leftmost(self, node: Optional[RBNode] = None) -> RBNode:
+        """Return the leftmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
         if node:
             current_node = node
@@ -248,12 +248,12 @@ class RBTree(binary_tree.BinaryTree):
         return current_node
 
     # Override
-    def get_max(self, node: Optional[RBNode] = None) -> RBNode:
-        """Return the node which has the biggest key from the subtree.
+    def get_rightmost(self, node: Optional[RBNode] = None) -> RBNode:
+        """Return the rightmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
         if node:
             current_node = node
@@ -276,7 +276,7 @@ class RBTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
         """
         if isinstance(node.right, RBNode):
-            return self.get_min(node=node.right)
+            return self.get_leftmost(node=node.right)
         parent = node.parent
         while isinstance(parent, RBNode) and node == parent.right:
             node = parent
@@ -292,7 +292,7 @@ class RBTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
         """
         if isinstance(node.left, RBNode):
-            return self.get_max(node=node.left)
+            return self.get_rightmost(node=node.left)
         return node.parent
 
     # Override
@@ -492,8 +492,8 @@ class RBTree(binary_tree.BinaryTree):
                 # Case 2: the sibling is black and its children are black.
                 if (sibling.left.color == Color.Black) and \
                    (sibling.right.color == Color.Black):
-                   sibling.color = Color.Red
-                   fixing_node = fixing_node.parent # new fixing node
+                    sibling.color = Color.Red
+                    fixing_node = fixing_node.parent # new fixing node
 
                 # Cases 3 and 4: the sibling is black and one of
                 # its child is red and the other is black.
@@ -519,8 +519,8 @@ class RBTree(binary_tree.BinaryTree):
                     sibling = fixing_node.parent.left
                 if (sibling.right.color == Color.Black) and \
                    (sibling.left.color == Color.Black):
-                   sibling.color = Color.Red
-                   fixing_node = fixing_node.parent
+                    sibling.color = Color.Red
+                    fixing_node = fixing_node.parent
                 else:
                     if sibling.left.color == Color.Black:
                         sibling.right.color = Color.Black

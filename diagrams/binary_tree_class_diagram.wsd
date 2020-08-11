@@ -13,8 +13,8 @@ class BinaryTree {
     {abstract} +search() -> NodeType
     {abstract} +insert()
     {abstract} +delete()
-    {abstract} +get_min() -> NodeType
-    {abstract} +get_max() -> NodeType
+    {abstract} +get_leftmost() -> NodeType
+    {abstract} +get_rightmost() -> NodeType
     {abstract} +get_successor() -> NodeType
     {abstract} +get_predecessor() -> NodeType
     {abstract} +get_height() -> int

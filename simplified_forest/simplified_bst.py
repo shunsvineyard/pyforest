@@ -68,7 +68,7 @@ class BinarySearchTree:
                                  replacing_node=deleting_node.left)
             # Case 3: Two children
             else:
-                min_node = self.get_min(node=deleting_node.right)
+                min_node = self.get_leftmost(node=deleting_node.right)
                 # the min node is not the direct child of the deleting node
                 if min_node:
                     if min_node.parent != deleting_node:
@@ -84,7 +84,7 @@ class BinarySearchTree:
                     raise RuntimeError("Leftmost node must exist when \
                                         deleting node has two children")
 
-    def get_min(self, node: Optional[Node] = None) -> Optional[Node]:
+    def get_leftmost(self, node: Optional[Node] = None) -> Optional[Node]:
         if node:
             current_node = node
         else:
@@ -96,7 +96,7 @@ class BinarySearchTree:
             current_node = current_node.left
         return current_node
 
-    def get_max(self, node: Optional[Node] = None) -> Optional[Node]:
+    def get_rightmost(self, node: Optional[Node] = None) -> Optional[Node]:
         if node:
             current_node = node
         else:
@@ -111,7 +111,7 @@ class BinarySearchTree:
 
     def get_successor(self, node: Node) -> Optional[Node]:
         if node.right:  # Case 1: Right child is not empty
-            return self.get_min(node=node.right)
+            return self.get_leftmost(node=node.right)
         # Case 2: Right child is empty
         parent = node.parent
         while parent and node == parent.right:
@@ -121,7 +121,7 @@ class BinarySearchTree:
 
     def get_predecessor(self, node: Node) -> Optional[Node]:
         if node.left:  # Case 1: Left child is not empty
-            return self.get_max(node=node.left)
+            return self.get_rightmost(node=node.left)
         # Case 2: Left child is empty
         parent = node.parent
         while parent and node == parent.left:
@@ -158,12 +158,12 @@ class Contact:
     def list_all(self, ascending: bool = True):
 
         if ascending:
-            item = self._bst.get_min()
+            item = self._bst.get_leftmost()
             while item:
                 yield (item.key, item.data)
                 item = self._bst.get_successor(node=item)
         else:
-            item = self._bst.get_max()
+            item = self._bst.get_rightmost()
             print(item.key)
 
             while item:
