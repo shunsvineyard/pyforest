@@ -25,15 +25,6 @@ class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 class AVLTree(binary_tree.BinaryTree):
     """AVL Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[AVLNode]`
@@ -90,10 +81,8 @@ class AVLTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root: AVLNode = AVLNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> AVLNode:

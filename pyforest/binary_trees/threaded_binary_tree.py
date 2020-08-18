@@ -44,15 +44,6 @@ class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 class RightThreadedBinaryTree(binary_tree.BinaryTree):
     """Right Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[SingleThreadNode]`
@@ -119,10 +110,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
@@ -401,15 +390,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     """Left Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[SingleThreadNode]`
@@ -471,10 +451,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
@@ -742,15 +720,6 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     """Double Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[DoubleThreadNode]`
@@ -822,10 +791,8 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = DoubleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:

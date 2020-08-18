@@ -123,14 +123,10 @@ class RBTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
         self._NIL: LeafNode = LeafNode()
         self.root: Union[RBNode, LeafNode] = self._NIL
-        if key and data:
-            self.root = RBNode(key=key, data=data, left=self._NIL,
-                               right=self._NIL, parent=self._NIL,
-                               color=Color.Black)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> RBNode:
@@ -158,16 +154,18 @@ class RBTree(binary_tree.BinaryTree):
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.insert`.
         """
-        node = RBNode(key=key, data=data, left=self._NIL, right=self._NIL,
-                      parent=self._NIL, color=Color.Red)
+        node = RBNode(key=key, data=data, left=self._NIL,
+                      right=self._NIL, parent=self._NIL, 
+                      color=Color.Red)  # Color the new node as red.
         parent: Union[RBNode, LeafNode] = self._NIL
         temp: Union[RBNode, LeafNode] = self.root
-        while isinstance(temp, RBNode):
+        while isinstance(temp, RBNode):  # Look for the insert location
             parent = temp
             if node.key < temp.key:
                 temp = temp.left
             else:
                 temp = temp.right
+        # If the parent is a LeafNode, set the new node to be the root.
         if isinstance(parent, LeafNode):
             node.color = Color.Black
             self.root = node
@@ -179,6 +177,7 @@ class RBTree(binary_tree.BinaryTree):
             else:
                 parent.right = node
 
+            # After the insertion, fix the broken red-black-tree-properties.
             self._insert_fixup(node)
 
     # Override
@@ -211,7 +210,7 @@ class RBTree(binary_tree.BinaryTree):
             min_node: RBNode = self.get_leftmost(deleting_node.right)
             original_color = min_node.color
             temp = min_node.right
-            # if the minimum node is the direct child of the deleting node
+            # If the minimum node is the direct child of the deleting node
             if min_node.parent == deleting_node:
                 temp.parent = min_node
             else:
@@ -284,6 +283,7 @@ class RBTree(binary_tree.BinaryTree):
         return parent
 
     # Override
+    # FIXME: this is wrong
     def get_predecessor(self, node: RBNode) -> Union[RBNode, LeafNode]:
         """Return the predecessor node in the in-order order.
 
@@ -409,67 +409,82 @@ class RBTree(binary_tree.BinaryTree):
         """
         return self._postorder_traverse(node=self.root)
 
-    def _left_rotate(self, node: Union[RBNode, LeafNode]):
-        temp = node.right
-        node.right = temp.left
-        if isinstance(temp.left, RBNode):
-            temp.left.parent = node
-        temp.parent = node.parent
+    def _left_rotate(self, node_x: RBNode):
+        node_y = node_x.right  # Set node y
+        if isinstance(node_y, LeafNode):  # Node y cannot be a LeafNode
+            raise RuntimeError("Invalid left rotate")
 
-        if isinstance(node.parent, LeafNode):
-            self.root = temp
-        elif node == node.parent.left:
-            node.parent.left = temp
+        # Turn node y's subtree into node x's subtree
+        node_x.right = node_y.left
+        if isinstance(node_y.left, RBNode):
+            node_y.left.parent = node_x
+        node_y.parent = node_x.parent
+
+        # If node's parent is a LeafNode, node y becomes the new root.
+        if isinstance(node_x.parent, LeafNode):
+            self.root = node_y
+        # Otherwise, update node x's parent.
+        elif node_x == node_x.parent.left:
+            node_x.parent.left = node_y
         else:
-            node.parent.right = temp
+            node_x.parent.right = node_y
 
-        temp.left = node
-        node.parent = temp
+        node_y.left = node_x
+        node_x.parent = node_y
 
-    def _right_rotate(self, node: Union[RBNode, LeafNode]):
-        temp = node.left
-        node.left = temp.right
-        if isinstance(temp.right, RBNode):
-            temp.right.parent = node
-        temp.parent = node.parent
+    def _right_rotate(self, node_x: RBNode):
+        node_y = node_x.left  # Set node y
+        if isinstance(node_y, LeafNode):  # Node y cannot be a LeafNode
+            raise RuntimeError("Invalid right rotate")
+        # Turn node y's subtree into node x's subtree
+        node_x.left = node_y.right
+        if isinstance(node_y.right, RBNode):
+            node_y.right.parent = node_x
+        node_y.parent = node_x.parent
 
-        if isinstance(node.parent, LeafNode):
-            self.root = temp
-        elif node == node.parent.right:
-            node.parent.right = temp
+        # If node's parent is a LeafNode, node y becomes the new root.
+        if isinstance(node_x.parent, LeafNode):
+            self.root = node_y
+        # Otherwise, update node x's parent.
+        elif node_x == node_x.parent.right:
+            node_x.parent.right = node_y
         else:
-            node.parent.left = temp
+            node_x.parent.left = node_y
 
-        temp.right = node
-        node.parent = temp
+        node_y.right = node_x
+        node_x.parent = node_y
 
     def _insert_fixup(self, fixing_node: RBNode):
         while fixing_node.parent.color == Color.Red:
             if fixing_node.parent == fixing_node.parent.parent.left:
-                temp = fixing_node.parent.parent.right
-                if temp.color == Color.Red:
+                parent_sibling = fixing_node.parent.parent.right
+                if parent_sibling.color == Color.Red:  # Case 1
                     fixing_node.parent.color = Color.Black
-                    temp.color = Color.Black
+                    parent_sibling.color = Color.Black
                     fixing_node.parent.parent.color = Color.Red
                     fixing_node = fixing_node.parent.parent
                 else:
+                    # Case 2
                     if fixing_node == fixing_node.parent.right:
                         fixing_node = fixing_node.parent
                         self._left_rotate(fixing_node)
+                    # Case 3
                     fixing_node.parent.color = Color.Black
                     fixing_node.parent.parent.color = Color.Red
                     self._right_rotate(fixing_node.parent.parent)
             else:
-                temp = fixing_node.parent.parent.left
-                if temp.color == Color.Red:
+                parent_sibling = fixing_node.parent.parent.left
+                if parent_sibling.color == Color.Red:  # Case 4
                     fixing_node.parent.color = Color.Black
-                    temp.color = Color.Black
+                    parent_sibling.color = Color.Black
                     fixing_node.parent.parent.color = Color.Red
                     fixing_node = fixing_node.parent.parent
                 else:
+                    # Case 5
                     if fixing_node == fixing_node.parent.left:
                         fixing_node = fixing_node.parent
                         self._right_rotate(fixing_node)
+                    # Case 6
                     fixing_node.parent.color = Color.Black
                     fixing_node.parent.parent.color = Color.Red
                     self._left_rotate(fixing_node.parent.parent)
@@ -502,20 +517,20 @@ class RBTree(binary_tree.BinaryTree):
                     if sibling.right.color == Color.Black:
                         sibling.left.color = Color.Black
                         sibling.color = Color.Red
-                        self._right_rotate(node=sibling)
+                        self._right_rotate(node_x=sibling)
 
                     # Case 4: the sibling is black and its right child is red.
                     sibling.color = fixing_node.parent.color
                     fixing_node.parent.color = Color.Black
                     sibling.right.color = Color.Black
-                    self._left_rotate(node=fixing_node.parent)
+                    self._left_rotate(node_x=fixing_node.parent)
                     fixing_node = self.root
             else:
                 sibling = fixing_node.parent.left
                 if sibling.color == Color.Red:
                     sibling.color == Color.Black
                     fixing_node.parent.color = Color.Red
-                    self._right_rotate(node=fixing_node.parent)
+                    self._right_rotate(node_x=fixing_node.parent)
                     sibling = fixing_node.parent.left
                 if (sibling.right.color == Color.Black) and \
                    (sibling.left.color == Color.Black):
@@ -525,11 +540,11 @@ class RBTree(binary_tree.BinaryTree):
                     if sibling.left.color == Color.Black:
                         sibling.right.color = Color.Black
                         sibling.color = Color.Red
-                        self._left_rotate(node=sibling)
+                        self._left_rotate(node_x=sibling)
                     sibling.color = fixing_node.parent.color
                     fixing_node.parent.color = Color.Black
                     sibling.left.color = Color.Black
-                    self._right_rotate(node=fixing_node.parent)
+                    self._right_rotate(node_x=fixing_node.parent)
                     fixing_node = self.root
 
         fixing_node.color = Color.Black

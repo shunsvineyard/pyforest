@@ -44,15 +44,6 @@ from pyforest.binary_trees import binary_tree
 class BinarySearchTree(binary_tree.BinaryTree):
     """Binary Search Tree (BST).
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[Node]`
@@ -109,10 +100,8 @@ class BinarySearchTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = binary_tree.Node(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> binary_tree.Node:
