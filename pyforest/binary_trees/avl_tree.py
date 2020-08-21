@@ -255,7 +255,11 @@ class AVLTree(binary_tree.BinaryTree):
         """
         if node.left:
             return self.get_rightmost(node=node.left)
-        return node.parent
+        parent = node.parent
+        while parent and node == parent.left:
+            node = parent
+            parent = parent.parent
+        return parent
 
     # Override
     def get_height(self, node: Optional[AVLNode]) -> int:

@@ -27,13 +27,11 @@ class BinarySearchTree {
 class RightSingleThreadedBinaryTree {
     +inorder_traverse()
     +preorder_traverse()
-    -_get_leftmost()
     -_transplant()
 }
 
 class LeftSingleThreadedBinaryTree {
     +reverse_inorder_traverse()
-    -_get_rightmost()
     -_transplant()
 }
 
@@ -41,8 +39,6 @@ class DoubleThreadedBinaryTree {
     +inorder_traverse()
     +preorder_traverse()
     +reverse_inorder_traverse()
-    -_get_leftmost()
-    -_get_rightmost()
     -_transplant()
 }
 

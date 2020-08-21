@@ -916,7 +916,6 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
         current_node = node
-
         while current_node.left and current_node.leftThread is False:
             current_node = current_node.left
         return current_node
@@ -930,9 +929,8 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
         current_node = node
-
         if current_node:
-            while current_node.right:
+            while current_node.right and current_node.rightThread is False:
                 current_node = current_node.right
         return current_node
 
@@ -965,7 +963,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             return node.left
         else:
             if node.left:
-                return self._get_rightmost(node=node.left)
+                return self.get_rightmost(node=node.left)
             return None
 
     # Override
@@ -1034,23 +1032,14 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         `Pairs`
             The next (key, data) pair in the tree out-order traversal.
         """
-        current = self._get_rightmost(node=self.root)
+        current = self.get_rightmost(node=self.root)
         while current:
             yield (current.key, current.data)
 
             if current.leftThread:
                 current = current.left
             else:
-                current = self._get_rightmost(current.left)
-
-    def _get_rightmost(self, node: Optional[DoubleThreadNode]):
-
-        if node is None:
-            return None
-
-        while node.right and node.rightThread is False:
-            node = node.right
-        return node
+                current = self.get_rightmost(current.left)
 
     def _transplant(self, deleting_node: DoubleThreadNode,
                     replacing_node: Optional[DoubleThreadNode]):
