@@ -185,42 +185,28 @@ class BinarySearchTree(binary_tree.BinaryTree):
                 min_node.left.parent = min_node
 
     # Override
-    def get_leftmost(self, node: Optional[binary_tree.Node] = None
-                     ) -> binary_tree.Node:
+    def get_leftmost(self, node: binary_tree.Node) -> binary_tree.Node:
         """Return the leftmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         while current_node.left:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_rightmost(self, node: Optional[binary_tree.Node] = None
-                      ) -> binary_tree.Node:
+    def get_rightmost(self, node: binary_tree.Node) -> binary_tree.Node:
         """Return the rightmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         if current_node:
             while current_node.right:

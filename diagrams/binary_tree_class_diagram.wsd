@@ -32,7 +32,7 @@ class RightSingleThreadedBinaryTree {
 }
 
 class LeftSingleThreadedBinaryTree {
-    +outorder_traverse()
+    +reverse_inorder_traverse()
     -_get_rightmost()
     -_transplant()
 }
@@ -40,7 +40,7 @@ class LeftSingleThreadedBinaryTree {
 class DoubleThreadedBinaryTree {
     +inorder_traverse()
     +preorder_traverse()
-    +outorder_traverse()
+    +reverse_inorder_traverse()
     -_get_leftmost()
     -_get_rightmost()
     -_transplant()

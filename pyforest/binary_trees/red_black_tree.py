@@ -76,9 +76,9 @@ class RBTree(binary_tree.BinaryTree):
         Perform Pre-order traversal.
     postorder_traverse()
         Perform Post-order traversal.
-    get_leftmost(node: `Optional[RBNode]` = `None`)
+    get_leftmost(node: `RBNode`)
         Return the node whose key is the smallest from the given subtree.
-    get_rightmost(node: `Optional[RBNode]` = `None`)
+    get_rightmost(node: `RBNode`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `RBNode`)
         Return the successor node in the in-order order.
@@ -227,41 +227,27 @@ class RBTree(binary_tree.BinaryTree):
             self._delete_fixup(fixing_node=temp)
 
     # Override
-    def get_leftmost(self, node: Optional[RBNode] = None) -> RBNode:
+    def get_leftmost(self, node: RBNode) -> RBNode:
         """Return the leftmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if isinstance(self.root, RBNode):
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         while isinstance(current_node.left, RBNode):
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_rightmost(self, node: Optional[RBNode] = None) -> RBNode:
+    def get_rightmost(self, node: RBNode) -> RBNode:
         """Return the rightmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if isinstance(self.root, RBNode):
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         while isinstance(current_node.right, RBNode):
             current_node = current_node.right
         return current_node
@@ -283,7 +269,6 @@ class RBTree(binary_tree.BinaryTree):
         return parent
 
     # Override
-    # FIXME: this is wrong
     def get_predecessor(self, node: RBNode) -> Union[RBNode, LeafNode]:
         """Return the predecessor node in the in-order order.
 
@@ -293,6 +278,10 @@ class RBTree(binary_tree.BinaryTree):
         """
         if isinstance(node.left, RBNode):
             return self.get_rightmost(node=node.left)
+        parent = node.parent
+        while isinstance(parent, RBNode) and node == parent.left:
+            node = parent
+            parent = parent.parent
         return node.parent
 
     # Override

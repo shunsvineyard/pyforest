@@ -40,9 +40,9 @@ class AVLTree(binary_tree.BinaryTree):
         Insert a (key, data) pair into a binary tree.
     delete(key: `KeyType`)
         Delete a node based on the given key from the binary tree.
-    get_leftmost(node: `Optional[AVLNode]` = `None`)
+    get_leftmost(node: `AVLNode`)
         Return the node whose key is the smallest from the given subtree.
-    get_rightmost(node: `Optional[AVLNode]` = `None`)
+    get_rightmost(node: `AVLNode`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `AVLNode`)
         Return the successor node in the in-order order.
@@ -201,41 +201,27 @@ class AVLTree(binary_tree.BinaryTree):
                 self._delete_fixup(min_node)
 
     # Override
-    def get_leftmost(self, node: Optional[AVLNode] = None) -> AVLNode:
+    def get_leftmost(self, node: AVLNode) -> AVLNode:
         """Return the leftmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         while current_node.left:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_rightmost(self, node: Optional[AVLNode] = None) -> AVLNode:
+    def get_rightmost(self, node: AVLNode) -> AVLNode:
         """Return the rightmost node from a given subtree.
 
         See Also
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         if current_node:
             while current_node.right:
                 current_node = current_node.right

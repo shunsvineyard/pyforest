@@ -178,10 +178,10 @@ class cli(cmd.Cmd):
                         self._tree,
                         threaded_binary_tree.DoubleThreadedBinaryTree
                     ):
-                        for item in self._tree.outorder_traverse():
+                        for item in self._tree.reverse_inorder_traverse():
                             print(item)
                     else:
-                        for item in traversal.outorder_traverse(
+                        for item in traversal.reverse_inorder_traverse(
                             tree=self._tree
                         ):
                             print(item)

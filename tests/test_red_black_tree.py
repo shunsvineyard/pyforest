@@ -15,10 +15,10 @@ def test_simple_case(basic_tree):
     for key, data in basic_tree:
         tree.insert(key=key, data=data)
 
-    assert tree.get_leftmost().key == 1
-    assert tree.get_leftmost().data == "1"
-    assert tree.get_rightmost().key == 34
-    assert tree.get_rightmost().data == "34"
+    assert tree.get_leftmost(tree.root).key == 1
+    assert tree.get_leftmost(tree.root).data == "1"
+    assert tree.get_rightmost(tree.root).key == 34
+    assert tree.get_rightmost(tree.root).data == "34"
     assert tree.search(24).key == 24
     assert tree.search(24).data == "24"
 

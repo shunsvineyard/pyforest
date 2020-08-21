@@ -147,32 +147,26 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_leftmost(self, node: Optional[NodeType] = None) -> NodeType:
+    def get_leftmost(self, node: NodeType) -> NodeType:
         """Get the leftmost node from a given subtree.
 
         The key of the leftmost node is the smallest key in a given subtree.
 
         Parameters
         ----------
-        node: `Optional[NodeType]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
+        node: `NodeType`
+            The root of the subtree.
 
         Returns
         -------
         `NodeType`
             The node whose key is the smallest from the subtree of
             the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
         """
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_rightmost(self, node: Optional[NodeType] = None) -> NodeType:
+    def get_rightmost(self, node: NodeType) -> NodeType:
         """Get the rightmost node from a given subtree.
 
         The key of the rightmost node is the biggest key in a given subtree.
@@ -180,19 +174,13 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         Parameters
         ----------
         node: `Optional[NodeType]`
-            The root of the subtree. If the parameter is not present,
-            root will be used.
+            The root of the subtree.
 
         Returns
         -------
         `NodeType`
             The node whose key is the biggest from the subtree of
             the given node.
-
-        Raises
-        ------
-        `EmptyTreeError`
-            Raised if the tree is empty.
         """
         raise NotImplementedError()
 
@@ -229,12 +217,12 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_height(self, node: Optional[NodeType]) -> int:
+    def get_height(self, node: NodeType) -> int:
         """Get the height of the given node.
 
         Parameters
         ----------
-        node: `Optional[NodeType]`
+        node: `NodeType`
             The node to get its height.
 
         Returns
