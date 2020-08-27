@@ -485,7 +485,7 @@ class RBTree(binary_tree.BinaryTree):
 
         self.root.color = Color.Black
 
-    def _delete_fixup(self, fixing_node: RBNode):
+    def _delete_fixup(self, fixing_node: Union[LeafNode, RBNode]):
         while (fixing_node is not self.root) and \
               (fixing_node.color == Color.Black):
             if fixing_node == fixing_node.parent.left:
@@ -518,27 +518,37 @@ class RBTree(binary_tree.BinaryTree):
                     fixing_node.parent.color = Color.Black
                     sibling.right.color = Color.Black
                     self._left_rotate(node_x=fixing_node.parent)
+                    # Once we are here, all the violation has been fixed, so
+                    # move to the root to terminate the loop.
                     fixing_node = self.root
             else:
                 sibling = fixing_node.parent.left
+
+                # Case 5: the sibling is red.
                 if sibling.color == Color.Red:
                     sibling.color == Color.Black
                     fixing_node.parent.color = Color.Red
                     self._right_rotate(node_x=fixing_node.parent)
                     sibling = fixing_node.parent.left
+
+                # Case 6: the sibling is black and its children are black.
                 if (sibling.right.color == Color.Black) and \
                    (sibling.left.color == Color.Black):
                     sibling.color = Color.Red
                     fixing_node = fixing_node.parent
                 else:
+                    # Case 7: the sibling is black and its right child is red.
                     if sibling.left.color == Color.Black:
                         sibling.right.color = Color.Black
                         sibling.color = Color.Red
                         self._left_rotate(node_x=sibling)
+                    # Case 8: the sibling is black and its left child is red.
                     sibling.color = fixing_node.parent.color
                     fixing_node.parent.color = Color.Black
                     sibling.left.color = Color.Black
                     self._right_rotate(node_x=fixing_node.parent)
+                    # Once we are here, all the violation has been fixed, so
+                    # move to the root to terminate the loop.
                     fixing_node = self.root
 
         fixing_node.color = Color.Black

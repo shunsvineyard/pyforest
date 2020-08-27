@@ -119,9 +119,9 @@ class cli(cmd.Cmd):
     def do_traverse(self, line):
         """Traverse the binary search tree.
 
-        Options: pre, in, post, out
+        Options: pre, in, post, rev-in
         Example:
-        forest> traverse out
+        forest> traverse pre
         """
         try:
             arg = self._get_single_arg(line=line).lower()
@@ -170,7 +170,7 @@ class cli(cmd.Cmd):
                 elif arg == "post":
                     for item in traversal.postorder_traverse(tree=self._tree):
                         print(item)
-                elif arg == "out":
+                elif arg == "rev-in":
                     if isinstance(
                         self._tree,
                         threaded_binary_tree.LeftThreadedBinaryTree

@@ -647,7 +647,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         Yields
         ------
         `Pairs`
-            The next (key, data) pair in the tree out-order traversal.
+            The next (key, data) pair in the tree reversed in-order traversal.
         """
         if self.root:
             current = self.get_rightmost(node=self.root)
@@ -1030,7 +1030,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         Yields
         ------
         `Pairs`
-            The next (key, data) pair in the tree out-order traversal.
+            The next (key, data) pair in the tree reversed in-order traversal.
         """
         current = self.get_rightmost(node=self.root)
         while current:
