@@ -23,8 +23,8 @@ def test_simple_right_threaded_case(basic_tree):
             (15, "15"), (22, "22"), (30, "30"), (24, "24"), (34, "34")] == \
            [item for item in tree.preorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)
@@ -89,10 +89,10 @@ def test_simple_left_threaded_case(basic_tree):
 
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
-            (1, "1")] == [item for item in tree.outorder_traverse()]
+            (1, "1")] == [item for item in tree.reverse_inorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)
@@ -103,8 +103,9 @@ def test_simple_left_threaded_case(basic_tree):
     with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(key=15)
 
-    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (11, "11"),
-            (4, "4"), (1, "1")] == [item for item in tree.outorder_traverse()]
+    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"),
+            (11, "11"), (4, "4"), (1, "1")] == \
+           [item for item in tree.reverse_inorder_traverse()]
 
 
 def test_deletion_left_threaded_case(basic_tree):
@@ -119,31 +120,31 @@ def test_deletion_left_threaded_case(basic_tree):
     tree.delete(15)
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (20, "20"), (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # One right child
     tree.delete(20)
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # One left child
     tree.insert(key=17, data="17")
     tree.delete(22)
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (17, "17"),
             (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # Two children
     tree.delete(11)
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (17, "17"),
             (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # Delete the root
     tree.delete(23)
     assert [(34, "34"), (30, "30"), (24, "24"), (17, "17"), (7, "7"), (4, "4"),
-            (1, "1")] == [item for item in tree.outorder_traverse()]
+            (1, "1")] == [item for item in tree.reverse_inorder_traverse()]
 
 
 def test_simple_double_threaded_case(basic_tree):
@@ -160,14 +161,14 @@ def test_simple_double_threaded_case(basic_tree):
 
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"),
-            (1, "1")] == [item for item in tree.outorder_traverse()]
+            (1, "1")] == [item for item in tree.reverse_inorder_traverse()]
 
     assert [(1, "1"), (4, "4"), (7, "7"), (11, "11"), (15, "15"), (20, "20"),
             (22, "22"), (23, "23"), (24, "24"), (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
 
-    assert tree.get_min(node=tree.root).key == 1
-    assert tree.get_max(node=tree.root).key == 34
+    assert tree.get_leftmost(node=tree.root).key == 1
+    assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
     tree.delete(key=15)
@@ -178,8 +179,9 @@ def test_simple_double_threaded_case(basic_tree):
     with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(key=15)
 
-    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (11, "11"),
-            (4, "4"), (1, "1")] == [item for item in tree.outorder_traverse()]
+    assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"),
+            (11, "11"), (4, "4"), (1, "1")] == \
+           [item for item in tree.reverse_inorder_traverse()]
 
 
 def test_deletion_double_threaded_case(basic_tree):
@@ -197,7 +199,7 @@ def test_deletion_double_threaded_case(basic_tree):
            [item for item in tree.inorder_traverse()]
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (20, "20"), (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # One right child
     tree.delete(20)
@@ -206,7 +208,7 @@ def test_deletion_double_threaded_case(basic_tree):
            [item for item in tree.inorder_traverse()]
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
             (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # One left child
     tree.insert(key=17, data="17")
@@ -216,7 +218,7 @@ def test_deletion_double_threaded_case(basic_tree):
            [item for item in tree.inorder_traverse()]
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (17, "17"),
             (11, "11"), (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # Two children
     tree.delete(11)
@@ -225,7 +227,7 @@ def test_deletion_double_threaded_case(basic_tree):
            [item for item in tree.inorder_traverse()]
     assert [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (17, "17"),
             (7, "7"), (4, "4"), (1, "1")] == \
-           [item for item in tree.outorder_traverse()]
+           [item for item in tree.reverse_inorder_traverse()]
 
     # Delete the root
     tree.delete(23)
@@ -233,4 +235,4 @@ def test_deletion_double_threaded_case(basic_tree):
             (30, "30"), (34, "34")] == \
            [item for item in tree.inorder_traverse()]
     assert [(34, "34"), (30, "30"), (24, "24"), (17, "17"), (7, "7"), (4, "4"),
-            (1, "1")] == [item for item in tree.outorder_traverse()]
+            (1, "1")] == [item for item in tree.reverse_inorder_traverse()]

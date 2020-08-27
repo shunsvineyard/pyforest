@@ -1,0 +1,66 @@
+@startuml
+
+BinaryTree <|-- BinarySearchTree
+BinaryTree <|-- RightSingleThreadedBinaryTree
+BinaryTree <|-- LeftSingleThreadedBinaryTree
+BinaryTree <|-- DoubleThreadedBinaryTree
+BinaryTree <|-- RBTree
+BinaryTree <|-- AVLTree
+
+class BinaryTree {
+    +root: NodeType
+    +empty: bool
+    {abstract} +search() -> NodeType
+    {abstract} +insert()
+    {abstract} +delete()
+    {abstract} +get_leftmost() -> NodeType
+    {abstract} +get_rightmost() -> NodeType
+    {abstract} +get_successor() -> NodeType
+    {abstract} +get_predecessor() -> NodeType
+    {abstract} +get_height() -> int
+}
+
+class BinarySearchTree {
+    -_transplant()
+}
+
+class RightSingleThreadedBinaryTree {
+    +inorder_traverse()
+    +preorder_traverse()
+    -_transplant()
+}
+
+class LeftSingleThreadedBinaryTree {
+    +reverse_inorder_traverse()
+    -_transplant()
+}
+
+class DoubleThreadedBinaryTree {
+    +inorder_traverse()
+    +preorder_traverse()
+    +reverse_inorder_traverse()
+    -_transplant()
+}
+
+class RBTree {
+    +inorder_traverse()
+    +preorder_traverse()
+    +postorder_traverse()
+    -_left_rotate()
+    -_right_rotate()
+    -_insert_fixup()
+    -_delete_fixup()
+    -_transplant()
+
+}
+
+class AVLTree {
+    -_left_rotate()
+    -_right_rotate()
+    -_transplant()
+    -_balance_factor()
+    -_delete_fixup()
+}
+
+
+@enduml

@@ -44,15 +44,6 @@ class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 class RightThreadedBinaryTree(binary_tree.BinaryTree):
     """Right Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[SingleThreadNode]`
@@ -72,9 +63,9 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         In-order traversal by using thr right threads.
     preorder_traverse()
         Pre-order traversal by using thr right threads.
-    get_min(node: `Optional[SingleThreadNode]` = `None`)
+    get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[SingleThreadNode]` = `None`)
+    get_rightmost(node: `SingleThreadNode`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `SingleThreadNode`)
         Return the successor node in the in-order order.
@@ -104,13 +95,13 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     >>> [item for item in tree.preorder_traverse()]
     [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
      (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
-    >>> tree.get_min().key
+    >>> tree.get_leftmost().key
     1
-    >>> tree.get_min().data
+    >>> tree.get_leftmost().data
     '1'
-    >>> tree.get_max().key
+    >>> tree.get_rightmost().key
     34
-    >>> tree.get_max().data
+    >>> tree.get_rightmost().data
     "34"
     >>> tree.get_height(tree.root)
     4
@@ -119,10 +110,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
@@ -222,7 +211,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 predecessor = self.get_predecessor(node=deleting_node)
 
                 min_node: SingleThreadNode = \
-                    self.get_min(node=deleting_node.right)
+                    self.get_leftmost(node=deleting_node.right)
 
                 # the minmum node is not the direct child of the deleting node
                 if min_node.parent != deleting_node:
@@ -244,42 +233,28 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                     predecessor.right = min_node
 
     # Override
-    def get_min(self,
-                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
-        """Return the node which has the smallest key from the subtree.
+    def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
+        """Return the leftmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         while current_node.left:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_max(self,
-                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
-        """Return the node which has the biggest key from the subtree.
+    def get_rightmost(self, node: SingleThreadNode) -> SingleThreadNode:
+        """Return the rightmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         while current_node.isThread is False and current_node.right:
             current_node = current_node.right
@@ -297,7 +272,10 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         if node.isThread:
             return node.right
         else:
-            return self._get_leftmost(node=node.right)
+            if node.right:
+                return self.get_leftmost(node=node.right)
+            # if node.right is None, it means no successor of the given node.
+            return None
 
     # Override
     def get_predecessor(self,
@@ -309,11 +287,15 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
         """
         if node.left:
-            return self.get_max(node=node.left)
-        return node.parent
+            return self.get_rightmost(node=node.left)
+        parent = node.parent
+        while parent and node == parent.left:
+            node = parent
+            parent = parent.parent
+        return parent
 
     # Override
-    def get_height(self, node: Optional[binary_tree.Node]) -> int:
+    def get_height(self, node: Optional[SingleThreadNode]) -> int:
         """Return the height of the given node.
 
         See Also
@@ -323,7 +305,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         if node is None:
             return 0
 
-        if node.left is None and node.right is None:
+        if node.left is None and node.isThread:
             return 0
 
         return max(self.get_height(node.left),
@@ -337,14 +319,17 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         `Pairs`
             The next (key, data) pair in the tree in-order traversal.
         """
-        current = self._get_leftmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
+        if self.root:
+            current = self.get_leftmost(node=self.root)
+            while current:
+                yield (current.key, current.data)
 
-            if current.isThread:
-                current = current.right
-            else:
-                current = self._get_leftmost(current.right)
+                if current.isThread:
+                    current = current.right
+                else:
+                    if current.right is None:
+                        break
+                    current = self.get_leftmost(current.right)
 
     def preorder_traverse(self) -> binary_tree.Pairs:
         """Use the right threads to traverse the tree in pre-order order.
@@ -362,15 +347,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                 current = current.right.right
             else:
                 current = current.left
-
-    def _get_leftmost(self, node: Optional[SingleThreadNode]):
-
-        if node is None:
-            return None
-
-        while node.left:
-            node = node.left
-        return node
 
     def _transplant(self, deleting_node: SingleThreadNode,
                     replacing_node: Optional[SingleThreadNode]):
@@ -401,15 +377,6 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     """Left Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[SingleThreadNode]`
@@ -425,11 +392,11 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         Insert a (key, data) pair into the tree.
     delete(key: `KeyType`)
         Delete a node based on the given key from the tree.
-    outorder_traverse()
+    reverse_inorder_traverse()
         Reversed In-order traversal by using thr left threads.
-    get_min(node: `Optional[SingleThreadNode]` = `None`)
+    get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[SingleThreadNode]` = `None`)
+    get_rightmost(node: `SingleThreadNode`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `SingleThreadNode`)
         Return the successor node in the in-order order.
@@ -453,16 +420,16 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.insert(key=22, data="22")
     >>> tree.insert(key=15, data="15")
     >>> tree.insert(key=1, data="1")
-    >>> [item for item in tree.outorder_traverse()]
+    >>> [item for item in tree.reverse_inorder_traverse()]
     [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
      (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"), (1, "1")]
-    >>> tree.get_min().key
+    >>> tree.get_leftmost().key
     1
-    >>> tree.get_min().data
+    >>> tree.get_leftmost().data
     '1'
-    >>> tree.get_max().key
+    >>> tree.get_rightmost().key
     34
-    >>> tree.get_max().data
+    >>> tree.get_rightmost().data
     "34"
     >>> tree.get_height(tree.root)
     4
@@ -471,10 +438,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = SingleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
@@ -573,7 +538,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             # The deleting node has two children
             else:
                 min_node: SingleThreadNode = \
-                    self.get_min(node=deleting_node.right)
+                    self.get_leftmost(node=deleting_node.right)
 
                 successor = self.get_successor(node=min_node)
 
@@ -597,42 +562,28 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self,
-                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
-        """Return the node which has the smallest key from the subtree.
+    def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
+        """Return the leftmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         while current_node.left and current_node.isThread is False:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_max(self,
-                node: Optional[SingleThreadNode] = None) -> SingleThreadNode:
-        """Return the node which has the biggest key from the subtree.
+    def get_rightmost(self, node: SingleThreadNode) -> SingleThreadNode:
+        """Return the rightmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
+        current_node = node
 
         if current_node:
             while current_node.right:
@@ -649,7 +600,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
         """
         if node.right:
-            return self.get_min(node=node.right)
+            return self.get_leftmost(node=node.right)
         parent = node.parent
         while parent and node == parent.right:
             node = parent
@@ -668,7 +619,10 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         if node.isThread:
             return node.left
         else:
-            return self._get_rightmost(node=node.left)
+            if node.left:
+                return self.get_rightmost(node=node.left)
+            # if node.left is None, it means no predecessor of the given node.
+            return None
 
     # Override
     def get_height(self, node: Optional[SingleThreadNode]) -> int:
@@ -681,37 +635,31 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         if node is None:
             return 0
 
-        if node.left is None and node.right is None:
+        if node.isThread and node.right is None:
             return 0
 
         return max(self.get_height(node.left),
                    self.get_height(node.right)) + 1
 
-    def outorder_traverse(self) -> binary_tree.Pairs:
+    def reverse_inorder_traverse(self) -> binary_tree.Pairs:
         """Use the left threads to traverse the tree in reversed in-order.
 
         Yields
         ------
         `Pairs`
-            The next (key, data) pair in the tree out-order traversal.
+            The next (key, data) pair in the tree reversed in-order traversal.
         """
-        current = self._get_rightmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
+        if self.root:
+            current = self.get_rightmost(node=self.root)
+            while current:
+                yield (current.key, current.data)
 
-            if current.isThread:
-                current = current.left
-            else:
-                current = self._get_rightmost(current.left)
-
-    def _get_rightmost(self, node: Optional[SingleThreadNode]):
-
-        if node is None:
-            return None
-
-        while node.right:
-            node = node.right
-        return node
+                if current.isThread:
+                    current = current.left
+                else:
+                    if current.left is None:
+                        break
+                    current = self.get_rightmost(current.left)
 
     def _transplant(self, deleting_node: SingleThreadNode,
                     replacing_node: Optional[SingleThreadNode]):
@@ -742,15 +690,6 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     """Double Threaded Binary Tree.
 
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Optional[DoubleThreadNode]`
@@ -770,11 +709,11 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         In-order traversal by using thr right threads.
     preorder_traverse()
         Pre-order traversal by using thr right threads.
-    outorder_traverse()
+    reverse_inorder_traverse()
         Reversed In-order traversal by using thr left threads.
-    get_min(node: `Optional[DoubleThreadNode]` = `None`)
+    get_leftmost(node: `DoubleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
-    get_max(node: `Optional[DoubleThreadNode]` = `None`)
+    get_rightmost(node: `DoubleThreadNode`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `DoubleThreadNode`)
         Return the successor node in the in-order order.
@@ -804,16 +743,16 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     >>> [item for item in tree.preorder_traverse()]
     [(1, '1'), (4, '4'), (7, '7'), (11, '11'), (15, '15'), (20, '20'),
      (22, '22'), (23, '23'), (24, '24'), (30, '30'), (34, '34')]
-    >>> [item for item in tree.outorder_traverse()]
+    >>> [item for item in tree.reverse_inorder_traverse()]
     [(34, "34"), (30, "30"), (24, "24"), (23, "23"), (22, "22"),
      (20, "20"), (15, "15"), (11, "11"), (7, "7"), (4, "4"), (1, "1")]
-    >>> tree.get_min().key
+    >>> tree.get_leftmost().key
     1
-    >>> tree.get_min().data
+    >>> tree.get_leftmost().data
     '1'
-    >>> tree.get_max().key
+    >>> tree.get_rightmost().key
     34
-    >>> tree.get_max().data
+    >>> tree.get_rightmost().data
     "34"
     >>> tree.get_height(tree.root)
     4
@@ -822,10 +761,8 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     >>> tree.delete(15)
     """
 
-    def __init__(self, key: binary_tree.KeyType = None, data: Any = None):
+    def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        if key and data:
-            self.root = DoubleThreadNode(key=key, data=data)
 
     # Override
     def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:
@@ -919,7 +856,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
             # The deleting node has only one right child
             elif (deleting_node.leftThread or deleting_node.left is None) and \
-                  deleting_node.rightThread is False:
+                    deleting_node.rightThread is False:
 
                 successor = self.get_successor(node=deleting_node)
                 if successor:
@@ -928,9 +865,9 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.right)
 
             # The deleting node has only one left child,
-            elif (deleting_node.rightThread or 
+            elif (deleting_node.rightThread or
                   deleting_node.right is None) and \
-                  deleting_node.leftThread is False:
+                    deleting_node.leftThread is False:
 
                 predecessor = self.get_predecessor(node=deleting_node)
                 if predecessor:
@@ -943,7 +880,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                 predecessor = self.get_predecessor(node=deleting_node)
 
                 min_node: DoubleThreadNode = \
-                    self.get_min(node=deleting_node.right)
+                    self.get_leftmost(node=deleting_node.right)
 
                 successor = self.get_successor(node=min_node)
 
@@ -971,45 +908,29 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     successor.left = min_node
 
     # Override
-    def get_min(self,
-                node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
-        """Return the node which has the smallest key from the subtree.
+    def get_leftmost(self, node: DoubleThreadNode) -> DoubleThreadNode:
+        """Return the leftmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_min`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_leftmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         while current_node.left and current_node.leftThread is False:
             current_node = current_node.left
         return current_node
 
     # Override
-    def get_max(self,
-                node: Optional[DoubleThreadNode] = None) -> DoubleThreadNode:
-        """Return the node which has the biggest key from the subtree.
+    def get_rightmost(self, node: DoubleThreadNode) -> DoubleThreadNode:
+        """Return the rightmost node from a given subtree.
 
         See Also
         --------
-        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_max`.
+        :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_rightmost`.
         """
-        if node:
-            current_node = node
-        else:
-            if self.root:
-                current_node = self.root
-            else:
-                raise tree_exceptions.EmptyTreeError()
-
+        current_node = node
         if current_node:
-            while current_node.right:
+            while current_node.right and current_node.rightThread is False:
                 current_node = current_node.right
         return current_node
 
@@ -1025,7 +946,9 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         if node.rightThread:
             return node.right
         else:
-            return self._get_leftmost(node=node.right)
+            if node.right:
+                return self.get_leftmost(node=node.right)
+            return None
 
     # Override
     def get_predecessor(self,
@@ -1039,7 +962,9 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         if node.leftThread:
             return node.left
         else:
-            return self._get_rightmost(node=node.left)
+            if node.left:
+                return self.get_rightmost(node=node.left)
+            return None
 
     # Override
     def get_height(self, node: Optional[DoubleThreadNode]) -> int:
@@ -1052,7 +977,10 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         if node is None:
             return 0
 
-        if node.left is None and node.right is None:
+        if (node.left is None and node.right is None) or \
+           (node.leftThread and node.right is None) or \
+           (node.left is None and node.rightThread) or \
+           (node.leftThread and node.rightThread):
             return 0
 
         return max(self.get_height(node.left),
@@ -1085,49 +1013,33 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         `Pairs`
             The next (key, data) pair in the tree in-order traversal.
         """
-        current = self._get_leftmost(node=self.root)
+        current = self.get_leftmost(node=self.root)
         while current:
             yield (current.key, current.data)
 
             if current.rightThread:
                 current = current.right
             else:
-                current = self._get_leftmost(current.right)
+                if current.right is None:
+                    break
+                current = self.get_leftmost(current.right)
 
-    def outorder_traverse(self) -> binary_tree.Pairs:
-        """Use the left threads to traverse the tree in reversed in-order order.
+    def reverse_inorder_traverse(self) -> binary_tree.Pairs:
+        """Use the left threads to traverse the tree in reversed in-order.
 
         Yields
         ------
         `Pairs`
-            The next (key, data) pair in the tree out-order traversal.
+            The next (key, data) pair in the tree reversed in-order traversal.
         """
-        current = self._get_rightmost(node=self.root)
+        current = self.get_rightmost(node=self.root)
         while current:
             yield (current.key, current.data)
 
             if current.leftThread:
                 current = current.left
             else:
-                current = self._get_rightmost(current.left)
-
-    def _get_leftmost(self, node: Optional[DoubleThreadNode]):
-
-        if node is None:
-            return None
-
-        while node.left and node.leftThread is False:
-            node = node.left
-        return node
-
-    def _get_rightmost(self, node: Optional[DoubleThreadNode]):
-
-        if node is None:
-            return None
-
-        while node.right and node.rightThread is False:
-            node = node.right
-        return node
+                current = self.get_rightmost(current.left)
 
     def _transplant(self, deleting_node: DoubleThreadNode,
                     replacing_node: Optional[DoubleThreadNode]):
