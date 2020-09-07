@@ -28,7 +28,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7"
     ],
     keywords="tree data structures",
-    packages=setuptools.find_packages(exclude=["docs", "examples", "tests"]),
+    packages=setuptools.find_packages(exclude=["examples", "tests"]),
     entry_points={
         "console_scripts": [
             "forest-cli=pyforest.bin.forest_cli:main"

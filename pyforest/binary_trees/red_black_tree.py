@@ -7,7 +7,7 @@
 import enum
 
 from dataclasses import dataclass
-from typing import Any, Generic, Optional, Union
+from typing import Any, Generic, Union
 
 from pyforest import tree_exceptions
 
