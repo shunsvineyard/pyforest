@@ -210,27 +210,27 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 predecessor = self.get_predecessor(node=deleting_node)
 
-                min_node: SingleThreadNode = \
+                replacing_node: SingleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.isThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.isThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
-                    min_node.isThread = False
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
+                    replacing_node.isThread = False
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
                 if predecessor and predecessor.isThread:
-                    predecessor.right = min_node
+                    predecessor.right = replacing_node
 
     # Override
     def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
@@ -537,29 +537,29 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
             # The deleting node has two children
             else:
-                min_node: SingleThreadNode = \
+                replacing_node: SingleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
-                successor = self.get_successor(node=min_node)
+                successor = self.get_successor(node=replacing_node)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.isThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.isThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
-                min_node.isThread = False
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
+                replacing_node.isThread = False
                 if successor and successor.isThread:
-                    successor.left = min_node
+                    successor.left = replacing_node
 
     # Override
     def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
@@ -879,33 +879,33 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             else:
                 predecessor = self.get_predecessor(node=deleting_node)
 
-                min_node: DoubleThreadNode = \
+                replacing_node: DoubleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
-                successor = self.get_successor(node=min_node)
+                successor = self.get_successor(node=replacing_node)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.rightThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.rightThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
-                    min_node.rightThread = False
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
+                    replacing_node.rightThread = False
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
-                min_node.leftThread = False
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
+                replacing_node.leftThread = False
                 if predecessor and predecessor.rightThread:
-                    predecessor.right = min_node
+                    predecessor.right = replacing_node
 
                 if successor and successor.leftThread:
-                    successor.left = min_node
+                    successor.left = replacing_node
 
     # Override
     def get_leftmost(self, node: DoubleThreadNode) -> DoubleThreadNode:

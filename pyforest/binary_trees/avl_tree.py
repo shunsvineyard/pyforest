@@ -186,19 +186,19 @@ class AVLTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = self.get_leftmost(node=deleting_node.right)
+            replacing_node = self.get_leftmost(node=deleting_node.right)
             # The deleting node is not the direct parent of the minimum node.
-            if min_node.parent != deleting_node:
-                self._transplant(min_node, min_node.right)
-                min_node.right = deleting_node.right
-                min_node.right.parent = min_node
+            if replacing_node.parent != deleting_node:
+                self._transplant(replacing_node, replacing_node.right)
+                replacing_node.right = deleting_node.right
+                replacing_node.right.parent = replacing_node
 
-            self._transplant(deleting_node, min_node)
-            min_node.left = deleting_node.left
-            min_node.left.parent = min_node
+            self._transplant(deleting_node, replacing_node)
+            replacing_node.left = deleting_node.left
+            replacing_node.left.parent = replacing_node
 
-            if min_node:
-                self._delete_fixup(min_node)
+            if replacing_node:
+                self._delete_fixup(replacing_node)
 
     # Override
     def get_leftmost(self, node: AVLNode) -> AVLNode:
