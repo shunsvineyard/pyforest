@@ -13,7 +13,7 @@ of threaded binary tree:
 """
 
 from dataclasses import dataclass
-from typing import Any, Generic, Optional
+from typing import Any, Optional
 
 from pyforest import tree_exceptions
 
@@ -21,7 +21,7 @@ from pyforest.binary_trees import binary_tree
 
 
 @dataclass
-class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+class SingleThreadNode(binary_tree.Node):
     """Single Threaded Tree node definition."""
 
     left: Optional["SingleThreadNode"] = None
@@ -31,7 +31,7 @@ class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 
 
 @dataclass
-class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+class DoubleThreadNode(binary_tree.Node):
     """Double Threaded Tree node definition."""
 
     left: Optional["DoubleThreadNode"] = None
@@ -53,11 +53,11 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
         In-order traversal by using thr right threads.
@@ -114,7 +114,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
+    def search(self, key: Any) -> SingleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -135,7 +135,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the right threaded binary tree.
 
         See Also
@@ -177,7 +177,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -386,11 +386,11 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     reverse_inorder_traverse()
         Reversed In-order traversal by using thr left threads.
@@ -442,7 +442,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
+    def search(self, key: Any) -> SingleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -464,7 +464,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the left threaded binary tree.
 
         See Also
@@ -506,7 +506,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -699,11 +699,11 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
         In-order traversal by using thr right threads.
@@ -765,7 +765,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:
+    def search(self, key: Any) -> DoubleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -789,7 +789,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the double threaded binary tree.
 
         See Also
@@ -838,7 +838,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also

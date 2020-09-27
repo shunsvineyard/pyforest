@@ -7,8 +7,6 @@
 Notes
 -----
 The module provides some custom types for type checking.
-- `KeyType`: the key type for a tree node. The key must be comparable.
-
 - `Paris`: an iterator of Key-Value pairs. Yield by traversal functions.
 
 - `NodeType`: the type that a derived node class should bound to.
@@ -20,39 +18,15 @@ from dataclasses import dataclass
 from typing import Any, Generic, Iterator, Optional, Tuple, TypeVar
 
 
-class Comparable(abc.ABC):
-    """Custom defined `Comparable` type for type hint."""
-
-    @abc.abstractmethod
-    def __eq__(self, other: Any) -> bool:
-        pass
-
-    @abc.abstractmethod
-    def __lt__(self, other: Any) -> bool:
-        pass
-
-    def __gt__(self, other) -> bool:
-        return (not self < other) and self != other
-
-    def __le__(self, other) -> bool:
-        return self < other or self == other
-
-    def __ge__(self, other) -> bool:
-        return (not self < other)
-
-
-KeyType = TypeVar("KeyType", bound=Comparable)
-"""Type of a tree node key. The key must be comparable."""
-
-Pairs = Iterator[Tuple[KeyType, Any]]
+Pairs = Iterator[Tuple[Any, Any]]
 """An iterator of Key-Value pairs. Yield by traversal functions."""
 
 
 @dataclass
-class Node(Generic[KeyType]):
+class Node:
     """Basic binary tree node definition."""
 
-    key: KeyType
+    key: Any
     data: Any
     left: Optional["Node"] = None
     right: Optional["Node"] = None
@@ -89,12 +63,12 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
                f"tree_height={str(self.get_height(self.root))}"
 
     @abc.abstractmethod
-    def search(self, key: KeyType) -> NodeType:
+    def search(self, key: Any) -> NodeType:
         """Search data based on the given key.
 
         Parameters
         ----------
-        key: `KeyType`
+        key: `Any`
             The key associated with the data.
 
         Returns
@@ -112,12 +86,12 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def insert(self, key: KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert data and its key into the binary tree.
 
         Parameters
         ----------
-        key: `KeyType`
+        key: `Any`
             The key associated with the data.
 
         data: `Any`
@@ -131,12 +105,12 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def delete(self, key: KeyType):
+    def delete(self, key: Any):
         """Delete the node based on the given key.
 
         Parameters
         ----------
-        key: `KeyType`
+        key: `Any`
             The key of the node to be deleted.
 
         Raises

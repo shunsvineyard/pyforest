@@ -10,14 +10,14 @@ BinaryTree <|-- AVLTree
 class BinaryTree {
     +root: NodeType
     +empty: bool
-    {abstract} +search() -> NodeType
+    {abstract} +search()
     {abstract} +insert()
     {abstract} +delete()
-    {abstract} +get_leftmost() -> NodeType
-    {abstract} +get_rightmost() -> NodeType
-    {abstract} +get_successor() -> NodeType
-    {abstract} +get_predecessor() -> NodeType
-    {abstract} +get_height() -> int
+    {abstract} +get_leftmost()
+    {abstract} +get_rightmost()
+    {abstract} +get_successor()
+    {abstract} +get_predecessor()
+    {abstract} +get_height()
 }
 
 class BinarySearchTree {
@@ -50,6 +50,9 @@ class RBTree {
     -_right_rotate()
     -_insert_fixup()
     -_delete_fixup()
+    -_inorder_traverse()
+    -_preorder_traverse()
+    -_postorder_traverse()
     -_transplant()
 
 }
@@ -57,9 +60,9 @@ class RBTree {
 class AVLTree {
     -_left_rotate()
     -_right_rotate()
-    -_transplant()
     -_balance_factor()
     -_delete_fixup()
+    -_transplant()
 }
 
 

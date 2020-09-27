@@ -53,11 +53,11 @@ class BinarySearchTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into a binary tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the binary tree.
     get_leftmost(node: `Optional[Node]` = `None`)
         Return the node whose key is the smallest from the given subtree.
@@ -104,7 +104,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> binary_tree.Node:
+    def search(self, key: Any) -> binary_tree.Node:
         """Look for a node by a given key.
 
         See Also
@@ -123,7 +123,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the binary search tree.
 
         See Also
@@ -132,15 +132,15 @@ class BinarySearchTree(binary_tree.BinaryTree):
         """
         new_node = binary_tree.Node(key=key, data=data)
         parent = None
-        temp = self.root
-        while temp:
-            parent = temp
-            if new_node.key == temp.key:
+        current = self.root
+        while current:
+            parent = current
+            if new_node.key == current.key:
                 raise tree_exceptions.DuplicateKeyError(key=new_node.key)
-            elif new_node.key < temp.key:
-                temp = temp.left
+            elif new_node.key < current.key:
+                current = current.left
             else:
-                temp = temp.right
+                current = current.right
         new_node.parent = parent
         # If the tree is empty
         if parent is None:
@@ -151,7 +151,7 @@ class BinarySearchTree(binary_tree.BinaryTree):
             parent.right = new_node
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -161,19 +161,20 @@ class BinarySearchTree(binary_tree.BinaryTree):
         if self.root:
             deleting_node = self.search(key=key)
 
-            # No child or only one right child
+            # Case 1: no child or Case 2: only one right child
             if deleting_node.left is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.right)
-            # Only one left child
+            # Case 2: only one left child
             elif deleting_node.right is None:
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=deleting_node.left)
-            # Two children
+            # Case 3: wwo children
             else:
                 replacing_node = \
                     self.get_leftmost(node=deleting_node.right)
-                # the minmum node is not the direct child of the deleting node
+                # the leftmost node is not the direct child of
+                # the deleting node
                 if replacing_node.parent != deleting_node:
                     self._transplant(deleting_node=replacing_node,
                                      replacing_node=replacing_node.right)
@@ -222,8 +223,9 @@ class BinarySearchTree(binary_tree.BinaryTree):
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_successor`.
         """
-        if node.right:
+        if node.right:  # Case 1: Right child is not empty
             return self.get_leftmost(node=node.right)
+        # Case 2: Right child is empty
         parent = node.parent
         while parent and node == parent.right:
             node = parent
@@ -239,8 +241,9 @@ class BinarySearchTree(binary_tree.BinaryTree):
         --------
         :py:meth:`pyforest.binary_trees.binary_tree.BinaryTree.get_predecessor`.
         """
-        if node.left:
+        if node.left:  # Case 1: Left child is not empty
             return self.get_rightmost(node=node.left)
+        # Case 2: Left child is empty
         parent = node.parent
         while parent and node == parent.left:
             node = parent

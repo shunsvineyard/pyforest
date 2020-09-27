@@ -26,6 +26,8 @@ def test_simple_case(basic_tree):
     assert tree.search(key=24).data == "24"
     assert tree.get_height(node=tree.root) == 4
     assert tree.get_predecessor(node=tree.root).key == 22
+    temp = tree.search(key=24)
+    assert tree.get_predecessor(node=temp).key == 23
     assert tree.get_successor(node=tree.root).key == 24
 
     tree.delete(key=15)
