@@ -8,8 +8,7 @@ Build the Forest in Python Series
 .. image:: https://codecov.io/gh/shunsvineyard/pyforest/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/shunsvineyard/pyforest
 
-The Forest is a tree data structure library for fun.
-The Forest contains the following tree data structures:
+The Forest Project is a tree data structure library for fun. It has the following tree data structures:
 
 - Binary Trees
     - AVL Tree
@@ -29,4 +28,5 @@ The Forest also provides the tree traversal feature to traverse binary trees and
 Requirements
 ============
 
-The Forest requires Python 3.7 or newer.
+The Forest Project requires Python 3.7 or newer.
+The key Python 3.7 feature used in the Forest Project is `dataclass <https://docs.python.org/3/library/dataclasses.html#module-dataclasses>`_.
