@@ -12,7 +12,7 @@ README = (HERE / "README.rst").read_text()
 # This call to setup() does all the work
 setuptools.setup(
     name="python-forest",
-    version="0.1.1",
+    version="0.2.0",
     description="The Forest in Python",
     long_description=README,
     long_description_content_type="text/x-rst",
@@ -21,7 +21,7 @@ setuptools.setup(
     author_email="shunsvineyard@protonmail.com",
     license="MIT",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "License :: OSI Approved :: MIT License",
