@@ -105,11 +105,17 @@ Forest CLI
 ==========
 
 The Forest Project provides a command line tool to simulate tree data structures.
+
 .. code-block:: text
+
     forest-cli
     Welcome to the Forest CLI. Type help or ? to list commands.
 
     forest> help
+
+    Documented commands (type help <topic>):
+    ========================================
+    build  delete  destroy  detail  exit  help  insert  search  traverse
 
 
 Build the Forest Series
