@@ -22,7 +22,7 @@ copyright = '2019 Shun Huang'
 author = 'Shun Huang'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.1'
+release = '0.2.0'
 
 
 # -- General configuration ---------------------------------------------------
