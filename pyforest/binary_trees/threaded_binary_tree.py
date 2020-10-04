@@ -2,15 +2,7 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""Threaded Binary Tree module.
-
-Threaded binary tree is a binary search tree variant that optimize traversal
-in a particular order by making all right child of leaf nodes pointer to
-their in-order successor of the node (if it exists). There are two types
-of threaded binary tree:
-- Single Threaded
-- Double Threaded
-"""
+"""Threaded Binary Search Trees."""
 
 from dataclasses import dataclass
 from typing import Any, Optional
@@ -60,9 +52,9 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
     delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
-        In-order traversal by using thr right threads.
+        In-order traversal by using the right threads.
     preorder_traverse()
-        Pre-order traversal by using thr right threads.
+        Pre-order traversal by using the right threads.
     get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `SingleThreadNode`)
@@ -398,7 +390,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
     delete(key: `Any`)
         Delete a node based on the given key from the tree.
     reverse_inorder_traverse()
-        Reversed In-order traversal by using thr left threads.
+        Reversed In-order traversal by using the left threads.
     get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `SingleThreadNode`)
@@ -715,11 +707,11 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
     delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
-        In-order traversal by using thr right threads.
+        In-order traversal by using the right threads.
     preorder_traverse()
-        Pre-order traversal by using thr right threads.
+        Pre-order traversal by using the right threads.
     reverse_inorder_traverse()
-        Reversed In-order traversal by using thr left threads.
+        Reversed In-order traversal by using the left threads.
     get_leftmost(node: `DoubleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `DoubleThreadNode`)

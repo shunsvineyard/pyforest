@@ -59,6 +59,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         self.root: Optional[NodeType] = None
 
     def __repr__(self):
+        """Provie the tree representation, so we can visualize its layout."""
         return f"{type(self)}, root={self.root}, " \
                f"tree_height={str(self.get_height(self.root))}"
 
@@ -74,7 +75,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         Returns
         -------
         `NodeType`
-            The found node whose key is the same as the given key.
+            The node found by the given key.
         Note that the type of the node depends on the derived class, and
         the node type should derive from `NodeType`.
 
@@ -100,7 +101,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
         Raises
         ------
         `DuplicateKeyError`
-            Raised if the input data has existed in the tree.
+            Raised if the key to be insted has existed in the tree.
         """
         raise NotImplementedError()
 
@@ -124,7 +125,7 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
     def get_leftmost(self, node: NodeType) -> NodeType:
         """Get the leftmost node from a given subtree.
 
-        The key of the leftmost node is the smallest key in a given subtree.
+        The key of the leftmost node is the smallest key in the given subtree.
 
         Parameters
         ----------
@@ -143,11 +144,11 @@ class BinaryTree(abc.ABC, Generic[NodeType]):
     def get_rightmost(self, node: NodeType) -> NodeType:
         """Get the rightmost node from a given subtree.
 
-        The key of the rightmost node is the biggest key in a given subtree.
+        The key of the rightmost node is the biggest key in the given subtree.
 
         Parameters
         ----------
-        node: `Optional[NodeType]`
+        node: `NodeType`
             The root of the subtree.
 
         Returns

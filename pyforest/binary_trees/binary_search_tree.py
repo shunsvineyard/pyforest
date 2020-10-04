@@ -2,37 +2,7 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""A Binary Search Tree (BST) module.
-
-A BST is a binary tree with the following properties:
-
-- The left subtree of a node contains only nodes whose keys are less
-  than or equal to the node’s key
-- The right subtree of a node contains only nodes whose keys are
-  greater than the node’s key
-
-Besides, BST should provide, at least, these Basic Operations:
-- Search: search an element in a tree
-- Insert: insert an element in a tree
-- Delete: delete an element in a tree
-- Traversal: traverses a tree
-
-A BST keeps the keys in sorted order so that the operations can use
-the principle of binary search. In general, the time complexity of
-a BST is as the table.
-
-+------------+------------+-----------+
-| Operations | Average    | Worst     |
-+============+============+===========+
-| Space      | O(n)       | O(n)      |
-+------------+------------+-----------+
-| Search     | O(log n)   | O(n)      |
-+------------+------------+-----------+
-| Insert     | O(log n)   | O(n)      |
-+------------+------------+-----------+
-| Delete     | O(log n)   | O(n)      |
-+------------+------------+-----------+
-"""
+"""Binary Search Tree."""
 
 from typing import Any, Optional
 
@@ -42,7 +12,7 @@ from pyforest.binary_trees import binary_tree
 
 
 class BinarySearchTree(binary_tree.BinaryTree):
-    """Binary Search Tree (BST).
+    """Binary Search Tree.
 
     Attributes
     ----------
@@ -59,9 +29,9 @@ class BinarySearchTree(binary_tree.BinaryTree):
         Insert a (key, data) pair into a binary tree.
     delete(key: `Any`)
         Delete a node based on the given key from the binary tree.
-    get_leftmost(node: `Optional[Node]` = `None`)
+    get_leftmost(node: `Node`)
         Return the node whose key is the smallest from the given subtree.
-    get_rightmost(node: `Optional[Node]` = `None`)
+    get_rightmost(node: `Node` = `None`)
         Return the node whose key is the biggest from the given subtree.
     get_successor(node: `Node`)
         Return the successor node in the in-order order.

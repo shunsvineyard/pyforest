@@ -44,15 +44,6 @@ class RBNode(binary_tree.Node):
 class RBTree(binary_tree.BinaryTree):
     """Red-Black Tree.
 
-    Parameters
-    ----------
-    key: `Any`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
-
     Attributes
     ----------
     root: `Union[RBNode, LeafNode]`
