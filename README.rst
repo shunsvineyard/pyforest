@@ -25,6 +25,8 @@ The Forest also provides the tree traversal feature to traverse binary trees and
     - Post-order
     - Level-order
 
+The API document is available at `The Forest Documentation <https://the-forest-in-python.readthedocs.io/en/latest/>`_.
+
 Requirements
 ============
 
