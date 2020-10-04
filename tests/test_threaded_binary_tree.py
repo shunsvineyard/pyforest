@@ -27,6 +27,10 @@ def test_simple_right_threaded_case(basic_tree):
     assert tree.get_rightmost(node=tree.root).key == 34
     assert tree.search(key=24).data == "24"
 
+    tree.delete(key=34)
+    with pytest.raises(tree_exceptions.KeyNotFoundError):
+        tree.search(key=34)
+
     tree.delete(key=15)
     tree.delete(key=22)
     tree.delete(key=7)
@@ -35,8 +39,8 @@ def test_simple_right_threaded_case(basic_tree):
     with pytest.raises(tree_exceptions.KeyNotFoundError):
         tree.search(key=15)
 
-    assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"), (30, "30"),
-            (34, "34")] == [item for item in tree.inorder_traverse()]
+    assert [(1, "1"), (4, "4"), (11, "11"), (23, "23"), (24, "24"),
+            (30, "30")] == [item for item in tree.inorder_traverse()]
 
 
 def test_deletion_right_threaded_case(basic_tree):

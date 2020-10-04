@@ -211,7 +211,6 @@ def reverse_inorder_traverse(tree: SupportedTreeType,
     return _reverse_inorder_traverse_non_recursive(root=tree.root)
 
 
-# FIXME: level order can be used for n-binary (n > 2). Should move it.
 def levelorder_traverse(tree: SupportedTreeType) -> binary_tree.Pairs:
     """Perform Level-Order traversal.
 

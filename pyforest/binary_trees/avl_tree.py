@@ -5,7 +5,7 @@
 """AVL Tree."""
 
 from dataclasses import dataclass
-from typing import Any, Generic, Optional
+from typing import Any, Optional
 
 from pyforest import tree_exceptions
 
@@ -13,7 +13,7 @@ from pyforest.binary_trees import binary_tree
 
 
 @dataclass
-class AVLNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+class AVLNode(binary_tree.Node):
     """AVL Tree node definition."""
 
     left: Optional["AVLNode"] = None
@@ -34,11 +34,11 @@ class AVLTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into a binary tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the binary tree.
     get_leftmost(node: `AVLNode`)
         Return the node whose key is the smallest from the given subtree.
@@ -85,7 +85,7 @@ class AVLTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> AVLNode:
+    def search(self, key: Any) -> AVLNode:
         """Look for an AVL node by a given key.
 
         See Also
@@ -104,7 +104,7 @@ class AVLTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the AVL tree.
 
         See Also
@@ -161,7 +161,7 @@ class AVLTree(binary_tree.BinaryTree):
             temp = temp.parent
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -186,19 +186,19 @@ class AVLTree(binary_tree.BinaryTree):
 
         # Two children
         else:
-            min_node = self.get_leftmost(node=deleting_node.right)
+            replacing_node = self.get_leftmost(node=deleting_node.right)
             # The deleting node is not the direct parent of the minimum node.
-            if min_node.parent != deleting_node:
-                self._transplant(min_node, min_node.right)
-                min_node.right = deleting_node.right
-                min_node.right.parent = min_node
+            if replacing_node.parent != deleting_node:
+                self._transplant(replacing_node, replacing_node.right)
+                replacing_node.right = deleting_node.right
+                replacing_node.right.parent = replacing_node
 
-            self._transplant(deleting_node, min_node)
-            min_node.left = deleting_node.left
-            min_node.left.parent = min_node
+            self._transplant(deleting_node, replacing_node)
+            replacing_node.left = deleting_node.left
+            replacing_node.left.parent = replacing_node
 
-            if min_node:
-                self._delete_fixup(min_node)
+            if replacing_node:
+                self._delete_fixup(replacing_node)
 
     # Override
     def get_leftmost(self, node: AVLNode) -> AVLNode:

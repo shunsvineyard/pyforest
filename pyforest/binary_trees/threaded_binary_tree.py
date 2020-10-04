@@ -2,18 +2,10 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""Threaded Binary Tree module.
-
-Threaded binary tree is a binary search tree variant that optimize traversal
-in a particular order by making all right child of leaf nodes pointer to
-their in-order successor of the node (if it exists). There are two types
-of threaded binary tree:
-- Single Threaded
-- Double Threaded
-"""
+"""Threaded Binary Search Trees."""
 
 from dataclasses import dataclass
-from typing import Any, Generic, Optional
+from typing import Any, Optional
 
 from pyforest import tree_exceptions
 
@@ -21,7 +13,7 @@ from pyforest.binary_trees import binary_tree
 
 
 @dataclass
-class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+class SingleThreadNode(binary_tree.Node):
     """Single Threaded Tree node definition."""
 
     left: Optional["SingleThreadNode"] = None
@@ -31,7 +23,7 @@ class SingleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
 
 
 @dataclass
-class DoubleThreadNode(binary_tree.Node, Generic[binary_tree.KeyType]):
+class DoubleThreadNode(binary_tree.Node):
     """Double Threaded Tree node definition."""
 
     left: Optional["DoubleThreadNode"] = None
@@ -53,16 +45,16 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
-        In-order traversal by using thr right threads.
+        In-order traversal by using the right threads.
     preorder_traverse()
-        Pre-order traversal by using thr right threads.
+        Pre-order traversal by using the right threads.
     get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `SingleThreadNode`)
@@ -114,7 +106,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
+    def search(self, key: Any) -> SingleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -135,7 +127,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the right threaded binary tree.
 
         See Also
@@ -177,7 +169,7 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -188,7 +180,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             deleting_node = self.search(key=key)
 
             # The deleting node has no child
-            if deleting_node.left is None and deleting_node.isThread:
+            if deleting_node.left is None and \
+               (deleting_node.right is None or deleting_node.isThread):
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=None)
 
@@ -207,30 +200,33 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.left)
 
             # The deleting node has two children
-            else:
+            elif deleting_node.left and deleting_node.right \
+                    and deleting_node.isThread is False:
                 predecessor = self.get_predecessor(node=deleting_node)
 
-                min_node: SingleThreadNode = \
+                replacing_node: SingleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.isThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.isThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
-                    min_node.isThread = False
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
+                    replacing_node.isThread = False
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
                 if predecessor and predecessor.isThread:
-                    predecessor.right = min_node
+                    predecessor.right = replacing_node
+            else:
+                raise RuntimeError("Invalid case. Should never happened")
 
     # Override
     def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
@@ -320,7 +316,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree in-order traversal.
         """
         if self.root:
-            current = self.get_leftmost(node=self.root)
+            current: Optional[SingleThreadNode] = \
+                self.get_leftmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
@@ -386,14 +383,14 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     reverse_inorder_traverse()
-        Reversed In-order traversal by using thr left threads.
+        Reversed In-order traversal by using the left threads.
     get_leftmost(node: `SingleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `SingleThreadNode`)
@@ -442,7 +439,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> SingleThreadNode:
+    def search(self, key: Any) -> SingleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -464,7 +461,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the left threaded binary tree.
 
         See Also
@@ -506,7 +503,7 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -517,7 +514,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             deleting_node = self.search(key=key)
 
             # The deleting node has no child
-            if deleting_node.right is None and deleting_node.isThread:
+            if deleting_node.right is None and \
+               (deleting_node.left is None or deleting_node.isThread):
                 self._transplant(deleting_node=deleting_node,
                                  replacing_node=None)
 
@@ -536,30 +534,32 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.left)
 
             # The deleting node has two children
-            else:
-                min_node: SingleThreadNode = \
+            elif deleting_node.right and deleting_node.left:
+                replacing_node: SingleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
-                successor = self.get_successor(node=min_node)
+                successor = self.get_successor(node=replacing_node)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.isThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.isThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
-                min_node.isThread = False
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
+                replacing_node.isThread = False
                 if successor and successor.isThread:
-                    successor.left = min_node
+                    successor.left = replacing_node
+            else:
+                raise RuntimeError("Invalid case. Should never happened")
 
     # Override
     def get_leftmost(self, node: SingleThreadNode) -> SingleThreadNode:
@@ -650,7 +650,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree reversed in-order traversal.
         """
         if self.root:
-            current = self.get_rightmost(node=self.root)
+            current: Optional[SingleThreadNode] = \
+                self.get_rightmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
@@ -699,18 +700,18 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
-        In-order traversal by using thr right threads.
+        In-order traversal by using the right threads.
     preorder_traverse()
-        Pre-order traversal by using thr right threads.
+        Pre-order traversal by using the right threads.
     reverse_inorder_traverse()
-        Reversed In-order traversal by using thr left threads.
+        Reversed In-order traversal by using the left threads.
     get_leftmost(node: `DoubleThreadNode`)
         Return the node whose key is the smallest from the given subtree.
     get_rightmost(node: `DoubleThreadNode`)
@@ -765,7 +766,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         binary_tree.BinaryTree.__init__(self)
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> DoubleThreadNode:
+    def search(self, key: Any) -> DoubleThreadNode:
         """Look for a node by a given key.
 
         See Also
@@ -789,7 +790,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the double threaded binary tree.
 
         See Also
@@ -838,7 +839,7 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                     raise tree_exceptions.DuplicateKeyError(key=key)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also
@@ -876,36 +877,38 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
                                  replacing_node=deleting_node.left)
 
             # The deleting node has two children
-            else:
+            elif deleting_node.left and deleting_node.right:
                 predecessor = self.get_predecessor(node=deleting_node)
 
-                min_node: DoubleThreadNode = \
+                replacing_node: DoubleThreadNode = \
                     self.get_leftmost(node=deleting_node.right)
 
-                successor = self.get_successor(node=min_node)
+                successor = self.get_successor(node=replacing_node)
 
                 # the minmum node is not the direct child of the deleting node
-                if min_node.parent != deleting_node:
-                    if min_node.rightThread:
-                        self._transplant(deleting_node=min_node,
+                if replacing_node.parent != deleting_node:
+                    if replacing_node.rightThread:
+                        self._transplant(deleting_node=replacing_node,
                                          replacing_node=None)
                     else:
-                        self._transplant(deleting_node=min_node,
-                                         replacing_node=min_node.right)
-                    min_node.right = deleting_node.right
-                    min_node.right.parent = min_node
-                    min_node.rightThread = False
+                        self._transplant(deleting_node=replacing_node,
+                                         replacing_node=replacing_node.right)
+                    replacing_node.right = deleting_node.right
+                    replacing_node.right.parent = replacing_node
+                    replacing_node.rightThread = False
 
                 self._transplant(deleting_node=deleting_node,
-                                 replacing_node=min_node)
-                min_node.left = deleting_node.left
-                min_node.left.parent = min_node
-                min_node.leftThread = False
+                                 replacing_node=replacing_node)
+                replacing_node.left = deleting_node.left
+                replacing_node.left.parent = replacing_node
+                replacing_node.leftThread = False
                 if predecessor and predecessor.rightThread:
-                    predecessor.right = min_node
+                    predecessor.right = replacing_node
 
                 if successor and successor.leftThread:
-                    successor.left = min_node
+                    successor.left = replacing_node
+            else:
+                raise RuntimeError("Invalid case. Should never happened")
 
     # Override
     def get_leftmost(self, node: DoubleThreadNode) -> DoubleThreadNode:
@@ -1013,16 +1016,18 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         `Pairs`
             The next (key, data) pair in the tree in-order traversal.
         """
-        current = self.get_leftmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
+        if self.root:
+            current: Optional[DoubleThreadNode] = \
+                self.get_leftmost(node=self.root)
+            while current:
+                yield (current.key, current.data)
 
-            if current.rightThread:
-                current = current.right
-            else:
-                if current.right is None:
-                    break
-                current = self.get_leftmost(current.right)
+                if current.rightThread:
+                    current = current.right
+                else:
+                    if current.right is None:
+                        break
+                    current = self.get_leftmost(current.right)
 
     def reverse_inorder_traverse(self) -> binary_tree.Pairs:
         """Use the left threads to traverse the tree in reversed in-order.
@@ -1032,14 +1037,18 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
         `Pairs`
             The next (key, data) pair in the tree reversed in-order traversal.
         """
-        current = self.get_rightmost(node=self.root)
-        while current:
-            yield (current.key, current.data)
+        if self.root:
+            current: Optional[DoubleThreadNode] = \
+                self.get_rightmost(node=self.root)
+            while current:
+                yield (current.key, current.data)
 
-            if current.leftThread:
-                current = current.left
-            else:
-                current = self.get_rightmost(current.left)
+                if current.leftThread:
+                    current = current.left
+                else:
+                    if current.left is None:
+                        break
+                    current = self.get_rightmost(current.left)
 
     def _transplant(self, deleting_node: DoubleThreadNode,
                     replacing_node: Optional[DoubleThreadNode]):

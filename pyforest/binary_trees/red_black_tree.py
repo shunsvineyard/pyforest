@@ -7,7 +7,7 @@
 import enum
 
 from dataclasses import dataclass
-from typing import Any, Generic, Optional, Union
+from typing import Any, Union
 
 from pyforest import tree_exceptions
 
@@ -22,7 +22,7 @@ class Color(enum.Enum):
 
 
 @dataclass
-class LeafNode:
+class LeafNode(binary_tree.Node):
     """Definition Red-Black Tree Leaf node whose color is always black."""
 
     left = None
@@ -32,28 +32,17 @@ class LeafNode:
 
 
 @dataclass
-class RBNode(Generic[binary_tree.KeyType]):
+class RBNode(binary_tree.Node):
     """Red-Black Tree non-leaf node definition."""
 
-    key: binary_tree.KeyType
-    data: Any
     left: Union["RBNode", LeafNode]
     right: Union["RBNode", LeafNode]
     parent: Union["RBNode", LeafNode]
-    color: Color
+    color: Color = Color.Red
 
 
 class RBTree(binary_tree.BinaryTree):
     """Red-Black Tree.
-
-    Parameters
-    ----------
-    key: `KeyType`
-        The key of the root when the tree is initialized.
-        Default is `None`.
-    data: `Any`
-        The data of the root when the tree is initialized.
-        Default is `None`.
 
     Attributes
     ----------
@@ -64,11 +53,11 @@ class RBTree(binary_tree.BinaryTree):
 
     Methods
     -------
-    search(key: `KeyType`)
+    search(key: `Any`)
         Look for a node based on the given key.
-    insert(key: `KeyType`, data: `Any`)
+    insert(key: `Any`, data: `Any`)
         Insert a (key, data) pair into the tree.
-    delete(key: `KeyType`)
+    delete(key: `Any`)
         Delete a node based on the given key from the tree.
     inorder_traverse()
         Perform In-order traversal.
@@ -125,11 +114,11 @@ class RBTree(binary_tree.BinaryTree):
 
     def __init__(self):
         binary_tree.BinaryTree.__init__(self)
-        self._NIL: LeafNode = LeafNode()
+        self._NIL: LeafNode = LeafNode(key=None, data=None)
         self.root: Union[RBNode, LeafNode] = self._NIL
 
     # Override
-    def search(self, key: binary_tree.KeyType) -> RBNode:
+    def search(self, key: Any) -> RBNode:
         """Look for a node by a given key.
 
         See Also
@@ -147,7 +136,7 @@ class RBTree(binary_tree.BinaryTree):
         raise tree_exceptions.KeyNotFoundError(key=key)
 
     # Override
-    def insert(self, key: binary_tree.KeyType, data: Any):
+    def insert(self, key: Any, data: Any):
         """Insert a (key, data) pair into the Red-Black tree.
 
         See Also
@@ -181,7 +170,7 @@ class RBTree(binary_tree.BinaryTree):
             self._insert_fixup(node)
 
     # Override
-    def delete(self, key: binary_tree.KeyType):
+    def delete(self, key: Any):
         """Delete the node by the given key.
 
         See Also

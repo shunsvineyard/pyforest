@@ -220,5 +220,6 @@ class cli(cmd.Cmd):
             return int(key[0])
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the Forest CLI."""
     cli().cmdloop()
