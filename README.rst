@@ -109,6 +109,12 @@ The Forest Project provides a command line tool to simulate tree data structures
 .. code-block:: text
 
     forest-cli
+
+It will show the interactive prompt. Use ``help`` to list all the available commands
+
+
+.. code-block:: text
+
     Welcome to the Forest CLI. Type help or ? to list commands.
 
     forest> help
