@@ -41,7 +41,7 @@ if __name__ == "__main__":
     contacts["Mark"] = "mark@email.com"
     contacts["John"] = "john@email.com"
     contacts["Luke"] = "luke@email.com"
-    contacts["john"] = "john@gmail.com"
+    contacts["john"] = "john@email.com"
 
     # Iterate the items.
     for contact in contacts:

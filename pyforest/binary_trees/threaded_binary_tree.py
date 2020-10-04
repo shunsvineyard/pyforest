@@ -324,7 +324,8 @@ class RightThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree in-order traversal.
         """
         if self.root:
-            current = self.get_leftmost(node=self.root)
+            current: Optional[SingleThreadNode] = \
+                self.get_leftmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
@@ -657,7 +658,8 @@ class LeftThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree reversed in-order traversal.
         """
         if self.root:
-            current = self.get_rightmost(node=self.root)
+            current: Optional[SingleThreadNode] = \
+                self.get_rightmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
@@ -1023,7 +1025,8 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree in-order traversal.
         """
         if self.root:
-            current = self.get_leftmost(node=self.root)
+            current: Optional[DoubleThreadNode] = \
+                self.get_leftmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
@@ -1043,13 +1046,16 @@ class DoubleThreadedBinaryTree(binary_tree.BinaryTree):
             The next (key, data) pair in the tree reversed in-order traversal.
         """
         if self.root:
-            current = self.get_rightmost(node=self.root)
+            current: Optional[DoubleThreadNode] = \
+                self.get_rightmost(node=self.root)
             while current:
                 yield (current.key, current.data)
 
                 if current.leftThread:
                     current = current.left
                 else:
+                    if current.left is None:
+                        break
                     current = self.get_rightmost(current.left)
 
     def _transplant(self, deleting_node: DoubleThreadNode,
