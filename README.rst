@@ -27,11 +27,13 @@ The Forest also provides the tree traversal feature to traverse binary trees and
 
 Requirements
 ============
+
 The Forest Project requires Python 3.7 or newer.
 The key Python 3.7 feature used in the Forest Project is `dataclass <https://docs.python.org/3/library/dataclasses.html#module-dataclasses>`_.
 
 Installation
 ============
+
 There are two ways to install the Forest Project.
 
 1. Install and update using `pip <https://pip.pypa.io/en/stable/quickstart/>`_:
@@ -50,7 +52,9 @@ There are two ways to install the Forest Project.
 
 Examples
 ========
+
 .. code-block:: python
+
     from pyforest.binary_trees import red_black_tree
     from pyforest.binary_trees import traversal
 
@@ -99,6 +103,7 @@ Examples
 
 Forest CLI
 ==========
+
 The Forest Project provides a command line tool to simulate tree data structures.
 .. code-block:: text
     forest-cli
@@ -113,6 +118,7 @@ The Forest Project provides a command line tool to simulate tree data structures
 
 Build the Forest Series
 =======================
+
 `Build the Forest Series <https://shunsvineyard.info/build-the-forest-series/>`_ is
 a series of articles about tree data structures in the Forest Project. It provides
 the tree concept and implementation detail of each tree data structures and the
