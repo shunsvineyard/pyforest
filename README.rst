@@ -30,3 +30,22 @@ Requirements
 
 The Forest Project requires Python 3.7 or newer.
 The key Python 3.7 feature used in the Forest Project is `dataclass <https://docs.python.org/3/library/dataclasses.html#module-dataclasses>`_.
+
+Installation
+============
+
+There are two ways to install the Forest Project.
+
+1. Install and update using `pip <https://pip.pypa.io/en/stable/quickstart/>`_:
+
+.. code-block:: text
+
+    pip install -U python-forest
+
+2. Install from Github
+
+.. code-block:: text
+
+    git clone https://github.com/shunsvineyard/pyforest.git
+    cd pyforest
+    pip install .
