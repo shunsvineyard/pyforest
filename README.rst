@@ -124,12 +124,3 @@ It will show the interactive prompt. Use ``help`` to list all the available comm
     Documented commands (type help <topic>):
     ========================================
     build  delete  destroy  detail  exit  help  insert  search  traverse
-
-
-Build the Forest Series
-=======================
-
-`Build the Forest Series <https://shunsvineyard.info/build-the-forest-series/>`_ is
-a series of articles about tree data structures in the Forest Project. It provides
-the tree concept and implementation detail of each tree data structures and the
-thoughts behind the scenes.
